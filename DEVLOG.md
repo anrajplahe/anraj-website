@@ -172,3 +172,122 @@ The original call-to-action button looked too basic. I experimented with a more 
 - Introduce TypeScript interfaces for component props.
 - Improve the overall component structure.
 - Continue testing responsiveness and accessibility.
+
+## 16 October 2026 — Website Deployment, Custom Domain and Email Configuration
+
+### Objectives
+- Deploy my Next.js website to a publicly accessible production environment.
+- Purchase and configure a custom domain.
+- Set up a professional email address using my domain.
+- Connect my GitHub repository to a hosting platform.
+- Gain practical experience with DNS configuration and deployment workflows.
+
+### Completed
+
+**Domain Registration and Email Hosting**
+- Registered `anrajplahe.com` through IONOS.
+- Purchased the IONOS Mail Basic 5 package, which includes custom-domain email hosting.
+- Added Domain Guard for additional domain security.
+- Configured and successfully tested `mail@anrajplahe.com`.
+- Retained IONOS as the domain registrar and DNS provider.
+
+**Website Deployment**
+- Created a Vercel account and connected my existing GitHub repository.
+- Imported my Next.js project into Vercel.
+- Successfully deployed the website to a publicly accessible production environment.
+- Added `anrajplahe.com` and `www.anrajplahe.com` as custom domains.
+- Verified that the website is accessible through both addresses.
+
+**DNS Configuration**
+- Configured an A record to direct the root domain to Vercel.
+- Configured a CNAME record for the `www` subdomain.
+- Preserved the existing IONOS email-related DNS records, including MX, SPF, DKIM and DMARC.
+- Successfully connected my domain to Vercel while maintaining email functionality.
+
+**Git and Version Control**
+- Continued working with feature branches and GitHub.
+- Encountered an issue where my homepage code appeared to disappear after switching to the `main` branch in GitHub Desktop.
+- Identified that my latest homepage development was stored on `feature/homepage`.
+- Successfully restored the expected working files by switching back to the correct branch.
+
+### What I Learned
+
+**Domain Registration and DNS**
+- The difference between a domain registrar, DNS provider and web hosting platform.
+- How DNS translates domain names into the information needed to reach a hosting service.
+- How A records point a domain towards an IP address.
+- How CNAME records allow subdomains to reference another hostname.
+- How website hosting and email hosting can operate independently under the same domain.
+
+**Deployment and Hosting**
+- How to deploy a Next.js application using Vercel.
+- How to connect a GitHub repository to a deployment platform.
+- How production environments differ from local development.
+- How GitHub-integrated deployments can support a continuous deployment workflow.
+
+**Email Infrastructure**
+- How custom-domain email hosting works.
+- The role of MX records in directing incoming email.
+- How SPF, DKIM and DMARC help protect email authentication and delivery.
+- Why DNS changes must be carefully managed to avoid disrupting existing services.
+
+**Git and Branch Management**
+- How switching Git branches changes the files displayed in my local working directory.
+- Why commits on a feature branch do not automatically appear on `main`.
+- How to locate and recover the expected version of a project by checking its branches.
+
+### Challenges and Solutions
+
+**Choosing Hosting Services**
+
+I initially considered using IONOS for both domain registration and website hosting. After comparing the available options, I decided to use IONOS for domain and email management and Vercel for hosting my Next.js application.
+
+This decision allows me to maintain a managed Next.js deployment while keeping the domain and email services separate.
+
+**Connecting the Domain**
+
+After adding my custom domain to Vercel, the dashboard initially displayed an invalid DNS configuration.
+
+I resolved this by updating the appropriate A and CNAME records within IONOS using the values provided by Vercel.
+
+Both the root domain and www subdomain subsequently became accessible.
+
+**Preserving Email Functionality**
+
+Because I was using IONOS for email hosting, I needed to ensure that connecting the website to Vercel would not interfere with incoming or outgoing mail.
+
+I kept the email-related DNS records intact and subsequently verified that the mailbox was working.
+
+**GitHub Desktop Branch Confusion**
+
+After switching to `main` in GitHub Desktop, my homepage appeared to have reverted to an earlier version.
+
+I discovered that the latest changes were present on `feature/homepage`, rather than the local `main` branch.
+
+Switching back restored the expected files and reinforced my understanding of how Git manages independent branches.
+
+### Technical Decisions
+- Selected Vercel for managed Next.js hosting and future server-side functionality.
+- Used IONOS for domain registration, DNS management and email hosting.
+- Kept website hosting and email hosting separate to allow independent configuration.
+- Continued using Git feature branches to isolate development changes from the main branch.
+- Chose to deploy the initial homepage before completing the entire full-stack application, allowing the website to evolve through future releases.
+
+### Next Steps
+- Merge the completed homepage changes into `main`, after reviewing and committing any remaining work.
+- Configure `www.anrajplahe.com` to redirect permanently to `anrajplahe.com`.
+- Configure email forwarding to my personal inbox.
+- Confirm Domain Guard activation.
+- Test an automatic production deployment following a GitHub merge.
+- Continue improving the homepage's component structure.
+- Begin developing dedicated pages and backend functionality.
+
+### Project Milestone
+
+**First public deployment completed.**
+
+My personal website is now accessible at:
+
+https://anrajplahe.com
+
+This marks the transition from a locally developed application to a publicly accessible website with a custom domain, production hosting and a professional email address.
