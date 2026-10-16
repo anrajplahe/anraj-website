@@ -6,7 +6,7 @@ export default function Navbar() {
 
         {/* Website Logo */}
         <a href="/" className="text-2xl font-bold tracking-tight">
-          anraj<span className="text-green-400">plahe</span>
+          <span className="text-green-400">anraj</span>plahe
         </a>
 
         {/* Navigation Links */}
