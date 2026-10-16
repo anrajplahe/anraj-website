@@ -51,7 +51,7 @@ export default function Home() {
           <h1 className="max-w-4xl text-4xl font-bold tracking-tight sm:text-5xl md:text-7xl">
             Hi, I'm <span className="text-green-400">Anraj</span>.
             <span className="mt-3 block text-gray-400">
-              Here's little bit about me.
+              Here's a little bit about me.
             </span>
           </h1>
 
