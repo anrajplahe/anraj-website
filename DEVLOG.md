@@ -121,3 +121,54 @@ After implementing the initial homepage, I decided to change the primary accent 
 - Test the homepage on different screen sizes.
 - Continue developing the remaining website sections.
 - Add social media links to the appropriate parts of the website.
+
+## 16 October 2026 — Homepage Styling and Social Integration
+
+### Objectives
+- Refine the visual design of the homepage.
+- Improve the main call-to-action button.
+- Introduce social media links.
+- Establish a consistent colour scheme for the interest cards.
+
+### Completed
+- Updated the homepage's colour scheme with individual accent colours for each interest:
+  - Software & Projects — Purple
+  - Tech & Gear — Cyan
+  - Bhangra — Yellow
+  - Music — Pink
+- Improved the "Take a look" button using Space Grotesk, gradient styling, shadows and hover animations.
+- Added LinkedIn, Instagram and TikTok icons to the website footer using React Icons.
+- Added Anahat Bhangra's Instagram, TikTok and email contact links to the Bhangra card.
+- Used conditional rendering to display Anahat's links only within the Bhangra card.
+- Investigated npm dependency security warnings using `npm audit` and `npm audit --omit=dev`.
+
+### What I Learned
+- How to integrate external React component libraries such as React Icons.
+- How to customise typography using Next.js font utilities.
+- How Tailwind CSS supports hover animations, transitions and custom shadows.
+- How conditional rendering works in React.
+- How `mailto:` links can open a user's email application without backend functionality.
+- How to investigate dependency vulnerabilities and distinguish development dependencies from production dependencies.
+
+### Challenges and Solutions
+
+**Dependency security warnings**
+
+Installing React Icons revealed five high-severity vulnerabilities. I investigated the affected dependency chain and confirmed that the production dependency audit reported zero vulnerabilities. I also learned why forcing major dependency changes can introduce compatibility issues.
+
+**Button styling**
+
+The original call-to-action button looked too basic. I experimented with a more expressive design using a gradient, improved typography and an animated arrow, then adjusted the arrow to face right.
+
+### Design Decisions
+- Chose to keep the interest cards minimal, without background photography or excessive visual effects.
+- Assigned each interest a distinct accent colour while maintaining a consistent dark theme.
+- Placed personal social accounts in the footer and Anahat's contact links within the Bhangra card.
+- Decided to reserve more expressive imagery and animations for dedicated pages.
+
+### Next Steps
+- Fix minor text formatting and spacing inconsistencies.
+- Refactor the interest cards into reusable React components.
+- Introduce TypeScript interfaces for component props.
+- Improve the overall component structure.
+- Continue testing responsiveness and accessibility.
