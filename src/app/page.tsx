@@ -1,17 +1,11 @@
 
 import Navbar from "@/components/Navbar";
-import { Space_Grotesk } from "next/font/google";
 import {
   FaLinkedinIn,
   FaInstagram,
   FaTiktok,
 } from "react-icons/fa6";
 import { HiOutlineEnvelope } from "react-icons/hi2";
-
-const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
-});
 
 const interests = [
   {
@@ -49,19 +43,19 @@ export default function Home() {
       {/* Hero Section */}
       <section
         id="about"
-        className="relative mx-auto max-w-6xl px-6 py-24 md:py-36"
+        className="relative mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24 md:py-36"
       >
         <div className="pointer-events-none absolute right-0 top-12 -z-0 h-64 w-64 rounded-full bg-green-600/10 blur-3xl" />
 
         <div className="relative z-10">
-          <h1 className="max-w-4xl text-5xl font-bold tracking-tight md:text-7xl">
+          <h1 className="max-w-4xl text-4xl font-bold tracking-tight sm:text-5xl md:text-7xl">
             Hi, I'm <span className="text-green-400">Anraj</span>.
             <span className="mt-3 block text-gray-400">
               Here's little bit about me.
             </span>
           </h1>
 
-          <p className="mt-8 max-w-2xl text-lg leading-relaxed text-gray-400">
+          <p className="mt-6 max-w-2xl text-base leading-relaxed text-gray-400 sm:mt-8 sm:text-lg">
             I'm passionate about software, technology, Bhangra and music.
             This is my space to share what I'm building, learning and
             enjoying along the way.
@@ -70,20 +64,19 @@ export default function Home() {
           
 <a
   href="#interests"
-  className={`
-    ${spaceGrotesk.className}
+  className="
     group mt-10 inline-flex items-center gap-4
     rounded-2xl border border-green-200/40
     bg-gradient-to-br from-green-300 via-green-400 to-green-600
     px-6 py-3
-    text-base font-semibold tracking-wide text-green-950
+    text-base font-semibold tracking-normal text-green-950
     shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_10px_30px_rgba(34,197,94,0.22)]
     transition-all duration-300
     motion-safe:hover:-translate-y-1
     hover:shadow-[0_16px_40px_rgba(34,197,94,0.35)]
     focus-visible:outline-2 focus-visible:outline-offset-4
     focus-visible:outline-green-300
-  `}
+  "
 >
   <span>Take a look</span>
 
@@ -95,10 +88,12 @@ export default function Home() {
       text-xl transition-transform duration-300
       motion-safe:group-hover:translate-x-1
       motion-safe:group-hover:-translate-y-1
-    ">
+    "
+  >
     →
   </span>
 </a>
+
 
         </div>
       </section>
@@ -106,9 +101,9 @@ export default function Home() {
       {/* Interests Section */}
       <section
         id="interests"
-        className="mx-auto max-w-6xl px-6 pb-28"
+        className="mx-auto max-w-6xl px-4 pb-16 sm:px-6 sm:pb-28"
       >
-        <h2 className="mb-8 text-3xl font-bold">
+        <h2 className="mb-6 text-2xl font-bold sm:mb-8 sm:text-3xl">
           Things I'm into.
         </h2>
 
@@ -116,13 +111,13 @@ export default function Home() {
           {interests.map((interest) => (
             <div
               key={interest.title}
-              className="rounded-2xl border border-white/10 bg-[#191D2B] p-8 transition duration-300 motion-safe:hover:-translate-y-1 hover:border-green-400/40"
+              className="rounded-2xl border border-white/10 bg-[#191D2B] p-5 transition duration-300 sm:p-8 motion-safe:hover:-translate-y-1 hover:border-green-400/40"
             >
               <span className={`text-3xl font-bold ${interest.colour}`}>
                 {interest.symbol}
               </span>
 
-              <h3 className="mt-10 text-xl font-semibold">
+              <h3 className="mt-8 text-lg font-semibold sm:mt-10 sm:text-xl">
                 {interest.title}
               </h3>
 
@@ -131,7 +126,7 @@ export default function Home() {
               </p>
 
 {interest.title === "Bhangra" && (
-  <div className="mt-5 flex items-center gap-4">
+  <div className="mt-5 flex flex-wrap items-center gap-3 sm:gap-4">
     <a
       href="https://www.instagram.com/anahatbhangra/"
       target="_blank"
@@ -182,7 +177,7 @@ export default function Home() {
       
 {/* Footer */}
 <footer className="border-t border-white/10">
-  <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-5 px-6 py-8 sm:flex-row">
+  <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-5 px-4 py-7 sm:flex-row sm:px-6 sm:py-8">
 
     <p className="text-sm text-gray-400">
       Built by Anraj
