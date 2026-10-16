@@ -54,12 +54,8 @@ export default function Home() {
         <div className="pointer-events-none absolute right-0 top-12 -z-0 h-64 w-64 rounded-full bg-green-600/10 blur-3xl" />
 
         <div className="relative z-10">
-          <p className="mb-6 text-sm font-medium uppercase tracking-widest text-green-400">
-            Welcome!
-          </p>
-
           <h1 className="max-w-4xl text-5xl font-bold tracking-tight md:text-7xl">
-            I'm <span className="text-green-400">Anraj</span>.
+            Hi, I'm <span className="text-green-400">Anraj</span>.
             <span className="mt-3 block text-gray-400">
               Here's little bit about me.
             </span>
