@@ -291,3 +291,60 @@ My personal website is now accessible at:
 https://anrajplahe.com
 
 This marks the transition from a locally developed application to a publicly accessible website with a custom domain, production hosting and a professional email address.
+
+## 16 October 2026 — Website Identity, Metadata & Deployment
+
+### What I worked on
+
+Following the initial deployment of my personal website, I focused on improving its identity and ensuring that changes could be tested and deployed reliably.
+
+**Website branding and metadata**
+- Updated the website's browser title and description through Next.js metadata configuration in `src/app/layout.tsx`.
+- Added metadata for search engines and social media sharing, including Open Graph properties.
+- Designed a custom `ap` favicon using a green `a` and white `p`, reflecting my website's existing branding.
+- Used the Geist Bold font to maintain consistency with the navigation logo.
+- Generated the favicon programmatically using Next.js `ImageResponse` in `src/app/icon.tsx`.
+- Removed the default Next.js favicon.
+
+**Git, GitHub and deployment**
+- Worked on the `feature/site-identity` branch to keep development separate from production.
+- Staged, committed and pushed changes to GitHub.
+- Created and merged a pull request into `main`.
+- Used Vercel preview deployments to inspect changes before publishing them.
+- Verified the deployment of the updated website to my custom domain, `anrajplahe.com`.
+
+### Challenges and lessons learned
+
+**Understanding Git stages**
+
+I encountered an issue where GitHub reported that there was nothing to compare between my feature branch and `main`.
+
+By inspecting `git status` and `git log`, I discovered that although I had staged my changes, I had not yet committed them.
+
+This helped reinforce the distinction between staging, committing and pushing, and why each stage is necessary.
+
+**Production deployments versus previews**
+
+I also learned that Vercel preview deployments are separate from the version served on my production domain. Pushing a feature branch does not automatically update the live website; the changes must first be merged into the production branch.
+
+**Favicon caching**
+
+After deployment, Safari continued showing the original Next.js favicon even though the new icon was accessible on the live domain. I investigated the icon URLs and browser caching before resolving the issue.
+
+This highlighted the difference between a deployment problem and a browser-side caching issue.
+
+### What I learned
+
+- How Git branches and pull requests support controlled development.
+- The differences between `git add`, `git commit`, `git push` and merging.
+- How Vercel preview and production deployments work.
+- How Next.js generates metadata and application icons.
+- How to integrate a custom font into a generated favicon.
+- How to troubleshoot discrepancies between local development and production.
+
+### Next steps
+
+- Review and improve mobile responsiveness.
+- Test the website across multiple viewport sizes.
+- Refactor repeated homepage UI into reusable React components.
+- Begin developing the individual interest pages.
