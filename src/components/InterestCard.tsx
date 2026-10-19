@@ -29,7 +29,7 @@ export default function InterestCard({
   return (
     <div
       className={`
-        relative rounded-2xl border border-white/10
+        relative h-full rounded-2xl border border-white/10
         bg-[#191D2B] p-5 transition-all duration-300 sm:p-8
         ${hoverColours[colour] ?? "hover:border-white/20"}
         ${href ? "motion-safe:hover:-translate-y-1" : ""}
