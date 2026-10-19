@@ -55,12 +55,6 @@ The aim is to create a space that reflects who I am beyond my professional backg
 
 ### Installation
 
-Clone the repository:
-
-```bash
-git clone https://github.com/YOUR_USERNAME/anraj-website.git
-```
-
 Navigate into the project:
 
 ```bash
