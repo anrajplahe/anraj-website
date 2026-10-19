@@ -556,3 +556,98 @@ This provided an opportunity to consider how frontend pages could eventually con
 - Implement secure authentication for a private publishing dashboard.
 - Eventually support creating, editing and deleting posts containing text, photographs, videos and embedded social media content.
 - Continue improving the website's accessibility, responsiveness and overall user experience.
+
+## 19 October 2026 — Projects Page & UI Refinements
+
+### What I worked on
+
+With the core pages of my personal website established, I created a dedicated **Projects** page to begin showcasing my software development work.
+
+Rather than waiting until all my previous projects are ready to share, I decided to feature the website itself as my first project. This allows me to demonstrate what I've built so far while continuing to expand the portfolio.
+
+**Projects page**
+- Created a new route at `/projects` using the Next.js App Router.
+- Added my personal website as the first featured project, including a description, technology stack and implemented features.
+- Used a data-driven structure to store project information in an array and render it dynamically using React's `.map()` method.
+- Included technologies such as Next.js, React, TypeScript, Tailwind CSS, Git, GitHub and Vercel.
+- Added a GitHub source code button linking directly to the website's repository.
+- Included a section explaining that additional projects will be added as I revisit and organise my existing work.
+- Added page-specific metadata for the Projects page.
+
+**Design and user experience**
+- Designed the Projects page using a minimalist, editorial layout rather than traditional project cards.
+- Used subtle dividers, typography and spacing to distinguish sections without making the project information appear clickable.
+- Maintained violet as the Projects section's accent colour.
+- Refined the GitHub source code link into a subtle outlined button, incorporating the GitHub icon and hover effects.
+- Removed unnecessary links and visual dividers to simplify the page.
+
+**Homepage improvements**
+- Connected the Projects interest card to the new `/projects` route.
+- Removed the "Take a look" button from the homepage hero section to simplify the layout and reduce unnecessary navigation.
+- Preserved the existing interest cards as the primary way for visitors to explore the website.
+
+**Shared Footer**
+- Added a GitHub profile link to the shared Footer component.
+- Organised the social links in the following order: LinkedIn, GitHub, Instagram and TikTok.
+- Maintained consistent styling, hover effects and accessibility labels across the social links.
+- Used the existing shared layout to ensure the Footer updates automatically across all pages.
+
+### Challenges and lessons learned
+
+**Distinguishing static content from interactive elements**
+
+While designing the Projects page, I realised that using traditional rounded cards made the project information look clickable, even though it was intended to be read.
+
+I changed the design to a more editorial layout, removing unnecessary backgrounds and hover effects while keeping actual links clearly interactive.
+
+This reinforced the importance of visual hierarchy and ensuring that interface elements communicate their purpose.
+
+**Structuring a portfolio for future expansion**
+
+Rather than hardcoding each individual project, I used a JavaScript array to store project details.
+
+This provides a consistent structure for future projects and makes it easier to add new entries without duplicating large amounts of JSX.
+
+**Simplifying the user experience**
+
+I reviewed several elements of the website and removed those that felt unnecessary, including the homepage's "Take a look" button and a redundant link to the website from its own project entry.
+
+This helped reinforce the idea that a cleaner interface can often be achieved by removing elements rather than adding more.
+
+### What I learned
+
+- Building additional pages with the Next.js App Router.
+- Structuring reusable, data-driven project listings.
+- Rendering nested project information using React.
+- Designing clear visual distinctions between static content and interactive elements.
+- Styling accessible links and buttons using Tailwind CSS.
+- Refining layouts through iterative development and testing.
+- Maintaining shared React components across multiple pages.
+- Using Git feature branches, pull requests and Vercel previews to review changes before production deployment.
+
+### Next steps
+
+- Plan and begin developing backend functionality for the website.
+- Explore how to implement a private, authenticated publishing dashboard.
+- Introduce a database for storing Bhangra and Guitar & Music posts.
+- Investigate options for uploading photographs, videos and embedding social media content.
+- Continue organising existing software projects for future inclusion in the Projects section.
+- Explore automated testing and CI/CD improvements as the project grows.
+
+## 19 October 2026 — Responsive Navigation
+
+### What I worked on
+
+- Updated the shared Navbar to display different layouts depending on the current page.
+- Kept the homepage minimal, with only the centred website logo.
+- Added navigation buttons for Projects, Tech I Use, Bhangra and Guitar & Music on individual pages.
+- Used Next.js `usePathname()` to identify the current route and highlight the active section using its corresponding accent colour.
+- Implemented responsive positioning, with the logo on the left and navigation buttons on the right on desktop, adapting for smaller screens.
+- Used Next.js `Link` components for navigation between pages.
+
+### What I learned
+
+- Using Client Components and Next.js navigation hooks.
+- Implementing conditional rendering based on the current route.
+- Creating responsive navigation layouts with Tailwind CSS.
+- Improving navigation and visual feedback while maintaining a consistent design.
