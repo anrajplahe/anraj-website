@@ -1,5 +1,3 @@
-
-import Navbar from "@/components/Navbar";
 import InterestCard from "@/components/InterestCard";
 
 import {
@@ -9,19 +7,20 @@ import {
 } from "react-icons/fa6";
 
 // Interest card data
+
 const interests = [
   {
-    title: "Software & Projects",
-    description:
-      "A little insight into my tech journey and what I'm building.",
+    title: "Projects",
+    description: "A little insight into my tech journey and what I'm building.",
     symbol: "</>",
     colour: "text-violet-400",
   },
   {
-    title: "Tech & Gear",
-    description: "Software and hardware I use and love.",
+    title: "Tech",
+    description: "The tech I use and love.",
     symbol: "⌘",
     colour: "text-cyan-400",
+    href: "/tech",
   },
   {
     title: "Bhangra",
@@ -30,7 +29,7 @@ const interests = [
     colour: "text-yellow-400",
   },
   {
-    title: "Music",
+    title: "Guitar & Music",
     description: "Guitars, sounds and random musings.",
     symbol: "♫",
     colour: "text-pink-400",
@@ -39,10 +38,7 @@ const interests = [
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-[#0B0D14] text-white">
-
-      {/* Navigation */}
-      <Navbar />
+    <main className="flex-1 bg-[#0B0D14] text-white">
 
       {/* Hero Section */}
       <section
@@ -124,6 +120,7 @@ export default function Home() {
               description={interest.description}
               symbol={interest.symbol}
               colour={interest.colour}
+              href={interest.href}
             />
           ))}
         </div>
