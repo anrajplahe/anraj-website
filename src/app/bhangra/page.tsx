@@ -5,10 +5,106 @@ import { FaInstagram, FaTiktok } from "react-icons/fa6";
 export const metadata: Metadata = {
   title: "Bhangra",
   description:
-    "A little insight into my world of Bhangra, from teaching to performing and competing.",
+    "My experiences in Bhangra, from competing and performing to coaching and teaching.",
   alternates: {
     canonical: "/bhangra",
   },
+};
+
+// Types for competition history
+type CompetitionEntry = {
+  team: string;
+  competition: string;
+  role?: "Captain" | "Coach";
+  placing?: "1st Place" | "2nd Place" | "3rd Place";
+};
+
+type CompetitionYear = {
+  year: number;
+  entries: CompetitionEntry[];
+};
+
+// Competition history organised by year
+const competitionHistory: CompetitionYear[] = [
+  {
+    year: 2022,
+    entries: [
+      {
+        team: "Ankhi Jawan",
+        competition: "World Class Bhangra",
+        placing: "2nd Place",
+      },
+    ],
+  },
+  {
+    year: 2023,
+    entries: [
+      {
+        team: "Loughborough × Nottingham Trent University",
+        competition: "The Bhangra Showdown",
+        role: "Captain",
+      },
+      {
+        team: "Ranjhe",
+        competition: "World Class Bhangra",
+        placing: "2nd Place",
+      },
+    ],
+  },
+  {
+    year: 2024,
+    entries: [
+      {
+        team: "Loughborough × Nottingham Trent University",
+        competition: "The Bhangra Showdown",
+        role: "Captain",
+      },
+      {
+        team: "Ranjhe",
+        competition: "Bhangra Beatdown",
+        placing: "1st Place",
+      },
+    ],
+  },
+  {
+    year: 2025,
+    entries: [
+      {
+        team: "Westminster × University College London",
+        competition: "The Bhangra Showdown",
+        role: "Coach",
+      },
+      {
+        team: "Ranjhe",
+        competition: "Bhangra Beatdown",
+      },
+    ],
+  },
+  {
+    year: 2026,
+    entries: [
+      {
+        team: "Raunak Bhangra",
+        competition: "The Bhangra Virsa Festival",
+        placing: "3rd Place",
+      },
+      {
+        team: "Ranjhe",
+        competition: "Bhangra Beatdown",
+        placing: "1st Place",
+      },
+    ],
+  },
+];
+
+// Gold, silver and bronze placing colours
+const placingColours: Record<
+  NonNullable<CompetitionEntry["placing"]>,
+  string
+> = {
+  "1st Place": "text-[#E8B84B]",
+  "2nd Place": "text-[#CDD5DF]",
+  "3rd Place": "text-[#CD9467]",
 };
 
 export default function BhangraPage() {
@@ -16,34 +112,107 @@ export default function BhangraPage() {
     <main className="flex-1 bg-[#0B0D14] text-white">
       <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
 
-        {/* Page Title */}
+        {/* Page Introduction */}
         <h1 className="text-4xl font-bold tracking-tight text-yellow-400 sm:text-5xl">
           Bhangra
         </h1>
 
-        {/* Introduction */}
         <div className="mt-8 max-w-2xl space-y-5 text-base leading-relaxed text-gray-400 sm:text-lg">
           <p>
-            Bhangra is a huge part of my life. I dance and compete
-            with Ranjhe, and I also run my own Bhangra academy,
-            Anahat Bhangra, where I teach classes and workshops. I've even been learning dhol so I can teach a more traditional style of Bhangra.
+            Bhangra is a huge part of my life. I dance and
+            compete with Ranjhe, and I also run my own
+            Bhangra academy, Anahat, where I teach
+            classes and workshops.
           </p>
 
           <p>
-            Between teaching, rehearsals, performances and
-            competitions, there's always something going on!
+            Between teaching, rehearsals, performances
+            and competitions, there's usually something
+            going on!
           </p>
 
           <p>
-            I'll be using this space to share some of the things
-            I've been getting up to, whether that's something
-            with Anahat, Ranjhe or just bhangra in general.
+            I'll be using this space to share some of
+            the things I've been getting up to, whether
+            that's something with Anahat, Ranjhe or just
+            Bhangra in general.
           </p>
         </div>
 
-        {/* Social Links */}
-        <div className="mt-12 max-w-2xl border-t border-white/15 pt-6">
-          <p className="mb-5 text-sm text-gray-400">
+        {/* Competition History */}
+        <section
+          aria-labelledby="competition-heading"
+          className="mt-16"
+        >
+          <h2
+            id="competition-heading"
+            className="text-2xl font-bold tracking-tight text-white sm:text-3xl"
+          >
+            Competition History
+          </h2>
+
+          <p className="mt-4 max-w-2xl leading-relaxed text-gray-400">
+            The teams I've competed with, captained and
+            coached over the years.
+          </p>
+
+          {/* Year-by-year history */}
+          <div className="mt-10 max-w-4xl space-y-8">
+            {competitionHistory.map((year) => (
+              <section
+                key={year.year}
+                aria-label={`${year.year} competitions`}
+                className="flex items-start gap-4 sm:gap-8"
+              >
+                {/* Year */}
+                <div className="w-12 shrink-0 pt-3">
+                  <h3 className="font-semibold text-yellow-400">
+                    {year.year}
+                  </h3>
+                </div>
+
+                {/* Competition Entries */}
+                <div className="min-w-0 flex-1 space-y-6 border-t border-white/15 pt-3">
+                  {year.entries.map((entry) => (
+                    <div
+                      key={`${entry.team}-${entry.competition}`}
+                    >
+                      {/* Team and Role */}
+                      <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                        <h4 className="text-sm font-semibold text-white sm:text-base">
+                          {entry.team}
+                        </h4>
+
+                        {entry.role && (
+                          <span className="text-xs italic text-slate-400">
+                            ({entry.role})
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Competition and Placing */}
+                      <p className="mt-1 text-sm leading-relaxed text-gray-400">
+                        {entry.competition}
+
+                        {entry.placing && (
+                          <span
+                            className={`ml-2 font-medium italic ${placingColours[entry.placing]}`}
+                          >
+                            ({entry.placing})
+                          </span>
+                        )}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            ))}
+          </div>
+        </section>
+
+        {/* Anahat Social Links */}
+        <div className="mt-16 max-w-2xl border-t border-white/15 pt-6">
+          <p className="mb-4 text-sm font-medium text-white">
             Follow Anahat Bhangra
           </p>
 
@@ -52,20 +221,20 @@ export default function BhangraPage() {
               href="https://www.instagram.com/anahatbhangra/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-gray-300 transition-colors hover:text-yellow-400"
+              className="inline-flex items-center gap-2 text-sm text-gray-400 transition-colors hover:text-yellow-400"
             >
-              <FaInstagram size={20} />
-              <span>Instagram</span>
+              <FaInstagram size={18} aria-hidden="true" />
+              Instagram
             </a>
 
             <a
               href="https://www.tiktok.com/@anahatbhangra"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-gray-300 transition-colors hover:text-yellow-400"
+              className="inline-flex items-center gap-2 text-sm text-gray-400 transition-colors hover:text-yellow-400"
             >
-              <FaTiktok size={20} />
-              <span>TikTok</span>
+              <FaTiktok size={18} aria-hidden="true" />
+              TikTok
             </a>
           </div>
         </div>
