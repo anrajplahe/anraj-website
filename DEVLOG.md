@@ -412,3 +412,83 @@ The website previously used different fonts in certain areas, which affected its
 - Create reusable layouts and components for the new pages.
 - Develop the Software & Projects page to showcase completed projects, technical skills and ongoing learning.
 - Explore adding backend functionality and dynamic content in future development stages.
+
+## 19 October 2026 — Tech Page & Shared Layout
+
+### What I worked on
+
+Following the completion of my homepage and its responsive design, I began expanding the website with its first dedicated section: **Tech**.
+
+This development stage focused on Next.js routing, shared layouts, data-driven content and creating a consistent visual experience across different pages.
+
+**Next.js routing and shared layouts**
+- Created the `src/app/tech/page.tsx` route, making the Tech page accessible at `/tech`.
+- Moved the navigation component into `src/app/layout.tsx`, allowing the same Navbar to appear automatically across the website.
+- Updated navigation links so they correctly return to homepage sections from other pages.
+- Added page-specific metadata, including the browser title, description and canonical URL.
+
+**Tech I Use page**
+- Created a dedicated page showcasing the technology and equipment I use.
+- Added my iPhone 16 Pro Max, MacBook Pro with M3 Pro and AirPods Pro 2.
+- Organised device information in a JavaScript array containing names, categories, icons and specifications.
+- Used React's `.map()` method to generate the device listings dynamically.
+- Added detailed specifications covering processors, memory, storage, displays and device features.
+- Implemented a responsive grid using Tailwind CSS.
+- Refined the design from traditional cards into minimalist informational listings, using subtle dividers and cyan icons.
+- Added custom bullet-point alignment to ensure device specifications line up consistently with their headings.
+
+**Homepage improvements**
+- Made the Tech I Use interest card clickable using Next.js `Link`.
+- Extended the reusable `InterestCard` component with an optional `href` prop.
+- Updated the interest cards to use their individual accent colours for hover effects instead of a universal green.
+- Returned the homepage card titles to white while preserving coloured symbols.
+- Kept dedicated page titles in their respective accent colours.
+
+### Challenges and lessons learned
+
+**Understanding shared layouts**
+
+Initially, the Navbar was imported separately into individual pages. Moving it into the root layout demonstrated how Next.js can share interface elements between routes without duplicating code.
+
+This also introduced a styling issue where the Navbar displayed a white background instead of the website's dark theme.
+
+I investigated the global CSS and layout styling before applying an explicit background colour to the Navbar component.
+
+**Distinguishing navigation from information**
+
+My initial equipment cards looked too similar to the clickable interest cards on the homepage.
+
+I redesigned them as static informational listings without hover animations or raised card backgrounds. This helped me understand the importance of visual cues in user interface design.
+
+**Data-driven rendering**
+
+Rather than creating separate JSX for every device, I stored the device information in an array and rendered it using `.map()`.
+
+I also added nested arrays for device specifications, allowing the page to display variable amounts of information without duplicating its structure.
+
+**Development and deployment workflow**
+
+I continued using Git feature branches to separate development from production, testing changes locally before committing and pushing them.
+
+I also gained more experience troubleshooting situations where local changes were not immediately reflected in the development server.
+
+### What I learned
+
+- Next.js App Router and file-based routing.
+- Shared layouts and reusable navigation components.
+- Page-specific metadata.
+- Data-driven rendering with React.
+- Nested arrays and `.map()`.
+- Optional props and conditional navigation.
+- Responsive grid layouts with Tailwind CSS.
+- CSS flexbox alignment and text wrapping.
+- Consistent UI styling and distinguishing interactive from non-interactive elements.
+- Using Git branches, commits, pull requests and Vercel preview deployments.
+
+### Next steps
+
+- Create introductory Bhangra and Guitar & Music pages.
+- Connect the remaining homepage interest cards to their respective pages.
+- Explore building a private content management system to publish personal updates, photographs and videos.
+- Investigate authentication, database integration and media storage for future dynamic content.
+- Return to the Projects section once I have organised and prepared my existing work for presentation.
