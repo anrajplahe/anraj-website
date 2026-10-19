@@ -492,3 +492,67 @@ I also gained more experience troubleshooting situations where local changes wer
 - Explore building a private content management system to publish personal updates, photographs and videos.
 - Investigate authentication, database integration and media storage for future dynamic content.
 - Return to the Projects section once I have organised and prepared my existing work for presentation.
+
+## 19 October 2026 — Bhangra & Music Pages, Shared Footer
+
+### What I worked on
+
+With the homepage and Tech I Use page established, I continued expanding my personal website by creating dedicated pages for two of my other interests: Bhangra and music.
+
+The focus was on introducing these areas of my life while keeping the design consistent, the code maintainable and the website ready for future expansion.
+
+**Bhangra page**
+- Created a new route at `/bhangra` using the Next.js App Router.
+- Added a personal introduction covering my involvement in Bhangra, including dancing and competing with Ranjhe and running Anahat Bhangra Academy.
+- Included links to Anahat's Instagram and TikTok accounts.
+- Used the existing dark theme and yellow accent colour to maintain consistency with the homepage.
+
+**Guitar & Music page**
+- Created a new route at `/music`.
+- Added an introduction to my interest in guitar, recording, music production and experimenting with different sounds.
+- Applied the same page structure as the Bhangra section, using pink as its accent colour.
+- Kept the initial page intentionally simple, allowing it to be expanded with guitar covers and recordings later.
+
+**Shared components and navigation**
+- Extracted the homepage Footer into a reusable `Footer.tsx` component.
+- Added the Footer to the root `layout.tsx`, allowing it to appear automatically across all pages.
+- Removed the original Footer JSX and its unused imports from the homepage.
+- Updated the Bhangra and Guitar & Music interest cards with their respective routes.
+- Preserved consistent navigation, styling and social media links throughout the website.
+
+### Challenges and lessons learned
+
+**Working with shared layouts**
+
+Having previously moved the Navbar into the root layout, I applied the same principle to the Footer.
+
+This reinforced how shared layouts reduce duplicated code and ensure consistency between pages. It also means that future pages automatically inherit the website's navigation and footer.
+
+**Planning for future functionality**
+
+While designing the Bhangra and Guitar & Music pages, I considered how I would eventually like to publish updates directly to the website.
+
+Rather than maintaining static pages indefinitely, my longer-term aim is to introduce a private dashboard where I can sign in, create posts, and share photographs, videos and guitar covers.
+
+I also explored the possibility of embedding existing social media content alongside posts published directly to the website.
+
+This provided an opportunity to consider how frontend pages could eventually connect to backend functionality, including authentication, databases and media storage.
+
+### What I learned
+
+- Creating additional routes using the Next.js App Router.
+- Reusing components across multiple pages.
+- Managing shared UI through `layout.tsx`.
+- Separating page-specific content from shared website elements.
+- Maintaining consistent responsive styling and visual design.
+- Planning the transition from static content to dynamically managed posts.
+- Considering authentication, media storage and database requirements for future features.
+
+### Next steps
+
+- Organise existing software projects before developing the Projects section.
+- Plan a shared content management system for Bhangra and Guitar & Music.
+- Explore Next.js backend functionality, including Route Handlers and database integration.
+- Implement secure authentication for a private publishing dashboard.
+- Eventually support creating, editing and deleting posts containing text, photographs, videos and embedded social media content.
+- Continue improving the website's accessibility, responsiveness and overall user experience.
