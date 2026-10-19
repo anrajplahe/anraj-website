@@ -22,7 +22,7 @@ export default function InterestCard({
         {symbol}
       </span>
 
-      <h3 className="mt-8 text-lg font-semibold sm:mt-10 sm:text-xl">
+      <h3 className={`mt-8 text-lg font-semibold sm:mt-10 sm:text-xl ${colour}`}>
         {title}
       </h3>
 
