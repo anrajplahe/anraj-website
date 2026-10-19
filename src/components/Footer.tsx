@@ -1,6 +1,7 @@
 
 import {
   FaLinkedinIn,
+  FaGithub,
   FaInstagram,
   FaTiktok,
 } from "react-icons/fa6";
@@ -27,6 +28,17 @@ export default function Footer() {
             className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-[#191D2B] text-gray-300 transition-all duration-200 hover:-translate-y-1 hover:border-green-400/50 hover:text-green-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
           >
             <FaLinkedinIn size={18} />
+          </a>
+
+          {/* GitHub */}
+          <a
+            href="https://github.com/anrajplahe"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="GitHub"
+            className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-[#191D2B] text-gray-300 transition-all duration-200 hover:-translate-y-1 hover:border-green-400/50 hover:text-green-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
+          >
+            <FaGithub size={19} />
           </a>
 
           {/* Instagram */}

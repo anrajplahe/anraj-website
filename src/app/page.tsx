@@ -4,10 +4,11 @@ import InterestCard from "@/components/InterestCard";
 
 const interests = [
   {
-    title: "Projects",
-    description: "A little insight into my tech journey and what I'm building.",
-    symbol: "</>",
-    colour: "text-violet-400",
+  title: "Projects",
+  description: "A little insight into my tech journey and what I'm building.",
+  symbol: "</>",
+  colour: "text-violet-400",
+  href: "/projects",
   },
   {
     title: "Tech",
@@ -46,7 +47,6 @@ export default function Home() {
         <div className="pointer-events-none absolute right-0 top-12 -z-0 h-64 w-64 rounded-full bg-green-600/10 blur-3xl" />
 
         <div className="relative z-10">
-
           {/* Introduction */}
           <h1 className="max-w-4xl text-4xl font-bold tracking-tight sm:text-5xl md:text-7xl">
             Hi, I'm <span className="text-green-400">Anraj</span>.
@@ -62,40 +62,6 @@ export default function Home() {
             This is my space to share what I'm building, learning and
             enjoying along the way.
           </p>
-
-          {/* Explore Button */}
-          <a
-            href="#interests"
-            className="
-              group mt-10 inline-flex items-center gap-4
-              rounded-2xl border border-green-200/40
-              bg-gradient-to-br from-green-300 via-green-400 to-green-600
-              px-6 py-3
-              text-base font-semibold tracking-normal text-green-950
-              shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_10px_30px_rgba(34,197,94,0.22)]
-              transition-all duration-300
-              motion-safe:hover:-translate-y-1
-              hover:shadow-[0_16px_40px_rgba(34,197,94,0.35)]
-              focus-visible:outline-2 focus-visible:outline-offset-4
-              focus-visible:outline-green-300
-            "
-          >
-            <span>Take a look</span>
-
-            <span
-              aria-hidden="true"
-              className="
-                flex h-9 w-9 items-center justify-center
-                rounded-xl bg-green-950/15
-                text-xl transition-transform duration-300
-                motion-safe:group-hover:translate-x-1
-                motion-safe:group-hover:-translate-y-1
-              "
-            >
-              →
-            </span>
-          </a>
-
         </div>
       </section>
 
