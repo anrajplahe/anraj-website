@@ -16,10 +16,11 @@ const interests = [
     colour: "text-violet-400",
   },
   {
-    title: "Tech I Use",
-    description: "Software and hardware I use and love.",
+    title: "Tech",
+    description: "The tech I use and love.",
     symbol: "⌘",
     colour: "text-cyan-400",
+    href: "/tech",
   },
   {
     title: "Bhangra",
@@ -119,6 +120,7 @@ export default function Home() {
               description={interest.description}
               symbol={interest.symbol}
               colour={interest.colour}
+              href={interest.href}
             />
           ))}
         </div>
