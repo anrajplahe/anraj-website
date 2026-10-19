@@ -348,3 +348,67 @@ This highlighted the difference between a deployment problem and a browser-side 
 - Test the website across multiple viewport sizes.
 - Refactor repeated homepage UI into reusable React components.
 - Begin developing the individual interest pages.
+
+## 19 October 2026 — Mobile Responsiveness & Component Refactoring
+
+### What I worked on
+
+Following the launch of my personal website, I focused on improving the homepage's responsiveness, maintaining consistent styling and restructuring the code to make it easier to maintain and extend.
+
+**Mobile responsiveness**
+- Improved the homepage layout for smaller screens using Tailwind CSS's mobile-first responsive utilities.
+- Adjusted the hero section's typography, spacing and padding across different screen sizes.
+- Refined the interest cards to use more appropriate spacing and text sizes on mobile devices.
+- Updated the Bhangra contact section to allow its social links and email button to wrap on narrower screens.
+- Improved navigation and footer spacing while preserving the existing desktop design.
+
+**Typography and visual consistency**
+- Standardised the website's typography around the Geist font.
+- Removed the separate Space Grotesk font previously used for the "Take a look" button.
+- Adjusted the button's letter spacing to match the rest of the website more closely.
+- Retained the existing colour scheme, gradients and animations.
+
+**React component refactoring**
+- Created a reusable `InterestCard.tsx` component in `src/components/`.
+- Moved the interest card JSX out of `page.tsx`, reducing repetition and improving the organisation of the homepage.
+- Defined a TypeScript type for the component's props, including its title, description, symbol and colour.
+- Used React props to pass data from the `interests` array in `page.tsx` to each card.
+- Preserved the Bhangra-specific social links using conditional rendering within the component.
+
+### Challenges and lessons learned
+
+**Understanding responsive design**
+
+I developed a better understanding of Tailwind CSS's mobile-first approach, particularly how breakpoint prefixes such as `sm:` and `md:` change the layout at different viewport widths.
+
+I also learned that responsive design involves more than resizing elements. Spacing, typography, content wrapping and usability all need to be considered.
+
+**Understanding React props and components**
+
+Previously, the JSX responsible for rendering my interest cards was written directly in `page.tsx`.
+
+By extracting this into a reusable component, I learned how to separate a component's data from its presentation.
+
+I also gained experience defining TypeScript prop types to help ensure components receive the correct information.
+
+**Maintaining consistency**
+
+The website previously used different fonts in certain areas, which affected its visual consistency. Standardising the typography reinforced the importance of having a coherent design system.
+
+### What I learned
+
+- Mobile-first responsive design with Tailwind CSS.
+- Responsive spacing, typography and layout techniques.
+- Creating and importing reusable React components.
+- Passing information between components using props.
+- Defining component properties with TypeScript.
+- Conditional rendering in React.
+- Improving code organisation and maintainability.
+
+### Next steps
+
+- Build dedicated pages for Software & Projects, Tech & Gear, Bhangra and Music.
+- Implement navigation between the homepage and individual pages using Next.js routing.
+- Create reusable layouts and components for the new pages.
+- Develop the Software & Projects page to showcase completed projects, technical skills and ongoing learning.
+- Explore adding backend functionality and dynamic content in future development stages.
