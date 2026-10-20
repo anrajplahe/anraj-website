@@ -1,653 +1,101 @@
 # Development Log
 
-This document tracks my progress, technical decisions, challenges and learning experiences throughout the development of my personal website.
+This log documents the significant technical milestones, decisions, challenges and lessons from building my personal website, [anrajplahe.com](https://anrajplahe.com). It focuses on development rather than routine updates to page content.
 
-## 12 October 2026 — Project Initialisation
+## 12 October 2026 — Project Setup & Version Control
 
-### Objectives
-- Set up my development environment.
-- Initialise a Next.js application.
-- Learn how to use Git and GitHub for version control.
-- Establish a structured development workflow.
+**What I built**
+- Initialised a Next.js application with TypeScript and Tailwind CSS, and set up my development environment in Visual Studio Code.
+- Connected the project to GitHub and established a workflow using feature branches, commits and pull requests.
+- Created the initial project documentation, including a README and this development log.
 
-### Completed
-- Created a Next.js project using TypeScript and Tailwind CSS.
-- Set up the project in Visual Studio Code.
-- Successfully launched the local development server.
-- Created and connected my GitHub repository.
-- Learned how to create Git commits and push changes.
-- Created my first feature branch.
-- Opened and merged my first pull request.
-- Created the initial README and development log files.
+**Challenges and lessons**
+- Learned to run and test the application locally using the Next.js development server before deploying it.
+- Investigated a Git error when the `origin` remote already existed and learned to inspect the repository's remote configuration.
+- Encountered an untracked file blocking a branch switch. This helped me understand how Git protects local work and when to preserve changes before switching branches.
+- Completed my first pull request and became more familiar with the distinction between local changes, commits, branches and merges.
 
-### What I Learned
-- The difference between Git and GitHub.
-- How branches allow features to be developed independently.
-- How commits record changes to a project's files.
-- How to connect a local repository to GitHub using a remote.
-- How pull requests are used to review and merge changes.
-- The difference between running an application locally and deploying it.
+## 16 October 2026 — Homepage & Frontend Foundations
 
-### Challenges and Solutions
+**What I built**
+- Replaced the Next.js starter page with a custom homepage and established a dark theme with individual accent colours for each interest.
+- Built the initial hero section and interest listings using React, JSX and Tailwind CSS.
+- Stored interest data in an array and rendered it with `.map()`, avoiding repeated markup.
+- Integrated React Icons and links to my personal social accounts and Anahat Bhangra's contact channels.
 
-**Running the application**
+**Decisions and lessons**
+- Chose to keep the homepage focused on a few clear sections instead of introducing complex functionality immediately.
+- Learned how React components, imports, conditional rendering, responsive utilities and external link types work together.
+- Resolved an import issue caused by placing a component in the wrong directory, reinforcing the importance of understanding the project structure.
+- Used `npm audit` to investigate dependency warnings and distinguish development-tooling issues from the production dependency audit, rather than applying potentially disruptive upgrades without checking them.
 
-Initially, I was unsure whether I needed to deploy the Next.js application to view it. I learned that the development server allows the website to run locally before it is published online.
+## 16 October 2026 — Production Deployment, Domain & Email
 
-**GitHub remote configuration**
+**What I built**
+- Connected the GitHub repository to Vercel and published the website.
+- Registered `anrajplahe.com` with IONOS and configured the domain to point to Vercel using the required DNS records.
+- Set up custom-domain email with IONOS while keeping website hosting and email hosting separate.
 
-When attempting to configure the remote repository, Git reported that `origin` already existed. I learned how to inspect an existing remote and verify that my local repository was synchronised with GitHub.
+**Challenges and decisions**
+- Vercel initially reported an invalid domain configuration. I corrected the A and CNAME records in IONOS and verified that the website became accessible.
+- Preserved email-related DNS records, including MX, SPF, DKIM and DMARC, so changing the website's hosting would not disrupt email.
+- Chose Vercel for managed Next.js deployments while retaining IONOS for the domain, DNS and mailbox.
+- When switching branches appeared to restore an older homepage, I traced the newer code to the feature branch. This clarified why work on one branch does not automatically appear on `main`.
 
-**Git branch conflicts**
+**Milestone:** First public deployment of the website on its custom domain.
 
-I encountered an error when switching branches because an untracked development log would have been overwritten. I learned how Git protects untracked files and how to use `git stash` to preserve work temporarily.
+## 16 October 2026 — Website Identity & Release Workflow
 
-**Pull requests**
+**What I built**
+- Configured page metadata and social-sharing information through Next.js.
+- Replaced the default favicon with a custom `ap` icon generated using Next.js `ImageResponse` and the site's branding.
+- Used GitHub pull requests and Vercel preview deployments to review changes before merging them into the production branch.
 
-I initially struggled to locate my pull request. I learned how to compare branches, create a pull request and merge changes into the main branch.
+**Challenges and lessons**
+- Investigated a pull request with no changes to compare and found that I had staged files without committing them. This reinforced the distinction between `git add`, `git commit`, `git push` and merging.
+- Learned that a Vercel preview deployment is not the same as the production site: feature-branch changes only reach the live website after merging into `main`.
+- Troubleshot Safari continuing to display the previous favicon after deployment and identified browser caching as a factor.
 
-### Next Steps
-- Finalise the development log.
-- Begin developing the homepage.
-- Create reusable React components.
-- Implement the initial design system using Tailwind CSS.
-- Continue practising Git branching, commits and pull requests.
+## 19 October 2026 — Responsive Design & Multi-Page Architecture
+
+**What I built**
+- Extracted the homepage interest listings into a reusable, typed `InterestCard` component with an optional navigation destination.
+- Improved responsive layouts, typography and content wrapping across different screen sizes.
+- Added dedicated routes for `/tech`, `/bhangra` and `/music`, using the Next.js App Router and page-specific metadata.
+- Moved shared navigation and footer components into the root layout so they appear consistently across pages.
+- Developed a route-aware Navbar using `usePathname()` and Next.js `Link`: the homepage keeps a centred logo, while section pages offer navigation with an active-page indicator.
+
+**Decisions and lessons**
+- Learned how typed props, reusable components, shared layouts and file-based routing reduce duplication as a site grows.
+- Differentiated navigation cards from static informational layouts. In particular, I replaced clickable-looking equipment cards with simpler listings so that the appearance of an element better reflects its behaviour.
+- Learned to treat responsive design as a usability problem involving layout, spacing, text wrapping and navigation, rather than just scaling down desktop elements.
+
+## 19 October 2026 — Projects Page & Interface Refinement
+
+**What I built**
+- Created `/projects` to showcase development work, starting with the website itself.
+- Used structured project data to render descriptions, technologies, implemented features and a GitHub source-code link.
+- Connected the Projects section to the homepage and added GitHub to the shared footer.
+
+**Decisions and lessons**
+- Chose an editorial, non-clickable layout for project information, reserving button styling for actual actions such as opening the source repository.
+- Removed the redundant link back to the website from its own project entry and removed the homepage's unnecessary “Take a look” button.
+- Reinforced the importance of reducing interface clutter and keeping project data separate from its presentation so future work can be added consistently.
 
 ---
 
-## Future Development Entries
+## Current State
 
-For each significant development session, I intend to record:
+The website has a responsive homepage, dedicated Projects, Tech, Bhangra and Guitar & Music sections, shared site navigation and footer, and a live deployment connected to GitHub. These pages are currently maintained primarily through the source code; **a backend publishing system has not yet been implemented**.
 
-- What I planned to accomplish.
-- What I completed.
-- New technologies or concepts I learned.
-- Problems encountered and how I resolved them.
-- Decisions made and their reasoning.
-- Next steps.
+## Planned Development
 
-## 16 October 2026 — Initial Homepage Development
+The next significant feature will be a private publishing system for Bhangra and Guitar & Music content. I plan to approach it in stages:
 
-### Objectives
-- Begin developing the frontend of my personal website.
-- Create a reusable navigation component.
-- Build the initial homepage layout.
-- Experiment with Tailwind CSS styling and colour schemes.
+1. **Design the public-facing post experience** — decide how written updates, photographs, guitar recordings and social media embeds should appear before coding.
+2. **Introduce server-side functionality and a database** — model and store posts, then retrieve them on the public pages.
+3. **Add secure administrator authentication** — restrict content management to a private dashboard.
+4. **Implement content management** — create, edit, draft, publish and delete posts, with appropriate support for media.
+5. **Improve reliability and delivery** — add automated testing, strengthen CI/CD and explore deployment and monitoring practices as the project grows.
 
-### Completed
-- Created a reusable `Navbar.tsx` React component.
-- Replaced the default Next.js starter page with a custom homepage.
-- Developed a hero section with a personal introduction and navigation button.
-- Created four interest cards showcasing Software & Projects, Tech & Gear, Bhangra and Music.
-- Used a JavaScript array and `.map()` to dynamically render the interest cards.
-- Implemented responsive layouts using Tailwind CSS.
-- Customised the original purple theme to use green as the primary accent colour and purple as the secondary accent.
-
-### What I Learned
-- **React components:** How components can be created in separate files, exported and imported into other parts of an application.
-- **JSX:** How React uses JSX to define user interface elements.
-- **Module imports:** How file paths and the `@/` alias work when importing components.
-- **Dynamic rendering:** How `.map()` can generate multiple UI elements from structured data.
-- **Tailwind CSS:** How utility classes control colours, spacing, typography, hover effects and responsive layouts.
-- **Responsive design:** How breakpoint prefixes such as `sm:` and `md:` adjust styling for different screen sizes.
-
-### Challenges and Solutions
-
-**Component import error**
-
-Initially, the application couldn't find the Navbar component because I had created it inside `src/app/components` rather than `src/components`.
-
-I resolved this by correcting the folder structure and learned how module imports relate to the project's directory structure.
-
-**Understanding the folder structure**
-
-VS Code's Compact Folders setting displayed `src` and `app` together, which initially made it difficult to understand the directory hierarchy. I learned that this was a display preference rather than an issue with the actual folder structure.
-
-**Changing the website's colour scheme**
-
-After implementing the initial homepage, I decided to change the primary accent colour from purple to green, while using purple for the Tech & Gear category. This helped me understand how Tailwind CSS utility classes are applied and modified.
-
-### Technical Decisions
-- Used separate React components to make the application easier to maintain and extend.
-- Used an array of objects to store interest card information, reducing repetitive JSX.
-- Chose a dark visual theme with green as the primary accent colour.
-- Kept the initial homepage relatively simple before introducing animations, additional pages and backend functionality.
-
-### Next Steps
-- Refactor the interest cards into reusable React components.
-- Improve the homepage's visual design and layout.
-- Add personal photographs and imagery.
-- Introduce animations and interactive elements.
-- Test the homepage on different screen sizes.
-- Continue developing the remaining website sections.
-- Add social media links to the appropriate parts of the website.
-
-## 16 October 2026 — Homepage Styling and Social Integration
-
-### Objectives
-- Refine the visual design of the homepage.
-- Improve the main call-to-action button.
-- Introduce social media links.
-- Establish a consistent colour scheme for the interest cards.
-
-### Completed
-- Updated the homepage's colour scheme with individual accent colours for each interest:
-  - Software & Projects — Purple
-  - Tech & Gear — Cyan
-  - Bhangra — Yellow
-  - Music — Pink
-- Improved the "Take a look" button using Space Grotesk, gradient styling, shadows and hover animations.
-- Added LinkedIn, Instagram and TikTok icons to the website footer using React Icons.
-- Added Anahat Bhangra's Instagram, TikTok and email contact links to the Bhangra card.
-- Used conditional rendering to display Anahat's links only within the Bhangra card.
-- Investigated npm dependency security warnings using `npm audit` and `npm audit --omit=dev`.
-
-### What I Learned
-- How to integrate external React component libraries such as React Icons.
-- How to customise typography using Next.js font utilities.
-- How Tailwind CSS supports hover animations, transitions and custom shadows.
-- How conditional rendering works in React.
-- How `mailto:` links can open a user's email application without backend functionality.
-- How to investigate dependency vulnerabilities and distinguish development dependencies from production dependencies.
-
-### Challenges and Solutions
-
-**Dependency security warnings**
-
-Installing React Icons revealed five high-severity vulnerabilities. I investigated the affected dependency chain and confirmed that the production dependency audit reported zero vulnerabilities. I also learned why forcing major dependency changes can introduce compatibility issues.
-
-**Button styling**
-
-The original call-to-action button looked too basic. I experimented with a more expressive design using a gradient, improved typography and an animated arrow, then adjusted the arrow to face right.
-
-### Design Decisions
-- Chose to keep the interest cards minimal, without background photography or excessive visual effects.
-- Assigned each interest a distinct accent colour while maintaining a consistent dark theme.
-- Placed personal social accounts in the footer and Anahat's contact links within the Bhangra card.
-- Decided to reserve more expressive imagery and animations for dedicated pages.
-
-### Next Steps
-- Fix minor text formatting and spacing inconsistencies.
-- Refactor the interest cards into reusable React components.
-- Introduce TypeScript interfaces for component props.
-- Improve the overall component structure.
-- Continue testing responsiveness and accessibility.
-
-## 16 October 2026 — Website Deployment, Custom Domain and Email Configuration
-
-### Objectives
-- Deploy my Next.js website to a publicly accessible production environment.
-- Purchase and configure a custom domain.
-- Set up a professional email address using my domain.
-- Connect my GitHub repository to a hosting platform.
-- Gain practical experience with DNS configuration and deployment workflows.
-
-### Completed
-
-**Domain Registration and Email Hosting**
-- Registered `anrajplahe.com` through IONOS.
-- Purchased the IONOS Mail Basic 5 package, which includes custom-domain email hosting.
-- Added Domain Guard for additional domain security.
-- Configured and successfully tested `mail@anrajplahe.com`.
-- Retained IONOS as the domain registrar and DNS provider.
-
-**Website Deployment**
-- Created a Vercel account and connected my existing GitHub repository.
-- Imported my Next.js project into Vercel.
-- Successfully deployed the website to a publicly accessible production environment.
-- Added `anrajplahe.com` and `www.anrajplahe.com` as custom domains.
-- Verified that the website is accessible through both addresses.
-
-**DNS Configuration**
-- Configured an A record to direct the root domain to Vercel.
-- Configured a CNAME record for the `www` subdomain.
-- Preserved the existing IONOS email-related DNS records, including MX, SPF, DKIM and DMARC.
-- Successfully connected my domain to Vercel while maintaining email functionality.
-
-**Git and Version Control**
-- Continued working with feature branches and GitHub.
-- Encountered an issue where my homepage code appeared to disappear after switching to the `main` branch in GitHub Desktop.
-- Identified that my latest homepage development was stored on `feature/homepage`.
-- Successfully restored the expected working files by switching back to the correct branch.
-
-### What I Learned
-
-**Domain Registration and DNS**
-- The difference between a domain registrar, DNS provider and web hosting platform.
-- How DNS translates domain names into the information needed to reach a hosting service.
-- How A records point a domain towards an IP address.
-- How CNAME records allow subdomains to reference another hostname.
-- How website hosting and email hosting can operate independently under the same domain.
-
-**Deployment and Hosting**
-- How to deploy a Next.js application using Vercel.
-- How to connect a GitHub repository to a deployment platform.
-- How production environments differ from local development.
-- How GitHub-integrated deployments can support a continuous deployment workflow.
-
-**Email Infrastructure**
-- How custom-domain email hosting works.
-- The role of MX records in directing incoming email.
-- How SPF, DKIM and DMARC help protect email authentication and delivery.
-- Why DNS changes must be carefully managed to avoid disrupting existing services.
-
-**Git and Branch Management**
-- How switching Git branches changes the files displayed in my local working directory.
-- Why commits on a feature branch do not automatically appear on `main`.
-- How to locate and recover the expected version of a project by checking its branches.
-
-### Challenges and Solutions
-
-**Choosing Hosting Services**
-
-I initially considered using IONOS for both domain registration and website hosting. After comparing the available options, I decided to use IONOS for domain and email management and Vercel for hosting my Next.js application.
-
-This decision allows me to maintain a managed Next.js deployment while keeping the domain and email services separate.
-
-**Connecting the Domain**
-
-After adding my custom domain to Vercel, the dashboard initially displayed an invalid DNS configuration.
-
-I resolved this by updating the appropriate A and CNAME records within IONOS using the values provided by Vercel.
-
-Both the root domain and www subdomain subsequently became accessible.
-
-**Preserving Email Functionality**
-
-Because I was using IONOS for email hosting, I needed to ensure that connecting the website to Vercel would not interfere with incoming or outgoing mail.
-
-I kept the email-related DNS records intact and subsequently verified that the mailbox was working.
-
-**GitHub Desktop Branch Confusion**
-
-After switching to `main` in GitHub Desktop, my homepage appeared to have reverted to an earlier version.
-
-I discovered that the latest changes were present on `feature/homepage`, rather than the local `main` branch.
-
-Switching back restored the expected files and reinforced my understanding of how Git manages independent branches.
-
-### Technical Decisions
-- Selected Vercel for managed Next.js hosting and future server-side functionality.
-- Used IONOS for domain registration, DNS management and email hosting.
-- Kept website hosting and email hosting separate to allow independent configuration.
-- Continued using Git feature branches to isolate development changes from the main branch.
-- Chose to deploy the initial homepage before completing the entire full-stack application, allowing the website to evolve through future releases.
-
-### Next Steps
-- Merge the completed homepage changes into `main`, after reviewing and committing any remaining work.
-- Configure `www.anrajplahe.com` to redirect permanently to `anrajplahe.com`.
-- Configure email forwarding to my personal inbox.
-- Confirm Domain Guard activation.
-- Test an automatic production deployment following a GitHub merge.
-- Continue improving the homepage's component structure.
-- Begin developing dedicated pages and backend functionality.
-
-### Project Milestone
-
-**First public deployment completed.**
-
-My personal website is now accessible at:
-
-https://anrajplahe.com
-
-This marks the transition from a locally developed application to a publicly accessible website with a custom domain, production hosting and a professional email address.
-
-## 16 October 2026 — Website Identity, Metadata & Deployment
-
-### What I worked on
-
-Following the initial deployment of my personal website, I focused on improving its identity and ensuring that changes could be tested and deployed reliably.
-
-**Website branding and metadata**
-- Updated the website's browser title and description through Next.js metadata configuration in `src/app/layout.tsx`.
-- Added metadata for search engines and social media sharing, including Open Graph properties.
-- Designed a custom `ap` favicon using a green `a` and white `p`, reflecting my website's existing branding.
-- Used the Geist Bold font to maintain consistency with the navigation logo.
-- Generated the favicon programmatically using Next.js `ImageResponse` in `src/app/icon.tsx`.
-- Removed the default Next.js favicon.
-
-**Git, GitHub and deployment**
-- Worked on the `feature/site-identity` branch to keep development separate from production.
-- Staged, committed and pushed changes to GitHub.
-- Created and merged a pull request into `main`.
-- Used Vercel preview deployments to inspect changes before publishing them.
-- Verified the deployment of the updated website to my custom domain, `anrajplahe.com`.
-
-### Challenges and lessons learned
-
-**Understanding Git stages**
-
-I encountered an issue where GitHub reported that there was nothing to compare between my feature branch and `main`.
-
-By inspecting `git status` and `git log`, I discovered that although I had staged my changes, I had not yet committed them.
-
-This helped reinforce the distinction between staging, committing and pushing, and why each stage is necessary.
-
-**Production deployments versus previews**
-
-I also learned that Vercel preview deployments are separate from the version served on my production domain. Pushing a feature branch does not automatically update the live website; the changes must first be merged into the production branch.
-
-**Favicon caching**
-
-After deployment, Safari continued showing the original Next.js favicon even though the new icon was accessible on the live domain. I investigated the icon URLs and browser caching before resolving the issue.
-
-This highlighted the difference between a deployment problem and a browser-side caching issue.
-
-### What I learned
-
-- How Git branches and pull requests support controlled development.
-- The differences between `git add`, `git commit`, `git push` and merging.
-- How Vercel preview and production deployments work.
-- How Next.js generates metadata and application icons.
-- How to integrate a custom font into a generated favicon.
-- How to troubleshoot discrepancies between local development and production.
-
-### Next steps
-
-- Review and improve mobile responsiveness.
-- Test the website across multiple viewport sizes.
-- Refactor repeated homepage UI into reusable React components.
-- Begin developing the individual interest pages.
-
-## 19 October 2026 — Mobile Responsiveness & Component Refactoring
-
-### What I worked on
-
-Following the launch of my personal website, I focused on improving the homepage's responsiveness, maintaining consistent styling and restructuring the code to make it easier to maintain and extend.
-
-**Mobile responsiveness**
-- Improved the homepage layout for smaller screens using Tailwind CSS's mobile-first responsive utilities.
-- Adjusted the hero section's typography, spacing and padding across different screen sizes.
-- Refined the interest cards to use more appropriate spacing and text sizes on mobile devices.
-- Updated the Bhangra contact section to allow its social links and email button to wrap on narrower screens.
-- Improved navigation and footer spacing while preserving the existing desktop design.
-
-**Typography and visual consistency**
-- Standardised the website's typography around the Geist font.
-- Removed the separate Space Grotesk font previously used for the "Take a look" button.
-- Adjusted the button's letter spacing to match the rest of the website more closely.
-- Retained the existing colour scheme, gradients and animations.
-
-**React component refactoring**
-- Created a reusable `InterestCard.tsx` component in `src/components/`.
-- Moved the interest card JSX out of `page.tsx`, reducing repetition and improving the organisation of the homepage.
-- Defined a TypeScript type for the component's props, including its title, description, symbol and colour.
-- Used React props to pass data from the `interests` array in `page.tsx` to each card.
-- Preserved the Bhangra-specific social links using conditional rendering within the component.
-
-### Challenges and lessons learned
-
-**Understanding responsive design**
-
-I developed a better understanding of Tailwind CSS's mobile-first approach, particularly how breakpoint prefixes such as `sm:` and `md:` change the layout at different viewport widths.
-
-I also learned that responsive design involves more than resizing elements. Spacing, typography, content wrapping and usability all need to be considered.
-
-**Understanding React props and components**
-
-Previously, the JSX responsible for rendering my interest cards was written directly in `page.tsx`.
-
-By extracting this into a reusable component, I learned how to separate a component's data from its presentation.
-
-I also gained experience defining TypeScript prop types to help ensure components receive the correct information.
-
-**Maintaining consistency**
-
-The website previously used different fonts in certain areas, which affected its visual consistency. Standardising the typography reinforced the importance of having a coherent design system.
-
-### What I learned
-
-- Mobile-first responsive design with Tailwind CSS.
-- Responsive spacing, typography and layout techniques.
-- Creating and importing reusable React components.
-- Passing information between components using props.
-- Defining component properties with TypeScript.
-- Conditional rendering in React.
-- Improving code organisation and maintainability.
-
-### Next steps
-
-- Build dedicated pages for Software & Projects, Tech & Gear, Bhangra and Music.
-- Implement navigation between the homepage and individual pages using Next.js routing.
-- Create reusable layouts and components for the new pages.
-- Develop the Software & Projects page to showcase completed projects, technical skills and ongoing learning.
-- Explore adding backend functionality and dynamic content in future development stages.
-
-## 19 October 2026 — Tech Page & Shared Layout
-
-### What I worked on
-
-Following the completion of my homepage and its responsive design, I began expanding the website with its first dedicated section: **Tech**.
-
-This development stage focused on Next.js routing, shared layouts, data-driven content and creating a consistent visual experience across different pages.
-
-**Next.js routing and shared layouts**
-- Created the `src/app/tech/page.tsx` route, making the Tech page accessible at `/tech`.
-- Moved the navigation component into `src/app/layout.tsx`, allowing the same Navbar to appear automatically across the website.
-- Updated navigation links so they correctly return to homepage sections from other pages.
-- Added page-specific metadata, including the browser title, description and canonical URL.
-
-**Tech I Use page**
-- Created a dedicated page showcasing the technology and equipment I use.
-- Added my iPhone 16 Pro Max, MacBook Pro with M3 Pro and AirPods Pro 2.
-- Organised device information in a JavaScript array containing names, categories, icons and specifications.
-- Used React's `.map()` method to generate the device listings dynamically.
-- Added detailed specifications covering processors, memory, storage, displays and device features.
-- Implemented a responsive grid using Tailwind CSS.
-- Refined the design from traditional cards into minimalist informational listings, using subtle dividers and cyan icons.
-- Added custom bullet-point alignment to ensure device specifications line up consistently with their headings.
-
-**Homepage improvements**
-- Made the Tech I Use interest card clickable using Next.js `Link`.
-- Extended the reusable `InterestCard` component with an optional `href` prop.
-- Updated the interest cards to use their individual accent colours for hover effects instead of a universal green.
-- Returned the homepage card titles to white while preserving coloured symbols.
-- Kept dedicated page titles in their respective accent colours.
-
-### Challenges and lessons learned
-
-**Understanding shared layouts**
-
-Initially, the Navbar was imported separately into individual pages. Moving it into the root layout demonstrated how Next.js can share interface elements between routes without duplicating code.
-
-This also introduced a styling issue where the Navbar displayed a white background instead of the website's dark theme.
-
-I investigated the global CSS and layout styling before applying an explicit background colour to the Navbar component.
-
-**Distinguishing navigation from information**
-
-My initial equipment cards looked too similar to the clickable interest cards on the homepage.
-
-I redesigned them as static informational listings without hover animations or raised card backgrounds. This helped me understand the importance of visual cues in user interface design.
-
-**Data-driven rendering**
-
-Rather than creating separate JSX for every device, I stored the device information in an array and rendered it using `.map()`.
-
-I also added nested arrays for device specifications, allowing the page to display variable amounts of information without duplicating its structure.
-
-**Development and deployment workflow**
-
-I continued using Git feature branches to separate development from production, testing changes locally before committing and pushing them.
-
-I also gained more experience troubleshooting situations where local changes were not immediately reflected in the development server.
-
-### What I learned
-
-- Next.js App Router and file-based routing.
-- Shared layouts and reusable navigation components.
-- Page-specific metadata.
-- Data-driven rendering with React.
-- Nested arrays and `.map()`.
-- Optional props and conditional navigation.
-- Responsive grid layouts with Tailwind CSS.
-- CSS flexbox alignment and text wrapping.
-- Consistent UI styling and distinguishing interactive from non-interactive elements.
-- Using Git branches, commits, pull requests and Vercel preview deployments.
-
-### Next steps
-
-- Create introductory Bhangra and Guitar & Music pages.
-- Connect the remaining homepage interest cards to their respective pages.
-- Explore building a private content management system to publish personal updates, photographs and videos.
-- Investigate authentication, database integration and media storage for future dynamic content.
-- Return to the Projects section once I have organised and prepared my existing work for presentation.
-
-## 19 October 2026 — Bhangra & Music Pages, Shared Footer
-
-### What I worked on
-
-With the homepage and Tech I Use page established, I continued expanding my personal website by creating dedicated pages for two of my other interests: Bhangra and music.
-
-The focus was on introducing these areas of my life while keeping the design consistent, the code maintainable and the website ready for future expansion.
-
-**Bhangra page**
-- Created a new route at `/bhangra` using the Next.js App Router.
-- Added a personal introduction covering my involvement in Bhangra, including dancing and competing with Ranjhe and running Anahat Bhangra Academy.
-- Included links to Anahat's Instagram and TikTok accounts.
-- Used the existing dark theme and yellow accent colour to maintain consistency with the homepage.
-
-**Guitar & Music page**
-- Created a new route at `/music`.
-- Added an introduction to my interest in guitar, recording, music production and experimenting with different sounds.
-- Applied the same page structure as the Bhangra section, using pink as its accent colour.
-- Kept the initial page intentionally simple, allowing it to be expanded with guitar covers and recordings later.
-
-**Shared components and navigation**
-- Extracted the homepage Footer into a reusable `Footer.tsx` component.
-- Added the Footer to the root `layout.tsx`, allowing it to appear automatically across all pages.
-- Removed the original Footer JSX and its unused imports from the homepage.
-- Updated the Bhangra and Guitar & Music interest cards with their respective routes.
-- Preserved consistent navigation, styling and social media links throughout the website.
-
-### Challenges and lessons learned
-
-**Working with shared layouts**
-
-Having previously moved the Navbar into the root layout, I applied the same principle to the Footer.
-
-This reinforced how shared layouts reduce duplicated code and ensure consistency between pages. It also means that future pages automatically inherit the website's navigation and footer.
-
-**Planning for future functionality**
-
-While designing the Bhangra and Guitar & Music pages, I considered how I would eventually like to publish updates directly to the website.
-
-Rather than maintaining static pages indefinitely, my longer-term aim is to introduce a private dashboard where I can sign in, create posts, and share photographs, videos and guitar covers.
-
-I also explored the possibility of embedding existing social media content alongside posts published directly to the website.
-
-This provided an opportunity to consider how frontend pages could eventually connect to backend functionality, including authentication, databases and media storage.
-
-### What I learned
-
-- Creating additional routes using the Next.js App Router.
-- Reusing components across multiple pages.
-- Managing shared UI through `layout.tsx`.
-- Separating page-specific content from shared website elements.
-- Maintaining consistent responsive styling and visual design.
-- Planning the transition from static content to dynamically managed posts.
-- Considering authentication, media storage and database requirements for future features.
-
-### Next steps
-
-- Organise existing software projects before developing the Projects section.
-- Plan a shared content management system for Bhangra and Guitar & Music.
-- Explore Next.js backend functionality, including Route Handlers and database integration.
-- Implement secure authentication for a private publishing dashboard.
-- Eventually support creating, editing and deleting posts containing text, photographs, videos and embedded social media content.
-- Continue improving the website's accessibility, responsiveness and overall user experience.
-
-## 19 October 2026 — Projects Page & UI Refinements
-
-### What I worked on
-
-With the core pages of my personal website established, I created a dedicated **Projects** page to begin showcasing my software development work.
-
-Rather than waiting until all my previous projects are ready to share, I decided to feature the website itself as my first project. This allows me to demonstrate what I've built so far while continuing to expand the portfolio.
-
-**Projects page**
-- Created a new route at `/projects` using the Next.js App Router.
-- Added my personal website as the first featured project, including a description, technology stack and implemented features.
-- Used a data-driven structure to store project information in an array and render it dynamically using React's `.map()` method.
-- Included technologies such as Next.js, React, TypeScript, Tailwind CSS, Git, GitHub and Vercel.
-- Added a GitHub source code button linking directly to the website's repository.
-- Included a section explaining that additional projects will be added as I revisit and organise my existing work.
-- Added page-specific metadata for the Projects page.
-
-**Design and user experience**
-- Designed the Projects page using a minimalist, editorial layout rather than traditional project cards.
-- Used subtle dividers, typography and spacing to distinguish sections without making the project information appear clickable.
-- Maintained violet as the Projects section's accent colour.
-- Refined the GitHub source code link into a subtle outlined button, incorporating the GitHub icon and hover effects.
-- Removed unnecessary links and visual dividers to simplify the page.
-
-**Homepage improvements**
-- Connected the Projects interest card to the new `/projects` route.
-- Removed the "Take a look" button from the homepage hero section to simplify the layout and reduce unnecessary navigation.
-- Preserved the existing interest cards as the primary way for visitors to explore the website.
-
-**Shared Footer**
-- Added a GitHub profile link to the shared Footer component.
-- Organised the social links in the following order: LinkedIn, GitHub, Instagram and TikTok.
-- Maintained consistent styling, hover effects and accessibility labels across the social links.
-- Used the existing shared layout to ensure the Footer updates automatically across all pages.
-
-### Challenges and lessons learned
-
-**Distinguishing static content from interactive elements**
-
-While designing the Projects page, I realised that using traditional rounded cards made the project information look clickable, even though it was intended to be read.
-
-I changed the design to a more editorial layout, removing unnecessary backgrounds and hover effects while keeping actual links clearly interactive.
-
-This reinforced the importance of visual hierarchy and ensuring that interface elements communicate their purpose.
-
-**Structuring a portfolio for future expansion**
-
-Rather than hardcoding each individual project, I used a JavaScript array to store project details.
-
-This provides a consistent structure for future projects and makes it easier to add new entries without duplicating large amounts of JSX.
-
-**Simplifying the user experience**
-
-I reviewed several elements of the website and removed those that felt unnecessary, including the homepage's "Take a look" button and a redundant link to the website from its own project entry.
-
-This helped reinforce the idea that a cleaner interface can often be achieved by removing elements rather than adding more.
-
-### What I learned
-
-- Building additional pages with the Next.js App Router.
-- Structuring reusable, data-driven project listings.
-- Rendering nested project information using React.
-- Designing clear visual distinctions between static content and interactive elements.
-- Styling accessible links and buttons using Tailwind CSS.
-- Refining layouts through iterative development and testing.
-- Maintaining shared React components across multiple pages.
-- Using Git feature branches, pull requests and Vercel previews to review changes before production deployment.
-
-### Next steps
-
-- Plan and begin developing backend functionality for the website.
-- Explore how to implement a private, authenticated publishing dashboard.
-- Introduce a database for storing Bhangra and Guitar & Music posts.
-- Investigate options for uploading photographs, videos and embedding social media content.
-- Continue organising existing software projects for future inclusion in the Projects section.
-- Explore automated testing and CI/CD improvements as the project grows.
-
-## 19 October 2026 — Responsive Navigation
-
-### What I worked on
-
-- Updated the shared Navbar to display different layouts depending on the current page.
-- Kept the homepage minimal, with only the centred website logo.
-- Added navigation buttons for Projects, Tech I Use, Bhangra and Guitar & Music on individual pages.
-- Used Next.js `usePathname()` to identify the current route and highlight the active section using its corresponding accent colour.
-- Implemented responsive positioning, with the logo on the left and navigation buttons on the right on desktop, adapting for smaller screens.
-- Used Next.js `Link` components for navigation between pages.
-
-### What I learned
-
-- Using Client Components and Next.js navigation hooks.
-- Implementing conditional rendering based on the current route.
-- Creating responsive navigation layouts with Tailwind CSS.
-- Improving navigation and visual feedback while maintaining a consistent design.
+These are plans, not completed features. Future log entries will focus on significant implementations, technical decisions and challenges rather than routine page-content changes or minor styling adjustments.
