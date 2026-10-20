@@ -99,3 +99,58 @@ The next significant feature will be a private publishing system for Bhangra and
 5. **Improve reliability and delivery** — add automated testing, strengthen CI/CD and explore deployment and monitoring practices as the project grows.
 
 These are plans, not completed features. Future log entries will focus on significant implementations, technical decisions and challenges rather than routine page-content changes or minor styling adjustments.
+
+## 20 October 2026 — PostgreSQL Database Integration
+
+### What I built
+
+I began transitioning my personal website from a static frontend into a full-stack application by setting up the database foundation for a future journal publishing system.
+
+- Created a PostgreSQL development database using Neon.
+- Integrated Drizzle ORM with Next.js and TypeScript.
+- Defined two relational tables: `posts` for journal entries and `post_media` for photographs and video references.
+- Used database enums, UUID primary keys, foreign keys and indexes.
+- Designed the schema to support both Bhangra and Guitar & Music journals through a shared database.
+- Separated user-selected journal dates and optional times from automatic creation and publication timestamps.
+- Generated and applied my first SQL migration using Drizzle Kit.
+- Configured a reusable, server-side database connection.
+- Verified the database connection through a temporary Next.js Route Handler.
+- Stored database credentials in `.env.local`, excluded from Git.
+
+### Technical Decisions
+
+**One shared database**
+
+Rather than maintaining separate databases for each journal, I chose a shared relational structure with categories to distinguish posts. This avoids duplicated backend logic and makes the system easier to maintain and extend.
+
+**Historical journal ordering**
+
+Journal entries will be ordered by their manually selected date and optional time, rather than when they were created or published. This will allow me to add older experiences retrospectively while preserving chronological order.
+
+**Development and production separation**
+
+I created a dedicated development database so that future experiments and schema changes can be tested independently of production data.
+
+### Challenges and Lessons Learned
+
+**Database migrations**
+
+I learned how Drizzle translates TypeScript schema definitions into SQL migrations and how migrations provide a version-controlled way to manage database structure.
+
+**Next.js Route Handlers**
+
+While testing the connection, I encountered a build error because an explicit runtime declaration was incompatible with the project's Next.js `cacheComponents` configuration.
+
+Removing the unnecessary runtime declaration resolved the issue. I was then able to query both PostgreSQL tables successfully from server-side code.
+
+### What I Learned
+
+- Relational database design and table relationships.
+- Integrating PostgreSQL with a Next.js application.
+- Defining database schemas using Drizzle ORM and TypeScript.
+- Generating and applying database migrations.
+- Managing database credentials using environment variables.
+- Using Next.js Route Handlers for server-side functionality.
+- Separating development infrastructure from production.
+
+**Milestone:** The development database is configured, its initial schema has been migrated, and connectivity from Next.js has been verified. Authentication, content publishing and public journal queries
