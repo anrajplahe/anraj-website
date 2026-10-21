@@ -23,7 +23,7 @@ export async function createDraft(formData: FormData) {
 
   const category = getField("category");
   const title = getField("title");
-  const body = getField("body");
+  const rawContent = getField("content");
   const journalDate = getField("journalDate");
   const journalTime = getField("journalTime");
 
@@ -32,9 +32,9 @@ export async function createDraft(formData: FormData) {
     throw new Error("Invalid journal category.");
   }
 
-  if (title.length > 150 || body.length > 20000) {
+  if (title.length > 150 || rawContent.length > 100000) {
     throw new Error("Journal entry exceeds the length limit.");
-  }
+ }
 
   const parsedDate = new Date(`${journalDate}T00:00:00Z`);
 
@@ -54,15 +54,32 @@ export async function createDraft(formData: FormData) {
   }
 
   // Store simple text in a Tiptap-compatible JSON structure.
-  const content = {
-    type: "doc",
-    content: body.split(/\r?\n/).map((line) => ({
-      type: "paragraph",
-      ...(line
-        ? { content: [{ type: "text", text: line }] }
-        : {}),
-    })),
-  };
+  
+let parsedContent: unknown;
+
+try {
+  parsedContent = JSON.parse(rawContent);
+} catch {
+  throw new Error("Invalid journal content.");
+}
+
+if (
+  !parsedContent ||
+  typeof parsedContent !== "object" ||
+  Array.isArray(parsedContent)
+) {
+  throw new Error("Invalid journal content.");
+}
+
+const content = parsedContent as Record<string, unknown>;
+
+if (
+  content.type !== "doc" ||
+  !Array.isArray(content.content)
+) {
+  throw new Error("Invalid journal document structure.");
+}
+
 
   await db.insert(posts).values({
     category,

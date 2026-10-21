@@ -48,13 +48,26 @@ export default function JournalDateTimeFields() {
         </label>
       </div>
 
+      
       <button
         type="button"
         onClick={fillNow}
-        className="text-sm font-medium text-green-400 transition-colors hover:text-green-300"
+        className="
+          inline-flex w-fit items-center gap-2
+          rounded-lg border border-green-400/40
+          bg-green-400/10 px-4 py-2.5
+          text-sm font-medium text-green-400
+          transition-colors duration-200
+          hover:border-green-400 hover:bg-green-400/20
+          focus-visible:outline-2
+          focus-visible:outline-offset-2
+          focus-visible:outline-green-400
+        "
       >
-        Now — use current date and time
+        <span aria-hidden="true">◷</span>
+        Now - use current date and time
       </button>
+
     </div>
   );
 }

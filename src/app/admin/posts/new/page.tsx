@@ -7,6 +7,7 @@ import Link from "next/link";
 import { auth } from "@/auth";
 import JournalDateTimeFields from "@/components/admin/JournalDateTimeFields";
 import { createDraft } from "../actions";
+import JournalRichTextEditor from "@/components/admin/JournalRichTextEditor";
 
 async function NewPostContent() {
   await connection();
@@ -76,27 +77,18 @@ async function NewPostContent() {
           />
         </div>
 
-        <div className="space-y-2">
-          <label
-            htmlFor="body"
-            className="block text-sm text-gray-400"
-          >
-            Content
-          </label>
+        
+            <div className="space-y-2">
+            <label className="block text-sm text-gray-400">
+                Content
+            </label>
 
-          <textarea
-            id="body"
-            name="body"
-            rows={10}
-            maxLength={20000}
-            placeholder="Start writing your journal entry..."
-            className="w-full resize-y rounded-lg border border-white/15 bg-[#161A22] px-4 py-3 text-white placeholder:text-gray-500 focus:border-green-400 focus:outline-none"
-          />
+            <JournalRichTextEditor />
 
-          <p className="text-xs text-gray-500">
-            Rich-text formatting and media will be added next.
-          </p>
-        </div>
+            <p className="text-xs text-gray-500">
+                Use the toolbar to format text, create lists and add links.
+            </p>
+            </div>
 
         <section className="space-y-4 rounded-xl border border-white/10 p-5">
           <h2 className="font-semibold text-white">
