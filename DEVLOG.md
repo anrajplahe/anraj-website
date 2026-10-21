@@ -154,3 +154,21 @@ Removing the unnecessary runtime declaration resolved the issue. I was then able
 - Separating development infrastructure from production.
 
 **Milestone:** The development database is configured, its initial schema has been migrated, and connectivity from Next.js has been verified. Authentication, content publishing and public journal queries
+
+## 21 October 2026 — Administrator Authentication & Access Control
+
+**What I built**
+- Integrated Auth.js v5 with GitHub OAuth to introduce authentication into the Next.js application.
+- Created a private administrator login page and dashboard using the App Router.
+- Restricted sign-in to my approved GitHub account using its numeric account ID.
+- Implemented JWT-based sessions, server-side authorisation checks and sign-out functionality.
+- Configured authentication credentials through environment variables rather than storing secrets in source code.
+
+**Challenges and lessons**
+- Learned how OAuth redirects, authentication callbacks and sessions work together.
+- Used TypeScript type guards to safely access custom session properties.
+- Encountered a Next.js 16 prerendering error caused by cryptographic operations during static rendering. Resolved this using `connection()` and React `Suspense` to ensure authentication is evaluated at request time.
+- Learned the distinction between authentication (verifying identity) and authorisation (determining who can access protected functionality).
+- Established the importance of securing individual server-side operations, not just protecting the dashboard interface.
+
+**Milestone:** GitHub authentication, session management and the protected admin dashboard have been implemented and tested locally. Production configuration and deployment remain to be completed.
