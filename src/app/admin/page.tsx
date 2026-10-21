@@ -2,13 +2,15 @@
 import { Suspense } from "react";
 import { connection } from "next/server";
 import { redirect } from "next/navigation";
+import Link from "next/link";
+
 import { auth, signOut } from "@/auth";
 import {
   getAdminDashboardData,
   type AdminPostFilters,
 } from "@/db/queries/admin-posts";
-import Link from "next/link";
 
+// Format journal dates for display
 function formatDate(date: string) {
   const [year, month, day] = date.split("-").map(Number);
 
@@ -20,6 +22,7 @@ function formatDate(date: string) {
   }).format(new Date(Date.UTC(year, month - 1, day)));
 }
 
+// URL search parameters
 type DashboardSearchParams = Promise<{
   q?: string | string[];
   category?: string | string[];
@@ -33,7 +36,6 @@ function firstValue(
   return Array.isArray(value) ? value[0] ?? "" : value ?? "";
 }
 
-
 async function AdminContent({
   searchParams,
 }: {
@@ -41,6 +43,7 @@ async function AdminContent({
 }) {
   await connection();
 
+  // Verify administrator authentication
   const session = await auth();
   const adminGitHubId = process.env.ADMIN_GITHUB_ID;
 
@@ -48,6 +51,7 @@ async function AdminContent({
     redirect("/admin/login");
   }
 
+  // Read search and filter parameters
   const params = await searchParams;
 
   const category = firstValue(params.category);
@@ -73,6 +77,7 @@ async function AdminContent({
         : "journal",
   };
 
+  // Only query the database after authorisation
   const { statistics, entries, matchedCount } =
     await getAdminDashboardData(filters);
 
@@ -84,6 +89,8 @@ async function AdminContent({
 
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10 sm:px-6 sm:py-14">
+
+      {/* Dashboard heading and sign out */}
       <div className="mb-10 flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className="mb-2 text-sm font-medium text-green-400">
@@ -137,103 +144,129 @@ async function AdminContent({
 
       {/* Journal entries */}
       <section>
-        <div className="mb-5">
-          <h2 className="text-xl font-semibold text-white">
-            Journal entries
-          </h2>
 
-          <form
-            action="/admin"
-            method="get"
-            className="mb-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4"
+        {/* Section heading and new entry button */}
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h2 className="text-xl font-semibold text-white">
+              Journal entries
+            </h2>
+
+            <p className="mt-1 text-sm text-gray-400">
+              Manage your Bhangra and Guitar & Music journals.
+            </p>
+          </div>
+
+          <Link
+            href="/admin/posts/new"
+            className="inline-flex items-center gap-2 rounded-lg bg-green-400 px-5 py-2.5 text-sm font-semibold text-[#0B0D14] transition-colors hover:bg-green-300"
           >
-            <label className="flex flex-col gap-2 text-sm text-gray-400">
-              Search
-              <input
-                name="q"
-                type="search"
-                maxLength={100}
-                defaultValue={filters.query}
-                placeholder="Search entries..."
-                className="rounded-lg border border-white/15 bg-[#161A22] px-3 py-2.5 text-white placeholder:text-gray-500 focus:border-green-400 focus:outline-none"
-              />
-            </label>
-
-            <label className="flex flex-col gap-2 text-sm text-gray-400">
-              Journal
-              <select
-                name="category"
-                defaultValue={filters.category}
-                className="rounded-lg border border-white/15 bg-[#161A22] px-3 py-2.5 text-white focus:border-green-400 focus:outline-none"
-              >
-                <option value="all">All journals</option>
-                <option value="bhangra">Bhangra</option>
-                <option value="music">Guitar & Music</option>
-              </select>
-            </label>
-
-            <label className="flex flex-col gap-2 text-sm text-gray-400">
-              Status
-              <select
-                name="status"
-                defaultValue={filters.status}
-                className="rounded-lg border border-white/15 bg-[#161A22] px-3 py-2.5 text-white focus:border-green-400 focus:outline-none"
-              >
-                <option value="all">All statuses</option>
-                <option value="published">Published</option>
-                <option value="draft">Draft</option>
-              </select>
-            </label>
-
-            <label className="flex flex-col gap-2 text-sm text-gray-400">
-              Sort by
-              <select
-                name="sort"
-                defaultValue={filters.sort}
-                className="rounded-lg border border-white/15 bg-[#161A22] px-3 py-2.5 text-white focus:border-green-400 focus:outline-none"
-              >
-                <option value="journal">Journal date (newest)</option>
-                <option value="created">Recently created</option>
-                <option value="updated">Recently updated</option>
-              </select>
-            </label>
-
-            <div className="flex items-center gap-3 sm:col-span-2 lg:col-span-4">
-              <button
-                type="submit"
-                className="rounded-lg bg-green-400 px-5 py-2.5 text-sm font-semibold text-[#0B0D14] transition-colors hover:bg-green-300"
-              >
-                Apply filters
-              </button>
-
-              <Link
-                href="/admin"
-                className="text-sm text-gray-400 transition-colors hover:text-white"
-              >
-                Reset
-              </Link>
-
-              <span className="ml-auto text-sm text-gray-400">
-                {matchedCount} matching entries
-              </span>
-            </div>
-          </form>
-
-
-          <p className="mt-1 text-sm text-gray-400">
-            Manage your Bhangra and Guitar & Music journals.
-          </p>
+            + New entry
+          </Link>
         </div>
 
+        {/* Search, filters and sorting */}
+        <form
+          action="/admin"
+          method="get"
+          className="mb-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4"
+        >
+          {/* Search */}
+          <label className="flex flex-col gap-2 text-sm text-gray-400">
+            Search
+            <input
+              name="q"
+              type="search"
+              maxLength={100}
+              defaultValue={filters.query}
+              placeholder="Search entries..."
+              className="rounded-lg border border-white/15 bg-[#161A22] px-3 py-2.5 text-white placeholder:text-gray-500 focus:border-green-400 focus:outline-none"
+            />
+          </label>
+
+          {/* Journal filter */}
+          <label className="flex flex-col gap-2 text-sm text-gray-400">
+            Journal
+            <select
+              name="category"
+              defaultValue={filters.category}
+              className="rounded-lg border border-white/15 bg-[#161A22] px-3 py-2.5 text-white focus:border-green-400 focus:outline-none"
+            >
+              <option value="all">All journals</option>
+              <option value="bhangra">Bhangra</option>
+              <option value="music">Guitar & Music</option>
+            </select>
+          </label>
+
+          {/* Status filter */}
+          <label className="flex flex-col gap-2 text-sm text-gray-400">
+            Status
+            <select
+              name="status"
+              defaultValue={filters.status}
+              className="rounded-lg border border-white/15 bg-[#161A22] px-3 py-2.5 text-white focus:border-green-400 focus:outline-none"
+            >
+              <option value="all">All statuses</option>
+              <option value="published">Published</option>
+              <option value="draft">Draft</option>
+            </select>
+          </label>
+
+          {/* Sorting */}
+          <label className="flex flex-col gap-2 text-sm text-gray-400">
+            Sort by
+            <select
+              name="sort"
+              defaultValue={filters.sort}
+              className="rounded-lg border border-white/15 bg-[#161A22] px-3 py-2.5 text-white focus:border-green-400 focus:outline-none"
+            >
+              <option value="journal">
+                Journal date (newest)
+              </option>
+              <option value="created">
+                Recently created
+              </option>
+              <option value="updated">
+                Recently updated
+              </option>
+            </select>
+          </label>
+
+          {/* Filter actions */}
+          <div className="flex flex-wrap items-center gap-3 sm:col-span-2 lg:col-span-4">
+            <button
+              type="submit"
+              className="rounded-lg bg-green-400 px-5 py-2.5 text-sm font-semibold text-[#0B0D14] transition-colors hover:bg-green-300"
+            >
+              Apply filters
+            </button>
+
+            <Link
+              href="/admin"
+              className="text-sm text-gray-400 transition-colors hover:text-white"
+            >
+              Reset
+            </Link>
+
+            <span className="ml-auto text-sm text-gray-400">
+              {matchedCount} matching entries
+            </span>
+          </div>
+        </form>
+
+        {/* Journal entries list */}
         {entries.length === 0 ? (
           <div className="rounded-xl border border-dashed border-white/15 px-6 py-16 text-center">
             <h3 className="text-lg font-medium text-white">
-              No journal entries yet
+              {statistics.total === 0
+                ? "No journal entries yet"
+                : "No matching entries"}
             </h3>
 
             <p className="mx-auto mt-2 max-w-md text-sm text-gray-400">
-              Your published entries and drafts will appear
-              here once we build the journal editor.
+              {statistics.total === 0
+                ? "Create your first journal entry to get started."
+                : "Try adjusting your search or filters."}
             </p>
           </div>
         ) : (
@@ -242,9 +275,12 @@ async function AdminContent({
               <div
                 key={entry.id}
                 className={`flex flex-wrap items-center justify-between gap-4 p-5 ${
-                  index !== 0 ? "border-t border-white/10" : ""
+                  index !== 0
+                    ? "border-t border-white/10"
+                    : ""
                 }`}
               >
+                {/* Entry details */}
                 <div>
                   <h3 className="font-medium text-white">
                     {entry.title || "Untitled entry"}
@@ -272,6 +308,7 @@ async function AdminContent({
                   </div>
                 </div>
 
+                {/* Publication status */}
                 <span
                   className={
                     entry.status === "published"
@@ -292,7 +329,7 @@ async function AdminContent({
   );
 }
 
-
+// Page wrapper for request-time rendering
 export default function AdminPage({
   searchParams,
 }: {
@@ -310,4 +347,3 @@ export default function AdminPage({
     </Suspense>
   );
 }
-
