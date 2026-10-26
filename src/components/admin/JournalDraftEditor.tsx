@@ -6,6 +6,7 @@ import type { RefObject } from "react";
 import { useRouter } from "next/navigation";
 import type { JournalDraftFields } from "@/types/journal";
 
+import JournalVideoMedia from "./JournalVideoMedia";
 import JournalDateTimeFields from "./JournalDateTimeFields";
 import JournalRichTextEditor from "./JournalRichTextEditor";
 
@@ -478,6 +479,11 @@ async function discard() {
             }
           />
         </div>
+
+        <JournalVideoMedia
+          videoUrls={fields.videoUrls}
+          onChange={(videoUrls) => updateFields({ videoUrls })}
+        />
 
         {/* Entry settings */}
         <section className="space-y-4 rounded-xl border border-white/10 p-5">

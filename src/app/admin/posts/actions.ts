@@ -3,13 +3,15 @@
 
 import { auth } from "@/auth";
 import { db } from "@/db";
-import { posts } from "@/db/schema";
+import { posts, postMedia } from "@/db/schema";
 import type { JournalDraftInput } from "@/types/journal";
 import type { JSONContent } from "@tiptap/core";
-import { and, eq } from "drizzle-orm";
+import { and, asc, eq, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import type { JournalDraftFields } from "@/types/journal";
+
+import { validateVideoUrls } from "@/lib/journal/youtube";
 
 const EMPTY_CONTENT = {
   type: "doc",
@@ -37,9 +39,19 @@ export async function loadJournalEditor(id: string) {
   const [post] = await db.select().from(posts).where(eq(posts.id, id)).limit(1);
   if (!post) throw new Error("Journal entry no longer exists.");
 
+  const media = await db.select({ url: postMedia.url }).from(postMedia)
+    .where(and(eq(postMedia.postId, id), eq(postMedia.type, "video_embed")))
+    .orderBy(asc(postMedia.position), asc(postMedia.id));
+  const videoUrls = media.map((item) => item.url);
+
   return {
     mode: post.status,
-    initial: post.pendingRevision ?? {
+    initial: post.pendingRevision ? {
+      ...post.pendingRevision,
+      // Revisions created before media support inherit the published videos.
+      videoUrls: post.pendingRevision.videoUrls ?? videoUrls,
+    } : {
+      videoUrls,
       category: post.category,
       title: post.title ?? "",
       content: post.content as JSONContent,
@@ -257,7 +269,44 @@ function validateInput(input: JournalDraftInput) {
     journalTime: input.journalTime || null,
     content: content as Record<string, unknown>,
     hasContent: hasText(content),
+    videoUrls: validateVideoUrls(input.videoUrls),
   };
+}
+
+// One PostgreSQL statement keeps fields and videos atomic with Neon HTTP.
+// Only video rows are replaced; future image attachments are left intact.
+async function writePostAndVideos(
+  data: ReturnType<typeof validateInput>,
+  expectedStatus: "draft" | "published",
+  publish: boolean,
+) {
+  const result = await db.execute(sql`
+    WITH updated AS (
+      UPDATE ${posts} SET
+        category = ${data.category}::journal_category,
+        title = ${data.title}, content = ${JSON.stringify(data.content)}::jsonb,
+        journal_date = ${data.journalDate}::date,
+        journal_time = ${data.journalTime}::time,
+        status = ${publish ? "published" : "draft"}::publication_status,
+        published_at = CASE WHEN ${publish && expectedStatus === "draft"}
+          THEN now() ELSE published_at END,
+        pending_revision = NULL, updated_at = now()
+      WHERE id = ${data.id}::uuid AND status = ${expectedStatus}::publication_status
+      RETURNING id
+    ), removed AS (
+      DELETE FROM ${postMedia} WHERE post_id IN (SELECT id FROM updated)
+        AND type = 'video_embed' RETURNING id
+    ), inserted AS (
+      INSERT INTO ${postMedia} (post_id, type, url, position)
+      SELECT updated.id, 'video_embed'::media_type, video.url, (video.position - 1)::integer
+      FROM updated CROSS JOIN jsonb_array_elements_text(${JSON.stringify(data.videoUrls)}::jsonb)
+        WITH ORDINALITY AS video(url, position)
+      CROSS JOIN (SELECT count(*) FROM removed) AS deletion_done
+      RETURNING id
+    )
+    SELECT id FROM updated
+  `);
+  return result.rows[0];
 }
 
 // Create a permanent draft as soon as New entry is clicked.
@@ -290,23 +339,7 @@ export async function saveJournalDraft(
 
   const data = validateInput(input);
 
-  const [updated] = await db
-    .update(posts)
-    .set({
-      category: data.category,
-      title: data.title,
-      content: data.content,
-      journalDate: data.journalDate,
-      journalTime: data.journalTime,
-      updatedAt: new Date(),
-    })
-    .where(
-      and(
-        eq(posts.id, data.id),
-        eq(posts.status, "draft")
-      )
-    )
-    .returning({ id: posts.id });
+  const updated = await writePostAndVideos(data, "draft", false);
 
   if (!updated) {
     throw new Error("Draft not found or no longer editable.");
@@ -331,25 +364,7 @@ export async function publishJournalDraft(
     throw new Error("Write some content before publishing.");
   }
 
-  const [updated] = await db
-    .update(posts)
-    .set({
-      category: data.category,
-      title: data.title,
-      content: data.content,
-      journalDate: data.journalDate,
-      journalTime: data.journalTime,
-      status: "published",
-      publishedAt: new Date(),
-      updatedAt: new Date(),
-    })
-    .where(
-      and(
-        eq(posts.id, data.id),
-        eq(posts.status, "draft")
-      )
-    )
-    .returning({ id: posts.id });
+  const updated = await writePostAndVideos(data, "draft", true);
 
   if (!updated) {
     throw new Error("Draft not found or already published.");
@@ -400,6 +415,7 @@ export async function savePublishedRevision(
   const data = validateInput(input);
 
   const revision: JournalDraftFields = {
+    videoUrls: data.videoUrls,
     category: data.category,
     title: data.title ?? "",
     content: data.content as JSONContent,
@@ -451,27 +467,7 @@ export async function publishPublishedRevision(
     );
   }
 
-  const [updated] = await db
-    .update(posts)
-    .set({
-      category: data.category,
-      title: data.title,
-      content: data.content,
-      journalDate: data.journalDate,
-      journalTime: data.journalTime,
-
-      // The unpublished revision is no longer needed.
-      pendingRevision: null,
-
-      updatedAt: new Date(),
-    })
-    .where(
-      and(
-        eq(posts.id, data.id),
-        eq(posts.status, "published")
-      )
-    )
-    .returning({ id: posts.id });
+  const updated = await writePostAndVideos(data, "published", true);
 
   if (!updated) {
     throw new Error("Published entry not found.");

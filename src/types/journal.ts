@@ -1,6 +1,7 @@
 import type { JSONContent } from "@tiptap/core";
 
 export type JournalDraftFields = {
+  videoUrls: string[];
   category: "bhangra" | "music";
   title: string;
   content: JSONContent;
