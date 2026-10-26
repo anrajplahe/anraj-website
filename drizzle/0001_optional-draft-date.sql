@@ -1,0 +1,1 @@
+ALTER TABLE "posts" ALTER COLUMN "journal_date" DROP NOT NULL;

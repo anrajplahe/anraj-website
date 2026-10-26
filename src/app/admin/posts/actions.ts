@@ -4,92 +4,522 @@
 import { auth } from "@/auth";
 import { db } from "@/db";
 import { posts } from "@/db/schema";
+import type { JournalDraftInput } from "@/types/journal";
+import type { JSONContent } from "@tiptap/core";
+import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import type { JournalDraftFields } from "@/types/journal";
 
-export async function createDraft(formData: FormData) {
-  // Always verify authorisation inside the Server Action.
+const EMPTY_CONTENT = {
+  type: "doc",
+  content: [{ type: "paragraph" }],
+};
+
+async function requireAdmin() {
   const session = await auth();
   const adminId = process.env.ADMIN_GITHUB_ID;
 
   if (!adminId || session?.githubId !== adminId) {
-    redirect("/admin/login");
+    throw new Error("Unauthorised.");
+  }
+}
+
+// Read afresh when an Activity-preserved editor becomes visible again.
+// Do not cache this: its revision may have changed since the route was visited.
+export async function loadJournalEditor(id: string) {
+  await requireAdmin();
+
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) {
+    throw new Error("Invalid entry ID.");
   }
 
-  function getField(name: string) {
-    const value = formData.get(name);
-    return typeof value === "string" ? value.trim() : "";
+  const [post] = await db.select().from(posts).where(eq(posts.id, id)).limit(1);
+  if (!post) throw new Error("Journal entry no longer exists.");
+
+  return {
+    mode: post.status,
+    initial: post.pendingRevision ?? {
+      category: post.category,
+      title: post.title ?? "",
+      content: post.content as JSONContent,
+      journalDate: post.journalDate ?? "",
+      journalTime: post.journalTime?.slice(0, 5) ?? "",
+    },
+  };
+}
+
+function isObject(value: unknown): value is Record<string, unknown> {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    !Array.isArray(value)
+  );
+}
+
+// Keep only document nodes and formatting supported by our editor.
+function validateContent(value: unknown): JSONContent {
+  const serialized = JSON.stringify(value);
+
+  if (!serialized || serialized.length > 100000) {
+    throw new Error("Invalid or oversized journal content.");
   }
 
-  const category = getField("category");
-  const title = getField("title");
-  const rawContent = getField("content");
-  const journalDate = getField("journalDate");
-  const journalTime = getField("journalTime");
+  let nodeCount = 0;
 
-  // Validate all submitted data on the server.
-  if (category !== "bhangra" && category !== "music") {
-    throw new Error("Invalid journal category.");
+  function clean(node: unknown, depth: number): JSONContent {
+    nodeCount++;
+
+    if (
+      !isObject(node) ||
+      depth > 20 ||
+      nodeCount > 2000
+    ) {
+      throw new Error("Invalid journal document.");
+    }
+
+    const type = node.type;
+
+    if (type === "text") {
+      if (
+        typeof node.text !== "string" ||
+        node.text.length > 20000
+      ) {
+        throw new Error("Invalid journal text.");
+      }
+
+      const marks = node.marks === undefined
+        ? []
+        : node.marks;
+
+      if (!Array.isArray(marks) || marks.length > 10) {
+        throw new Error("Invalid formatting.");
+      }
+
+      const safeMarks = marks.map((mark: unknown) => {
+        if (!isObject(mark)) {
+          throw new Error("Invalid formatting.");
+        }
+
+        if (
+          mark.type === "bold" ||
+          mark.type === "italic" ||
+          mark.type === "underline" ||
+          mark.type === "strike"
+        ) {
+          return { type: mark.type };
+        }
+
+        if (
+          mark.type === "link" &&
+          isObject(mark.attrs) &&
+          typeof mark.attrs.href === "string"
+        ) {
+          try {
+            const url = new URL(mark.attrs.href);
+
+            if (
+              !["http:", "https:"].includes(url.protocol) ||
+              !url.hostname ||
+              url.toString().length > 2048
+            ) {
+              throw new Error("Invalid link.");
+            }
+
+            return {
+              type: "link",
+              attrs: { href: url.toString() },
+            };
+          } catch {
+            throw new Error("Invalid link URL.");
+          }
+        }
+
+        throw new Error("Unsupported formatting.");
+      });
+
+      return {
+        type: "text",
+        text: node.text,
+        ...(safeMarks.length ? { marks: safeMarks } : {}),
+      };
+    }
+
+    if (type === "hardBreak") {
+      return { type: "hardBreak" };
+    }
+
+    const allowedNodes = [
+      "doc",
+      "paragraph",
+      "bulletList",
+      "orderedList",
+      "listItem",
+    ];
+
+    if (
+      typeof type !== "string" ||
+      !allowedNodes.includes(type)
+    ) {
+      throw new Error("Unsupported document element.");
+    }
+
+    if (
+      node.content !== undefined &&
+      !Array.isArray(node.content)
+    ) {
+      throw new Error("Invalid document content.");
+    }
+
+    return {
+      type,
+      content: (node.content ?? []).map(
+        (child: unknown) => clean(child, depth + 1)
+      ),
+    };
   }
 
-  if (title.length > 150 || rawContent.length > 100000) {
-    throw new Error("Journal entry exceeds the length limit.");
- }
+  const content = clean(value, 0);
 
-  const parsedDate = new Date(`${journalDate}T00:00:00Z`);
+  if (content.type !== "doc") {
+    throw new Error("Invalid document root.");
+  }
 
+  return content;
+}
+
+function hasText(content: JSONContent): boolean {
+  return (
+    Boolean(content.text?.trim()) ||
+    Boolean(content.content?.some(hasText))
+  );
+}
+
+function validateInput(input: JournalDraftInput) {
   if (
-    !/^\d{4}-\d{2}-\d{2}$/.test(journalDate) ||
-    Number.isNaN(parsedDate.getTime()) ||
-    parsedDate.toISOString().slice(0, 10) !== journalDate
+    typeof input.id !== "string" ||
+    !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+      input.id
+    )
   ) {
-    throw new Error("A valid journal date is required.");
+    throw new Error("Invalid entry ID.");
   }
 
   if (
-    journalTime &&
-    !/^([01]\d|2[0-3]):[0-5]\d$/.test(journalTime)
+    input.category !== "bhangra" &&
+    input.category !== "music"
+  ) {
+    throw new Error("Invalid journal.");
+  }
+
+  if (
+    typeof input.title !== "string" ||
+    input.title.length > 150
+  ) {
+    throw new Error("Invalid title.");
+  }
+
+  if (
+    typeof input.journalDate !== "string" ||
+    typeof input.journalTime !== "string"
+  ) {
+    throw new Error("Invalid date or time.");
+  }
+
+  const date = input.journalDate;
+
+  if (date) {
+    const parsed = new Date(`${date}T00:00:00Z`);
+
+    if (
+      !/^\d{4}-\d{2}-\d{2}$/.test(date) ||
+      Number.isNaN(parsed.getTime()) ||
+      parsed.toISOString().slice(0, 10) !== date
+    ) {
+      throw new Error("Invalid journal date.");
+    }
+  }
+
+  if (
+    input.journalTime &&
+    !/^([01]\d|2[0-3]):[0-5]\d$/.test(input.journalTime)
   ) {
     throw new Error("Invalid journal time.");
   }
 
-  // Store simple text in a Tiptap-compatible JSON structure.
-  
-let parsedContent: unknown;
+  const content = validateContent(input.content);
 
-try {
-  parsedContent = JSON.parse(rawContent);
-} catch {
-  throw new Error("Invalid journal content.");
+  return {
+    id: input.id,
+    category: input.category,
+    title: input.title.trim() || null,
+    journalDate: date || null,
+    journalTime: input.journalTime || null,
+    content: content as Record<string, unknown>,
+    hasContent: hasText(content),
+  };
 }
 
-if (
-  !parsedContent ||
-  typeof parsedContent !== "object" ||
-  Array.isArray(parsedContent)
-) {
-  throw new Error("Invalid journal content.");
-}
+// Create a permanent draft as soon as New entry is clicked.
+export async function createJournalDraft() {
+  await requireAdmin();
 
-const content = parsedContent as Record<string, unknown>;
+  const [created] = await db
+    .insert(posts)
+    .values({
+      category: "bhangra",
+      content: EMPTY_CONTENT,
+      journalDate: null,
+      status: "draft",
+    })
+    .returning({ id: posts.id });
 
-if (
-  content.type !== "doc" ||
-  !Array.isArray(content.content)
-) {
-  throw new Error("Invalid journal document structure.");
-}
-
-
-  await db.insert(posts).values({
-    category,
-    title: title || null,
-    content,
-    journalDate,
-    journalTime: journalTime || null,
-    status: "draft",
-  });
+  if (!created) {
+    throw new Error("Could not create draft.");
+  }
 
   revalidatePath("/admin");
-  redirect("/admin");
+  redirect(`/admin/posts/${created.id}/edit`);
+}
+
+// Autosave or manually save changes to an existing draft.
+export async function saveJournalDraft(
+  input: JournalDraftInput
+) {
+  await requireAdmin();
+
+  const data = validateInput(input);
+
+  const [updated] = await db
+    .update(posts)
+    .set({
+      category: data.category,
+      title: data.title,
+      content: data.content,
+      journalDate: data.journalDate,
+      journalTime: data.journalTime,
+      updatedAt: new Date(),
+    })
+    .where(
+      and(
+        eq(posts.id, data.id),
+        eq(posts.status, "draft")
+      )
+    )
+    .returning({ id: posts.id });
+
+  if (!updated) {
+    throw new Error("Draft not found or no longer editable.");
+  }
+
+  return { saved: true };
+}
+
+// Publication is always a separate, explicit action.
+export async function publishJournalDraft(
+  input: JournalDraftInput
+) {
+  await requireAdmin();
+
+  const data = validateInput(input);
+
+  if (!data.journalDate) {
+    throw new Error("Choose a journal date before publishing.");
+  }
+
+  if (!data.hasContent) {
+    throw new Error("Write some content before publishing.");
+  }
+
+  const [updated] = await db
+    .update(posts)
+    .set({
+      category: data.category,
+      title: data.title,
+      content: data.content,
+      journalDate: data.journalDate,
+      journalTime: data.journalTime,
+      status: "published",
+      publishedAt: new Date(),
+      updatedAt: new Date(),
+    })
+    .where(
+      and(
+        eq(posts.id, data.id),
+        eq(posts.status, "draft")
+      )
+    )
+    .returning({ id: posts.id });
+
+  if (!updated) {
+    throw new Error("Draft not found or already published.");
+  }
+
+  revalidatePath("/admin");
+  return { published: true };
+}
+
+// Delete a draft only after the administrator confirms.
+export async function discardJournalDraft(id: string) {
+  await requireAdmin();
+
+  if (
+    !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
+  ) {
+    throw new Error("Invalid entry ID.");
+  }
+
+  const [deleted] = await db
+    .delete(posts)
+    .where(
+      and(
+        eq(posts.id, id),
+        eq(posts.status, "draft")
+      )
+    )
+    .returning({ id: posts.id });
+
+  if (!deleted) {
+    throw new Error("Draft not found or cannot be discarded.");
+  }
+
+  revalidatePath("/admin");
+  return { discarded: true };
+}
+
+
+/**
+ * Autosave changes to a published entry without
+ * modifying the published content.
+ */
+export async function savePublishedRevision(
+  input: JournalDraftInput
+) {
+  await requireAdmin();
+
+  const data = validateInput(input);
+
+  const revision: JournalDraftFields = {
+    category: data.category,
+    title: data.title ?? "",
+    content: data.content as JSONContent,
+    journalDate: data.journalDate ?? "",
+    journalTime: data.journalTime ?? "",
+  };
+
+  const [updated] = await db
+    .update(posts)
+    .set({
+      pendingRevision: revision,
+      updatedAt: new Date(),
+    })
+    .where(
+      and(
+        eq(posts.id, data.id),
+        eq(posts.status, "published")
+      )
+    )
+    .returning({ id: posts.id });
+
+  if (!updated) {
+    throw new Error("Published entry not found.");
+  }
+
+  return { saved: true };
+}
+
+/**
+ * Explicitly apply changes to the published entry.
+ * The original publication timestamp is preserved.
+ */
+export async function publishPublishedRevision(
+  input: JournalDraftInput
+) {
+  await requireAdmin();
+
+  const data = validateInput(input);
+
+  if (!data.journalDate) {
+    throw new Error(
+      "Choose a journal date before publishing changes."
+    );
+  }
+
+  if (!data.hasContent) {
+    throw new Error(
+      "Journal content cannot be empty."
+    );
+  }
+
+  const [updated] = await db
+    .update(posts)
+    .set({
+      category: data.category,
+      title: data.title,
+      content: data.content,
+      journalDate: data.journalDate,
+      journalTime: data.journalTime,
+
+      // The unpublished revision is no longer needed.
+      pendingRevision: null,
+
+      updatedAt: new Date(),
+    })
+    .where(
+      and(
+        eq(posts.id, data.id),
+        eq(posts.status, "published")
+      )
+    )
+    .returning({ id: posts.id });
+
+  if (!updated) {
+    throw new Error("Published entry not found.");
+  }
+
+  revalidatePath("/admin");
+  revalidatePath("/bhangra");
+  revalidatePath("/music");
+
+  return { published: true };
+}
+
+/**
+ * Discard only the unpublished changes.
+ * Never delete the published entry itself.
+ */
+export async function discardPublishedRevision(
+  id: string
+) {
+  await requireAdmin();
+
+  if (
+    !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+      id
+    )
+  ) {
+    throw new Error("Invalid entry ID.");
+  }
+
+  const [updated] = await db
+    .update(posts)
+    .set({
+      pendingRevision: null,
+      updatedAt: new Date(),
+    })
+    .where(
+      and(
+        eq(posts.id, id),
+        eq(posts.status, "published")
+      )
+    )
+    .returning({ id: posts.id });
+
+  if (!updated) {
+    throw new Error("Published entry not found.");
+  }
+
+  revalidatePath("/admin");
+
+  return { discarded: true };
 }

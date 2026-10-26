@@ -10,6 +10,8 @@ import {
   type AdminPostFilters,
 } from "@/db/queries/admin-posts";
 
+import { createJournalDraft } from "./posts/actions";
+
 // Format journal dates for display
 function formatDate(date: string) {
   const [year, month, day] = date.split("-").map(Number);
@@ -157,12 +159,16 @@ async function AdminContent({
             </p>
           </div>
 
-          <Link
-            href="/admin/posts/new"
+          
+        <form action={createJournalDraft}>
+          <button
+            type="submit"
             className="inline-flex items-center gap-2 rounded-lg bg-green-400 px-5 py-2.5 text-sm font-semibold text-[#0B0D14] transition-colors hover:bg-green-300"
           >
             + New entry
-          </Link>
+          </button>
+        </form>
+
         </div>
 
         {/* Search, filters and sorting */}
@@ -300,7 +306,9 @@ async function AdminContent({
                     </span>
 
                     <span className="text-gray-400">
-                      {formatDate(entry.journalDate)}
+                      {entry.journalDate
+                        ? formatDate(entry.journalDate)
+                        : "Date not set"}
                       {entry.journalTime
                         ? ` · ${entry.journalTime.slice(0, 5)}`
                         : ""}
@@ -320,6 +328,24 @@ async function AdminContent({
                     ? "Published"
                     : "Draft"}
                 </span>
+                
+                <div className="flex flex-wrap items-center gap-3">
+                  {entry.status === "published" &&
+                    entry.hasPendingRevision && (
+                      <span className="text-xs text-amber-300">
+                        Unpublished changes
+                      </span>
+                    )}
+
+                  <Link
+                    href={`/admin/posts/${entry.id}/edit`}
+                    className="text-sm font-medium text-green-400 transition-colors hover:text-green-300"
+                  >
+                    {entry.status === "draft"
+                      ? "Edit draft →"
+                      : "Edit entry →"}
+                  </Link>
+                </div>
               </div>
             ))}
           </div>

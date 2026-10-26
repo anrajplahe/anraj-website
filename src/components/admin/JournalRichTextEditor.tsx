@@ -23,10 +23,12 @@ const emptyDocument: JSONContent = {
 
 type Props = {
   initialContent?: JSONContent;
+  onContentChange?: (content: JSONContent) => void;
 };
 
 export default function JournalRichTextEditor({
   initialContent = emptyDocument,
+  onContentChange,
 }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -91,11 +93,13 @@ export default function JournalRichTextEditor({
 
     // Keep the hidden field updated as content changes.
     onUpdate: ({ editor }) => {
+      const content = editor.getJSON();
+
       if (inputRef.current) {
-        inputRef.current.value = JSON.stringify(
-          editor.getJSON()
-        );
+        inputRef.current.value = JSON.stringify(content);
       }
+
+      onContentChange?.(content);
     },
   });
 

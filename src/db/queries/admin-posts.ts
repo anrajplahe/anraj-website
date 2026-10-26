@@ -55,7 +55,7 @@ export async function getAdminDashboardData(
       : filters.sort === "updated"
         ? [desc(posts.updatedAt), desc(posts.id)]
         : [
-            desc(posts.journalDate),
+            sql`${posts.journalDate} DESC NULLS LAST`,
             sql`${posts.journalTime} DESC NULLS LAST`,
             desc(posts.createdAt),
             desc(posts.id),
@@ -92,6 +92,8 @@ export async function getAdminDashboardData(
           status: posts.status,
           journalDate: posts.journalDate,
           journalTime: posts.journalTime,
+          hasPendingRevision:
+            sql<boolean>`${posts.pendingRevision} IS NOT NULL`,
         })
         .from(posts)
         .where(conditions)

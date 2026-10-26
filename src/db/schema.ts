@@ -13,6 +13,8 @@ import {
   index,
 } from "drizzle-orm/pg-core";
 
+import type { JournalDraftFields } from "@/types/journal";
+
 // Journal categories
 export const journalCategory = pgEnum(
   "journal_category",
@@ -46,10 +48,11 @@ export const posts = pgTable(
       .$type<Record<string, unknown>>()
       .notNull(),
 
+    pendingRevision: jsonb("pending_revision")
+      .$type<JournalDraftFields>(),
+
     // User-selected date and optional time
-    journalDate: date("journal_date", {
-      mode: "string",
-    }).notNull(),
+    journalDate: date("journal_date", { mode: "string" }),
 
     journalTime: time("journal_time"),
 
