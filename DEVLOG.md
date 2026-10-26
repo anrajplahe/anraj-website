@@ -191,6 +191,98 @@ Removing the unnecessary runtime declaration resolved the issue. I was then able
 
 **Milestone:** GitHub authentication, session management and the protected admin dashboard have been implemented and tested locally. Production configuration and deployment remain to be completed.
 
+## 21 October 2026 — Admin Dashboard & Database Integration
+
+**What I built**
+- Reorganised the Next.js application using Route Groups to separate public pages from the administrator interface without changing existing URLs.
+- Introduced dedicated public and admin layouts while preserving the website's shared styling and branding.
+- Connected the administrator dashboard to the Neon PostgreSQL database using Drizzle ORM.
+- Implemented database queries for journal statistics, including total entries, published posts and drafts.
+- Added server-side search, category filtering, publication status filtering and chronological sorting.
+- Created an empty state for when no journal entries exist.
+
+**Challenges and lessons**
+- Learned how nested layouts and Route Groups work in the Next.js App Router.
+- Resolved duplicate navigation and footer components caused by rendering them in multiple layouts.
+- Used URL search parameters to implement bookmarkable filters without unnecessary client-side state.
+- Learned how to construct conditional database queries and combine filtering, sorting and aggregation.
+- Ensured database queries only execute after checking the administrator's session and permissions.
+
+**Milestone:** Implemented and tested a database-connected administrator dashboard with working statistics, search, filtering and sorting. Journal creation and editing functionality will be developed next.
+
+## 21 October 2026 — Journal Editor, Autosaving & Publishing
+
+### Overview
+
+Implemented a database-backed journal editor for the Bhangra and Guitar & Music sections of the website. The system now supports creating, editing and automatically saving drafts, alongside explicit publishing and draft deletion.
+
+### Implementation
+
+- **Rich-text editor:** Integrated Tiptap with support for bold, italic, underline, strikethrough, ordered and unordered lists, hyperlinks, undo and redo. Added contextual toolbar highlighting and custom hyperlink controls.
+- **Automatic draft saving:** Implemented debounced autosaving using React state and Next.js Server Actions. Changes are persisted to Neon PostgreSQL after a short period of inactivity.
+- **Save coordination:** Introduced a queue for asynchronous save operations to prevent older requests from overwriting newer changes. Added save-status feedback and warnings for potentially unsaved changes.
+- **Draft lifecycle:** Added manual Save draft, Publish and Discard draft actions. Drafts can be reopened from the admin dashboard, with their existing content and formatting restored.
+- **Database migration:** Updated the Drizzle schema to permit nullable journal dates for drafts, while enforcing a valid date before publication. Adjusted dashboard ordering to place undated drafts after dated entries.
+- **Security and validation:** Protected database mutations with server-side administrator authentication and added validation for journal fields, rich-text content and hyperlink URLs.
+
+### Challenges & Learning
+
+A key challenge was managing asynchronous persistence without introducing race conditions or losing recent edits. This involved coordinating pending save requests, ensuring navigation waits for outstanding changes, and accounting for browser limitations when closing a tab.
+
+Implementing the rich-text editor also provided experience with structured JSON documents, React state synchronisation and extending third-party editor functionality.
+
+The distinction between saving and publishing was maintained throughout: autosaving can update drafts but cannot publish them automatically.
+
+### Outcome & Next Steps
+
+The admin dashboard now supports a working draft-to-publication workflow backed by PostgreSQL.
+
+Next steps include supporting revisions to published entries, adding image and video management, and displaying published journal content on the public-facing pages. Production deployment will follow separate database configuration and testing.
+
+## 26 October 2026 — Published Journal Revisions & Editor State Management
+
+### What I Built
+
+Extended the journal publishing system to support editing previously published entries without immediately affecting their published content.
+
+- Added the ability to reopen and edit published journal entries through the admin dashboard.
+- Introduced a nullable `pending_revision` JSONB column in PostgreSQL to store unpublished changes separately from the published entry.
+- Implemented autosaving for published-entry revisions, preserving changes to titles, categories, rich-text content, journal dates and times.
+- Added **Save draft**, **Publish changes** and **Discard changes** functionality for published entries.
+- Reused the existing Tiptap editor and journal form for both new drafts and published entries.
+- Added dashboard indicators for published entries with outstanding unpublished changes.
+- Implemented server-side actions to save, publish and discard revisions while enforcing administrator authorisation.
+
+### Technical Decisions
+
+**Separating published content from unpublished revisions**
+
+Rather than allowing autosaving to update published records directly, I introduced a separate revision field. This ensures that unfinished changes cannot unintentionally replace published content.
+
+The revision workflow follows three distinct operations:
+
+- **Save draft:** Persist the latest changes while preserving the published version.
+- **Publish changes:** Apply the revised content to the published entry and clear the pending revision.
+- **Discard changes:** Remove the unpublished revision without deleting or modifying the published entry.
+
+**Reusing existing components**
+
+Instead of maintaining separate editors for draft and published content, I extended the existing editor to support both workflows. This reduced duplication and kept formatting, validation and autosaving behaviour consistent.
+
+### Challenges & Lessons Learned
+
+**Asynchronous state and persistence**
+
+During testing, I encountered an issue where changes to published entries were not consistently persisted.
+
+Investigating the problem highlighted the importance of synchronising React state with asynchronous save operations. I refined how the editor tracks its latest field values and coordinates database updates so that save actions operate on the intended content.
+
+**React state preservation in Next.js 16**
+
+A further issue occurred when reopening an entry after saving or publishing changes. The editor initially worked but subsequently became uneditable.
+
+This was related to temporary editing state being retained across navigation, including flags used to prevent conflicting
+
 ---
 
 ## Documentation and Reference Resources
@@ -228,3 +320,10 @@ Official documentation relevant to the frameworks, tools and techniques used in 
 - [Auth.js — Protecting Resources](https://authjs.dev/getting-started/session-management/protecting) — Server-side session checks and access control.
 - [Next.js — `connection()`](https://nextjs.org/docs/app/api-reference/functions/connection) — Rendering request-specific content without prerendering.
 - [Next.js — Route Groups](https://nextjs.org/docs/app/api-reference/file-conventions/route-groups) — Separating public and admin layouts without changing URLs.
+
+### Journal Editor, Autosaving and Publishing
+- [Tiptap — React Integration](https://tiptap.dev/docs/editor/getting-started/install/react)
+- [Tiptap — Link Extension](https://tiptap.dev/docs/editor/extensions/marks/link)
+- [Next.js — Server Functions and Mutations](https://nextjs.org/docs/app/getting-started/updating-data)
+- [Drizzle ORM — Migrations](https://orm.drizzle.team/docs/migrations)
+- [React — Synchronising with Effects](https://react.dev/learn/synchronizing-with-effects)
