@@ -6,7 +6,9 @@ import type { RefObject } from "react";
 import { useRouter } from "next/navigation";
 import type { JournalDraftFields } from "@/types/journal";
 
-import JournalVideoMedia from "./JournalVideoMedia";
+import type { ImageUploadController } from "./JournalImageMedia";
+import JournalMediaEditor from "./JournalMediaEditor";
+import { reconcileMedia } from "@/lib/journal/media";
 import JournalDateTimeFields from "./JournalDateTimeFields";
 import JournalRichTextEditor from "./JournalRichTextEditor";
 
@@ -31,6 +33,7 @@ type SessionWork = {
 
 type SessionProps = Props & {
   initial: JournalDraftFields;
+  version: string;
   mode: "draft" | "published";
   work: RefObject<SessionWork>;
 };
@@ -106,6 +109,7 @@ export default function JournalDraftEditor({ id }: Props) {
 function JournalEditorSession({
   id,
   initial,
+  version,
   mode,
   work,
 }: SessionProps) {
@@ -117,6 +121,8 @@ function JournalEditorSession({
   const [error, setError] = useState("");
 
   // Keep the latest values available to async callbacks.
+  const imageUploads = useRef<ImageUploadController>(null);
+  const latestVersion = useRef(version);
   const latestFields = useRef(initial);
   const lastSaved = useRef(JSON.stringify(initial));
 
@@ -133,10 +139,10 @@ function JournalEditorSession({
   ) {
     if (!active.current || stopped.current || actionRunning.current) return;
 
-    const next = {
+    const next = reconcileMedia({
       ...latestFields.current,
       ...changes,
-    };
+    }, () => crypto.randomUUID());
 
     latestFields.current = next;
     setFields(next);
@@ -166,16 +172,18 @@ const savePending = useCallback(async () => {
       try {
         if (mode === "published") {
           // Store unpublished edits separately.
-          await savePublishedRevision({
-            id,
+          const result = await savePublishedRevision({
+            id, version: latestVersion.current,
             ...snapshot,
           });
+          latestVersion.current = result.version;
         } else {
           // Save an ordinary unpublished draft.
-          await saveJournalDraft({
-            id,
+          const result = await saveJournalDraft({
+            id, version: latestVersion.current,
             ...snapshot,
           });
+          latestVersion.current = result.version;
         }
 
         // Only record a successful database save.
@@ -234,7 +242,7 @@ const savePending = useCallback(async () => {
     const timer = window.setTimeout(() => {
       void savePending().catch(() => {
         setError(
-          "Autosave failed. Your changes have not all been saved. Please retry."
+          "Autosave failed. If this entry changed in another tab, reload it before saving. Otherwise, retry."
         );
       });
     }, 1200);
@@ -248,7 +256,7 @@ const savePending = useCallback(async () => {
       if (
         !stopped.current &&
         JSON.stringify(latestFields.current) !==
-          lastSaved.current
+          lastSaved.current || imageUploads.current?.hasPending()
       ) {
         event.preventDefault();
         event.returnValue = "";
@@ -270,6 +278,7 @@ const savePending = useCallback(async () => {
     setError("");
 
     try {
+      await imageUploads.current?.settle();
       await savePending();
       stopped.current = true;
 
@@ -277,10 +286,8 @@ const savePending = useCallback(async () => {
         router.push("/admin");
         router.refresh();
       }
-    } catch {
-      setError(
-        "Could not save your changes. Please retry before leaving."
-      );
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "Could not save your changes. Please retry before leaving.");
     } finally {
       setBusy(false);
     }
@@ -294,21 +301,22 @@ const savePending = useCallback(async () => {
 
     setBusy(true);
     setError("");
-    stopped.current = true;
 
     try {
+      await imageUploads.current?.settle();
+      stopped.current = true;
       // Let any already-started autosave finish first.
       await saveQueue.current.catch(() => {});
 
       // Publish includes the latest unsaved field values.
       if (mode === "published") {
         await publishPublishedRevision({
-          id,
+          id, version: latestVersion.current,
           ...latestFields.current,
         });
       } else {
         await publishJournalDraft({
-          id,
+          id, version: latestVersion.current,
           ...latestFields.current,
         });
       }
@@ -349,9 +357,9 @@ async function discard() {
     await saveQueue.current.catch(() => {});
 
     if (mode === "published") {
-      await discardPublishedRevision(id);
+      await discardPublishedRevision(id, latestVersion.current);
     } else {
-      await discardJournalDraft(id);
+      await discardJournalDraft(id, latestVersion.current);
     }
 
     if (active.current) {
@@ -480,10 +488,17 @@ async function discard() {
           />
         </div>
 
-        <JournalVideoMedia
-          videoUrls={fields.videoUrls}
-          onChange={(videoUrls) => updateFields({ videoUrls })}
-        />
+        <JournalMediaEditor postId={id} fields={fields} controller={imageUploads}
+          onChange={updateFields}
+          onImagesChange={(update) => {
+            // Upload completion joins the latest ordering, including while a
+            // Save/Publish action is waiting for verification to finish.
+            if (!active.current || stopped.current) return;
+            const next = reconcileMedia({ ...latestFields.current, images: update(latestFields.current.images) }, () => crypto.randomUUID());
+            latestFields.current = next;
+            setFields(next);
+            setSaveStatus("unsaved");
+          }} />
 
         {/* Entry settings */}
         <section className="space-y-4 rounded-xl border border-white/10 p-5">

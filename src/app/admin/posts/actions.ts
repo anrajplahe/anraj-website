@@ -1,12 +1,16 @@
 
 "use server";
 
-import { auth } from "@/auth";
+import { requireJournalAdmin as requireAdmin } from "@/lib/journal/admin";
+import { resolveJournalImages } from "@/lib/journal/image-storage";
+import { randomUUID } from "node:crypto";
+import { reconcileMedia, validateMediaArrangement } from "@/lib/journal/media";
+import { validateImageInput } from "@/lib/journal/images";
 import { db } from "@/db";
 import { posts, postMedia } from "@/db/schema";
 import type { JournalDraftInput } from "@/types/journal";
 import type { JSONContent } from "@tiptap/core";
-import { and, asc, eq, sql } from "drizzle-orm";
+import { and, asc, eq, sql, getTableColumns } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import type { JournalDraftFields } from "@/types/journal";
@@ -18,15 +22,6 @@ const EMPTY_CONTENT = {
   content: [{ type: "paragraph" }],
 };
 
-async function requireAdmin() {
-  const session = await auth();
-  const adminId = process.env.ADMIN_GITHUB_ID;
-
-  if (!adminId || session?.githubId !== adminId) {
-    throw new Error("Unauthorised.");
-  }
-}
-
 // Read afresh when an Activity-preserved editor becomes visible again.
 // Do not cache this: its revision may have changed since the route was visited.
 export async function loadJournalEditor(id: string) {
@@ -36,29 +31,34 @@ export async function loadJournalEditor(id: string) {
     throw new Error("Invalid entry ID.");
   }
 
-  const [post] = await db.select().from(posts).where(eq(posts.id, id)).limit(1);
+  const [post] = await db.select({ ...getTableColumns(posts), version: sql<string>`${posts.updatedAt}::text` }).from(posts).where(eq(posts.id, id)).limit(1);
   if (!post) throw new Error("Journal entry no longer exists.");
 
-  const media = await db.select({ url: postMedia.url }).from(postMedia)
-    .where(and(eq(postMedia.postId, id), eq(postMedia.type, "video_embed")))
+  const media = await db.select({ id: postMedia.id, type: postMedia.type, url: postMedia.url, caption: postMedia.caption, altText: postMedia.altText, isCover: postMedia.isCover }).from(postMedia)
+    .where(eq(postMedia.postId, id))
     .orderBy(asc(postMedia.position), asc(postMedia.id));
-  const videoUrls = media.map((item) => item.url);
+  const videoUrls = media.filter((item) => item.type === "video_embed").map((item) => item.url);
+  const images = media.filter((item) => item.type === "image").map((item) => ({
+    id: item.id, url: item.url, caption: item.caption ?? "", altText: item.altText ?? "",
+  }));
 
-  return {
-    mode: post.status,
-    initial: post.pendingRevision ? {
-      ...post.pendingRevision,
-      // Revisions created before media support inherit the published videos.
-      videoUrls: post.pendingRevision.videoUrls ?? videoUrls,
-    } : {
-      videoUrls,
-      category: post.category,
-      title: post.title ?? "",
-      content: post.content as JSONContent,
-      journalDate: post.journalDate ?? "",
-      journalTime: post.journalTime?.slice(0, 5) ?? "",
-    },
-  };
+  const publishedOrder = media.map((item) => item.type === "image"
+    ? { id: item.id, type: "image" as const }
+    : { id: item.id, type: "video_embed" as const, url: item.url });
+  const publishedCover = media.find((item) => item.type === "image" && item.isCover)?.id ?? null;
+  const revision = post.pendingRevision;
+  const initial = reconcileMedia({
+    ...(revision ?? {
+      category: post.category, title: post.title ?? "", content: post.content as JSONContent,
+      journalDate: post.journalDate ?? "", journalTime: post.journalTime?.slice(0, 5) ?? "",
+    }),
+    images: revision?.images ?? images,
+    videoUrls: revision?.videoUrls ?? videoUrls,
+    mediaOrder: revision?.mediaOrder ?? publishedOrder,
+    // Undefined means legacy snapshot. Explicit null clears a cover.
+    coverImageId: revision?.coverImageId === undefined ? publishedCover : revision.coverImageId,
+  }, randomUUID);
+  return { mode: post.status, version: post.version, initial };
 }
 
 function isObject(value: unknown): value is Record<string, unknown> {
@@ -259,7 +259,13 @@ function validateInput(input: JournalDraftInput) {
     throw new Error("Invalid journal time.");
   }
 
+  if (typeof input.version !== "string" || input.version.length > 64 || !/^\d{4}-\d{2}-\d{2}[ T]/.test(input.version) || Number.isNaN(Date.parse(input.version))) {
+    throw new Error("Invalid entry version. Reload this entry before saving.");
+  }
   const content = validateContent(input.content);
+  const images = validateImageInput(input.images);
+  const videoUrls = validateVideoUrls(input.videoUrls);
+  const arrangement = validateMediaArrangement(input.mediaOrder, input.coverImageId, images, videoUrls);
 
   return {
     id: input.id,
@@ -269,17 +275,24 @@ function validateInput(input: JournalDraftInput) {
     journalTime: input.journalTime || null,
     content: content as Record<string, unknown>,
     hasContent: hasText(content),
-    videoUrls: validateVideoUrls(input.videoUrls),
+    videoUrls,
+    images: input.images,
+    ...arrangement,
+    version: input.version,
   };
 }
 
-// One PostgreSQL statement keeps fields and videos atomic with Neon HTTP.
-// Only video rows are replaced; future image attachments are left intact.
-async function writePostAndVideos(
+// One PostgreSQL statement keeps fields, videos and images atomic with Neon HTTP.
+async function writePostAndMedia(
   data: ReturnType<typeof validateInput>,
   expectedStatus: "draft" | "published",
   publish: boolean,
 ) {
+  const images = await resolveJournalImages(data.id, data.images);
+  const byId = new Map(images.map((image) => [image.id, image]));
+  const media = data.mediaOrder.map((ref, position) => ref.type === "image"
+    ? { ...byId.get(ref.id)!, type: ref.type, position, isCover: ref.id === data.coverImageId }
+    : { id: ref.id, type: ref.type, url: ref.url, caption: null, altText: null, position, isCover: false });
   const result = await db.execute(sql`
     WITH updated AS (
       UPDATE ${posts} SET
@@ -290,21 +303,23 @@ async function writePostAndVideos(
         status = ${publish ? "published" : "draft"}::publication_status,
         published_at = CASE WHEN ${publish && expectedStatus === "draft"}
           THEN now() ELSE published_at END,
-        pending_revision = NULL, updated_at = now()
+        pending_revision = NULL, updated_at = greatest(clock_timestamp(), updated_at + interval '1 microsecond')
       WHERE id = ${data.id}::uuid AND status = ${expectedStatus}::publication_status
-      RETURNING id
+        AND updated_at = ${data.version}::timestamptz
+      RETURNING id, updated_at::text AS version
     ), removed AS (
       DELETE FROM ${postMedia} WHERE post_id IN (SELECT id FROM updated)
-        AND type = 'video_embed' RETURNING id
+        AND type IN ('video_embed', 'image') RETURNING id
     ), inserted AS (
-      INSERT INTO ${postMedia} (post_id, type, url, position)
-      SELECT updated.id, 'video_embed'::media_type, video.url, (video.position - 1)::integer
-      FROM updated CROSS JOIN jsonb_array_elements_text(${JSON.stringify(data.videoUrls)}::jsonb)
-        WITH ORDINALITY AS video(url, position)
+      INSERT INTO ${postMedia} (id, post_id, type, url, caption, alt_text, position, is_cover)
+      SELECT (item->>'id')::uuid, updated.id, (item->>'type')::media_type,
+        item->>'url', item->>'caption', item->>'altText',
+        (item->>'position')::integer, (item->>'isCover')::boolean
+      FROM updated CROSS JOIN jsonb_array_elements(${JSON.stringify(media)}::jsonb) AS item
       CROSS JOIN (SELECT count(*) FROM removed) AS deletion_done
       RETURNING id
     )
-    SELECT id FROM updated
+    SELECT id, version FROM updated
   `);
   return result.rows[0];
 }
@@ -339,13 +354,13 @@ export async function saveJournalDraft(
 
   const data = validateInput(input);
 
-  const updated = await writePostAndVideos(data, "draft", false);
+  const updated = await writePostAndMedia(data, "draft", false);
 
   if (!updated) {
-    throw new Error("Draft not found or no longer editable.");
+    throw new Error("This entry changed elsewhere or is no longer editable. Reload before saving.");
   }
 
-  return { saved: true };
+  return { saved: true, version: String(updated.version) };
 }
 
 // Publication is always a separate, explicit action.
@@ -364,10 +379,10 @@ export async function publishJournalDraft(
     throw new Error("Write some content before publishing.");
   }
 
-  const updated = await writePostAndVideos(data, "draft", true);
+  const updated = await writePostAndMedia(data, "draft", true);
 
   if (!updated) {
-    throw new Error("Draft not found or already published.");
+    throw new Error("This entry changed elsewhere or was already published. Reload before publishing.");
   }
 
   revalidatePath("/admin");
@@ -375,7 +390,7 @@ export async function publishJournalDraft(
 }
 
 // Delete a draft only after the administrator confirms.
-export async function discardJournalDraft(id: string) {
+export async function discardJournalDraft(id: string, version: string) {
   await requireAdmin();
 
   if (
@@ -389,7 +404,8 @@ export async function discardJournalDraft(id: string) {
     .where(
       and(
         eq(posts.id, id),
-        eq(posts.status, "draft")
+        eq(posts.status, "draft"),
+        sql`${posts.updatedAt} = ${version}::timestamptz`
       )
     )
     .returning({ id: posts.id });
@@ -414,7 +430,11 @@ export async function savePublishedRevision(
 
   const data = validateInput(input);
 
+  const images = await resolveJournalImages(data.id, data.images);
   const revision: JournalDraftFields = {
+    images,
+    mediaOrder: data.mediaOrder,
+    coverImageId: data.coverImageId,
     videoUrls: data.videoUrls,
     category: data.category,
     title: data.title ?? "",
@@ -427,21 +447,22 @@ export async function savePublishedRevision(
     .update(posts)
     .set({
       pendingRevision: revision,
-      updatedAt: new Date(),
+      updatedAt: sql`greatest(clock_timestamp(), ${posts.updatedAt} + interval '1 microsecond')`,
     })
     .where(
       and(
         eq(posts.id, data.id),
-        eq(posts.status, "published")
+        eq(posts.status, "published"),
+        sql`${posts.updatedAt} = ${data.version}::timestamptz`
       )
     )
-    .returning({ id: posts.id });
+    .returning({ id: posts.id, version: sql<string>`${posts.updatedAt}::text` });
 
   if (!updated) {
-    throw new Error("Published entry not found.");
+    throw new Error("This entry changed elsewhere or is no longer editable. Reload before saving.");
   }
 
-  return { saved: true };
+  return { saved: true, version: updated.version };
 }
 
 /**
@@ -467,10 +488,10 @@ export async function publishPublishedRevision(
     );
   }
 
-  const updated = await writePostAndVideos(data, "published", true);
+  const updated = await writePostAndMedia(data, "published", true);
 
   if (!updated) {
-    throw new Error("Published entry not found.");
+    throw new Error("This entry changed elsewhere or is no longer editable. Reload before saving.");
   }
 
   revalidatePath("/admin");
@@ -485,7 +506,7 @@ export async function publishPublishedRevision(
  * Never delete the published entry itself.
  */
 export async function discardPublishedRevision(
-  id: string
+  id: string, version: string
 ) {
   await requireAdmin();
 
@@ -501,18 +522,19 @@ export async function discardPublishedRevision(
     .update(posts)
     .set({
       pendingRevision: null,
-      updatedAt: new Date(),
+      updatedAt: sql`greatest(clock_timestamp(), ${posts.updatedAt} + interval '1 microsecond')`,
     })
     .where(
       and(
         eq(posts.id, id),
-        eq(posts.status, "published")
+        eq(posts.status, "published"),
+        sql`${posts.updatedAt} = ${version}::timestamptz`
       )
     )
     .returning({ id: posts.id });
 
   if (!updated) {
-    throw new Error("Published entry not found.");
+    throw new Error("This entry changed elsewhere or is no longer editable. Reload before saving.");
   }
 
   revalidatePath("/admin");

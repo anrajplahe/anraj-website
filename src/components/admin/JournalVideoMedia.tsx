@@ -1,14 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { MAX_JOURNAL_VIDEOS, parseYouTubeUrl } from "@/lib/journal/youtube";
 
 type Props = {
+  children?: ReactNode;
+  hidePreviews?: boolean;
   videoUrls: string[];
   onChange: (videoUrls: string[]) => void;
 };
 
-export default function JournalVideoMedia({ videoUrls, onChange }: Props) {
+export default function JournalVideoMedia({ videoUrls, onChange, children, hidePreviews = false }: Props) {
   const [url, setUrl] = useState("");
   const [error, setError] = useState("");
 
@@ -54,26 +56,30 @@ export default function JournalVideoMedia({ videoUrls, onChange }: Props) {
       </div>
       <p id="journal-video-help" className="text-xs text-gray-400">YouTube links, short links and Shorts are supported. Added and removed videos save automatically.</p>
       {error && <p id="journal-video-error" role="alert" className="text-sm text-red-400">{error}</p>}
-      <div className="grid gap-4 sm:grid-cols-2">
-        {videoUrls.map((videoUrl, index) => {
-          const video = parseYouTubeUrl(videoUrl);
-          return (
-            <div key={videoUrl} className="space-y-3 overflow-hidden rounded-lg border border-white/15 p-3">
-              {video && <iframe
-                src={`https://www.youtube-nocookie.com/embed/${video.id}`}
-                title={`YouTube video ${index + 1}`}
-                loading="lazy"
-                referrerPolicy="strict-origin-when-cross-origin"
-                allow="encrypted-media; picture-in-picture; fullscreen"
-                allowFullScreen
-                className="aspect-video w-full rounded border-0"
-              />}
-              <p className="break-all text-xs text-gray-400">{videoUrl}</p>
-              <button type="button" onClick={() => onChange(videoUrls.filter((_, i) => i !== index))} aria-label={`Remove video ${index + 1}`} className="text-sm text-red-300 hover:text-red-200">Remove video</button>
-            </div>
-          );
-        })}
-      </div>
+      {!hidePreviews && <div className="grid gap-4 sm:grid-cols-2">
+        {videoUrls.map((videoUrl, index) => <JournalVideoPreview key={videoUrl} videoUrl={videoUrl} index={index}
+          onRemove={() => onChange(videoUrls.filter((_, i) => i !== index))} />)}
+      </div>}
+      {children}
     </section>
+  );
+}
+
+export function JournalVideoPreview({ videoUrl, index, onRemove }: { videoUrl: string; index: number; onRemove: () => void }) {
+  const video = parseYouTubeUrl(videoUrl);
+  return (
+    <div className="space-y-3 overflow-hidden rounded-lg border border-white/15 p-3">
+      {video && <iframe
+        src={`https://www.youtube-nocookie.com/embed/${video.id}`}
+        title={`YouTube video ${index + 1}`}
+        loading="lazy"
+        referrerPolicy="strict-origin-when-cross-origin"
+        allow="encrypted-media; picture-in-picture; fullscreen"
+        allowFullScreen
+        className="aspect-video w-full rounded border-0"
+      />}
+      <p className="break-all text-xs text-gray-400">{videoUrl}</p>
+      <button type="button" onClick={onRemove} aria-label={`Remove video ${index + 1}`} className="text-sm text-red-300 hover:text-red-200">Remove video</button>
+    </div>
   );
 }

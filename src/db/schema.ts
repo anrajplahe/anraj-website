@@ -122,3 +122,15 @@ export const postMedia = pgTable(
     ),
   ]
 );
+
+// Retain upload records after entry deletion for future orphan reconciliation.
+export const journalImageUploads = pgTable("journal_image_uploads", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  postId: uuid("post_id").references(() => posts.id, { onDelete: "set null" }),
+  pathname: text("pathname").notNull().unique(),
+  url: text("url"),
+  contentType: text("content_type").notNull(),
+  size: integer("size").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  verifiedAt: timestamp("verified_at", { withTimezone: true }),
+}, (table) => [index("journal_image_uploads_post_idx").on(table.postId)]);
