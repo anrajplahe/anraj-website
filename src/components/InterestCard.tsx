@@ -14,7 +14,7 @@ type InterestCardProps = {
 // Match each card's hover colour to its accent.
 const hoverColours: Record<string, string> = {
   "text-violet-400": "hover:border-violet-400/40",
-  "text-cyan-400": "hover:border-cyan-400/40",
+  "text-green-500": "hover:border-green-500/40",
   "text-yellow-400": "hover:border-yellow-400/40",
   "text-pink-400": "hover:border-pink-400/40",
 };
@@ -97,12 +97,12 @@ export default function InterestCard({
         <Link
           href={href}
           aria-label={`Explore ${title}`}
-          className="
+          className={`
             absolute inset-0 rounded-2xl
             focus-visible:outline-2
             focus-visible:outline-offset-4
-            focus-visible:outline-cyan-400
-          "
+            ${colour === "text-green-500" ? "focus-visible:outline-green-500" : "focus-visible:outline-cyan-400"}
+          `}
         />
       )}
     </div>

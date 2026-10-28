@@ -288,7 +288,7 @@ export default function JournalRichTextEditor({
     : [];
 
   return (
-    <div className="overflow-hidden rounded-lg border border-white/15 bg-[#161A22] focus-within:border-green-400">
+    <div className="overflow-hidden rounded-lg border border-white/15 bg-[#161A22] focus-within:border-blue-500">
 
       {/* Hidden input submitted with the parent form */}
       <input
@@ -329,12 +329,12 @@ export default function JournalRichTextEditor({
               font-medium transition-colors
               focus-visible:outline-2
               focus-visible:outline-offset-2
-              focus-visible:outline-green-400
+              focus-visible:outline-blue-500
               ${
                 item.active
-                  ? "border-green-400/60 bg-green-400/15 text-green-300"
+                  ? "border-blue-500/60 bg-blue-500/15 text-blue-400"
                   : item.label === "End link"
-                    ? "border-green-400/40 text-green-300 hover:bg-green-400/10"
+                    ? "border-blue-500/40 text-blue-400 hover:bg-blue-500/10"
                     : "border-transparent text-gray-300 hover:bg-white/10 hover:text-white"
               }
             `}
@@ -388,7 +388,7 @@ export default function JournalRichTextEditor({
             className={`w-full rounded-lg border bg-[#0B0D14] px-3 py-2.5 text-sm text-white placeholder:text-gray-500 focus:outline-none ${
               linkError
                 ? "border-red-400"
-                : "border-white/15 focus:border-green-400"
+                : "border-white/15 focus:border-blue-500"
             }`}
           />
 
@@ -408,7 +408,7 @@ export default function JournalRichTextEditor({
             <button
               type="button"
               onClick={applyLink}
-              className="rounded-lg bg-green-400 px-4 py-2 text-sm font-semibold text-[#0B0D14] transition-colors hover:bg-green-300"
+              className="rounded-lg bg-blue-500 px-4 py-2 text-sm font-semibold text-[#0B0D14] transition-colors hover:bg-blue-400"
             >
               Apply link
             </button>
@@ -441,7 +441,7 @@ export default function JournalRichTextEditor({
           [&_.tiptap_ul]:pl-6
           [&_.tiptap_ol]:list-decimal
           [&_.tiptap_ol]:pl-6
-          [&_.tiptap_a]:text-green-400
+          [&_.tiptap_a]:text-blue-500
           [&_.tiptap_a]:underline
           [&_.tiptap_u]:underline
           [&_.tiptap_s]:line-through

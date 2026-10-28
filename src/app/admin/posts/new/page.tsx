@@ -30,7 +30,7 @@ async function NewPostContent() {
       <form action={createJournalDraft} className="mt-8">
         <button
           type="submit"
-          className="rounded-lg bg-green-400 px-6 py-3 font-semibold text-[#0B0D14] hover:bg-green-300"
+          className="rounded-lg bg-blue-500 px-6 py-3 font-semibold text-[#0B0D14] hover:bg-blue-400"
         >
           Create draft
         </button>

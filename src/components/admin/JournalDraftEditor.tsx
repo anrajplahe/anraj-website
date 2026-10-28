@@ -389,7 +389,7 @@ async function discard() {
           : "Unsaved changes";
 
   const fieldStyle =
-    "w-full rounded-lg border border-white/15 bg-[#161A22] px-4 py-3 text-white focus:border-green-400 focus:outline-none";
+    "w-full rounded-lg border border-white/15 bg-[#161A22] px-4 py-3 text-white focus:border-blue-500 focus:outline-none";
 
   return (
     <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-10 sm:px-6 sm:py-14">
@@ -409,7 +409,7 @@ async function discard() {
           aria-live="polite"
           className={`text-sm ${
             saveStatus === "saved"
-              ? "text-green-400"
+              ? "text-blue-500"
               : saveStatus === "error"
                 ? "text-red-400"
                 : "text-gray-400"
@@ -420,7 +420,7 @@ async function discard() {
       </div>
 
       <div className="mb-10">
-        <p className="mb-2 text-sm font-medium text-green-400">
+        <p className="mb-2 text-sm font-medium text-blue-500">
           {mode === "published"
             ? "Published · Editing unpublished changes"
             : "Draft"}
@@ -567,7 +567,7 @@ async function discard() {
               type="button"
               disabled={busy}
               onClick={() => runAction(publish)}
-              className="rounded-lg bg-green-400 px-6 py-2.5 text-sm font-semibold text-[#0B0D14] transition-colors hover:bg-green-300 disabled:opacity-50"
+              className="rounded-lg bg-blue-500 px-6 py-2.5 text-sm font-semibold text-[#0B0D14] transition-colors hover:bg-blue-400 disabled:opacity-50"
             >
               {mode === "published"
                 ? "Publish changes"

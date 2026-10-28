@@ -95,7 +95,7 @@ async function AdminContent({
       {/* Dashboard heading and sign out */}
       <div className="mb-10 flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="mb-2 text-sm font-medium text-green-400">
+          <p className="mb-2 text-sm font-medium text-blue-500">
             Administrator
           </p>
 
@@ -163,7 +163,7 @@ async function AdminContent({
         <form action={createJournalDraft}>
           <button
             type="submit"
-            className="inline-flex items-center gap-2 rounded-lg bg-green-400 px-5 py-2.5 text-sm font-semibold text-[#0B0D14] transition-colors hover:bg-green-300"
+            className="inline-flex items-center gap-2 rounded-lg bg-blue-500 px-5 py-2.5 text-sm font-semibold text-[#0B0D14] transition-colors hover:bg-blue-400"
           >
             + New entry
           </button>
@@ -186,7 +186,7 @@ async function AdminContent({
               maxLength={100}
               defaultValue={filters.query}
               placeholder="Search entries..."
-              className="rounded-lg border border-white/15 bg-[#161A22] px-3 py-2.5 text-white placeholder:text-gray-500 focus:border-green-400 focus:outline-none"
+              className="rounded-lg border border-white/15 bg-[#161A22] px-3 py-2.5 text-white placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
             />
           </label>
 
@@ -196,7 +196,7 @@ async function AdminContent({
             <select
               name="category"
               defaultValue={filters.category}
-              className="rounded-lg border border-white/15 bg-[#161A22] px-3 py-2.5 text-white focus:border-green-400 focus:outline-none"
+              className="rounded-lg border border-white/15 bg-[#161A22] px-3 py-2.5 text-white focus:border-blue-500 focus:outline-none"
             >
               <option value="all">All journals</option>
               <option value="bhangra">Bhangra</option>
@@ -210,7 +210,7 @@ async function AdminContent({
             <select
               name="status"
               defaultValue={filters.status}
-              className="rounded-lg border border-white/15 bg-[#161A22] px-3 py-2.5 text-white focus:border-green-400 focus:outline-none"
+              className="rounded-lg border border-white/15 bg-[#161A22] px-3 py-2.5 text-white focus:border-blue-500 focus:outline-none"
             >
               <option value="all">All statuses</option>
               <option value="published">Published</option>
@@ -224,7 +224,7 @@ async function AdminContent({
             <select
               name="sort"
               defaultValue={filters.sort}
-              className="rounded-lg border border-white/15 bg-[#161A22] px-3 py-2.5 text-white focus:border-green-400 focus:outline-none"
+              className="rounded-lg border border-white/15 bg-[#161A22] px-3 py-2.5 text-white focus:border-blue-500 focus:outline-none"
             >
               <option value="journal">
                 Journal date (newest)
@@ -242,7 +242,7 @@ async function AdminContent({
           <div className="flex flex-wrap items-center gap-3 sm:col-span-2 lg:col-span-4">
             <button
               type="submit"
-              className="rounded-lg bg-green-400 px-5 py-2.5 text-sm font-semibold text-[#0B0D14] transition-colors hover:bg-green-300"
+              className="rounded-lg bg-blue-500 px-5 py-2.5 text-sm font-semibold text-[#0B0D14] transition-colors hover:bg-blue-400"
             >
               Apply filters
             </button>
@@ -320,7 +320,7 @@ async function AdminContent({
                 <span
                   className={
                     entry.status === "published"
-                      ? "text-sm text-green-400"
+                      ? "text-sm text-blue-500"
                       : "text-sm text-gray-400"
                   }
                 >
@@ -339,7 +339,7 @@ async function AdminContent({
 
                   <Link
                     href={`/admin/posts/${entry.id}/edit`}
-                    className="text-sm font-medium text-green-400 transition-colors hover:text-green-300"
+                    className="text-sm font-medium text-blue-500 transition-colors hover:text-blue-400"
                   >
                     {entry.status === "draft"
                       ? "Edit draft →"

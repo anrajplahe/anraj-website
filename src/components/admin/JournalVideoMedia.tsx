@@ -50,9 +50,9 @@ export default function JournalVideoMedia({ videoUrls, onChange, children, hideP
           placeholder="https://www.youtube.com/watch?v=..."
           aria-invalid={Boolean(error)}
           aria-describedby={error ? "journal-video-error" : "journal-video-help"}
-          className="min-w-0 flex-1 rounded-lg border border-white/15 bg-[#0B0D14] px-4 py-3 text-white focus:border-green-400 focus:outline-none"
+          className="min-w-0 flex-1 rounded-lg border border-white/15 bg-[#0B0D14] px-4 py-3 text-white focus:border-blue-500 focus:outline-none"
         />
-        <button type="button" onClick={addVideo} className="rounded-lg bg-green-400 px-4 py-2 text-sm font-semibold text-[#0B0D14] hover:bg-green-300">Add video</button>
+        <button type="button" onClick={addVideo} className="rounded-lg bg-blue-500 px-4 py-2 text-sm font-semibold text-[#0B0D14] hover:bg-blue-400">Add video</button>
       </div>
       <p id="journal-video-help" className="text-xs text-gray-400">YouTube links, short links and Shorts are supported. Added and removed videos save automatically.</p>
       {error && <p id="journal-video-error" role="alert" className="text-sm text-red-400">{error}</p>}

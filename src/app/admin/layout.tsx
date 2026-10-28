@@ -25,7 +25,7 @@ export default function AdminLayout({
             href="/admin"
             className="text-lg font-bold tracking-tight transition-opacity hover:opacity-80 sm:text-xl"
           >
-            <span className="text-green-400">anraj</span>
+            <span className="text-blue-500">anraj</span>
             <span className="text-white">plahe</span>
             <span className="ml-2 font-normal text-gray-500">
               / admin
@@ -34,7 +34,7 @@ export default function AdminLayout({
 
           <Link
             href="/"
-            className="text-sm text-gray-400 transition-colors hover:text-green-400"
+            className="text-sm text-gray-400 transition-colors hover:text-blue-500"
           >
             View website ↗
           </Link>

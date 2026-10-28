@@ -283,6 +283,101 @@ A further issue occurred when reopening an entry after saving or publishing chan
 
 This was related to temporary editing state being retained across navigation, including flags used to prevent conflicting
 
+## 26 October 2026 — Journal Media Management: Video Embeds & Image Uploads
+
+### What I Built
+
+Extended the journal publishing system to support multimedia content, allowing entries to contain photographs and embedded YouTube videos alongside rich-text content.
+
+**YouTube Video Embeds**
+- Implemented support for adding YouTube videos through validated URLs.
+- Added video previews and removal controls within the journal editor.
+- Integrated video references with PostgreSQL persistence and the existing autosave system.
+- Ensured video changes to published entries remain unpublished until explicitly applied.
+- Tested video persistence across draft saving, publication, editing and discarding changes.
+
+**Image Uploads**
+- Integrated Vercel Blob for cloud-based image storage.
+- Added support for uploading images directly from the journal editor.
+- Implemented image previews and support for captions and alternative text.
+- Connected uploaded files to database records in Neon PostgreSQL.
+- Added server-side upload handling and administrator authorisation.
+- Integrated the image-upload functionality with the existing journal media management interface.
+
+### Technical Decisions
+
+**Separating file storage from database storage**
+
+Rather than storing images directly in PostgreSQL, I chose to use Vercel Blob for file storage and Neon PostgreSQL for structured media records.
+
+This separates two responsibilities:
+
+- **Vercel Blob:** Stores the actual image files.
+- **PostgreSQL:** Stores the references and metadata required to associate media with journal entries.
+
+This approach makes the system more maintainable and avoids storing large binary files within the relational database.
+
+**Maintaining the existing publishing workflow**
+
+Media management was designed around the existing draft and published-revision system. Changes to media on published entries must remain separate from their published state until explicitly applied.
+
+This maintains consistency between written content and associated media.
+
+### Challenges & Lessons Learned
+
+**Debugging failed image uploads**
+
+During implementation, image uploads initially failed with a generic error message, making it difficult to determine the underlying cause.
+
+I investigated the Vercel Blob configuration, local development credentials and upload handling before obtaining a more specific error indicating that the required database table was missing.
+
+The application was attempting to create an image-upload record in a table that had not yet been created.
+
+**Database migration management**
+
+Codex had prepared the required database migration, but it had not been applied automatically.
+
+After reviewing the migration, I applied it to the Neon development database using Drizzle Kit. This resolved the missing-table error and allowed image uploads to work.
+
+This reinforced the distinction between:
+
+- Defining a database schema in application code.
+- Generating the SQL migration.
+- Applying the migration to the actual database.
+
+I also gained experience debugging functionality spanning multiple services, where a frontend upload error can originate from the database rather than the file-storage provider itself.
+
+**Using Codex for development**
+
+I began using OpenAI Codex to assist with implementing features spanning multiple files.
+
+I maintained control over architectural decisions, environment configuration, migrations and Git operations while using Codex to inspect existing code and assist with implementation.
+
+This introduced a more structured workflow involving implementation plans, code review, local testing and controlled changes.
+
+### Outcome
+
+The journal editor now supports rich-text entries, YouTube embeds and cloud-hosted image uploads.
+
+YouTube functionality has been tested across the publishing lifecycle, and image uploading is operational following the database migration fix.
+
+### Next Steps
+
+- Implement drag-and-drop ordering for images and YouTube videos.
+- Add cover-image selection for journal entries.
+- Complete regression testing of image persistence across published revisions.
+- Develop the public-facing Bhangra and Guitar & Music journal displays.
+- Configure separate production infrastructure before deploying the publishing system.
+
+### Documentation & Resources
+
+- [Vercel Blob Documentation](https://vercel.com/docs/vercel-blob)
+- [Vercel Blob Client Uploads](https://vercel.com/docs/vercel-blob/client-upload)
+- [Drizzle ORM — Migrations](https://orm.drizzle.team/docs/migrations)
+- [Next.js — Route Handlers](https://nextjs.org/docs/app/getting-started/route-handlers)
+- [YouTube Embedded Players](https://developers.google.com/youtube/iframe_api_reference)
+- [OpenAI Codex](https://developers.openai.com/codex/)
+
 ---
 
 ## Documentation and Reference Resources

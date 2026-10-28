@@ -62,7 +62,7 @@ export default function TechPage() {
       {/* Page Introduction */}
       <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
 
-        <h1 className="text-4xl font-bold tracking-tight text-cyan-400 sm:text-5xl">
+        <h1 className="text-4xl font-bold tracking-tight text-green-500 sm:text-5xl">
           Tech
         </h1>
 
@@ -91,11 +91,11 @@ export default function TechPage() {
                     <Icon
                         size={26}
                         aria-hidden="true"
-                        className="mt-1 shrink-0 text-cyan-400"
+                        className="mt-1 shrink-0 text-green-500"
                     />
 
                     <div className="min-w-0">
-                        <p className="text-xs font-semibold uppercase tracking-widest text-cyan-400">
+                        <p className="text-xs font-semibold uppercase tracking-widest text-green-500">
                         {device.category}
                         </p>
 
@@ -112,10 +112,10 @@ export default function TechPage() {
                         key={spec}
                         className="flex items-start gap-4 text-sm leading-relaxed text-gray-400"
                         >
-                        {/* Cyan Bullet */}
+                        {/* Green Bullet */}
                         <span
                             aria-hidden="true"
-                            className="flex w-[26px] shrink-0 justify-center text-cyan-400"
+                            className="flex w-[26px] shrink-0 justify-center text-green-500"
                         >
                             •
                         </span>

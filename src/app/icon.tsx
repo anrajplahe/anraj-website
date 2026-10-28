@@ -35,7 +35,7 @@ export default async function Icon() {
           letterSpacing: "-2px",
         }}
       >
-        <span style={{ color: "#4ADE80" }}>a</span>
+        <span style={{ color: "#3B82F6" }}>a</span>
         <span style={{ color: "#F5F6FA" }}>p</span>
       </div>
     ),

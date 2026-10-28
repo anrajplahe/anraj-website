@@ -20,11 +20,11 @@ type Props = {
 function SortableMedia({ id, index, label, children }: { id: string; index: number; label: string; children: ReactNode }) {
   const { ref, handleRef, isDragging } = useSortable({ id, index, type: "journal-media", accept: "journal-media" });
   return (
-    <li ref={ref} className={`min-w-0 rounded-lg border p-3 ${isDragging ? "border-green-400 bg-[#0B0D14]" : "border-white/10"}`}>
+    <li ref={ref} className={`min-w-0 rounded-lg border p-3 ${isDragging ? "border-blue-500 bg-[#0B0D14]" : "border-white/10"}`}>
       <div className="mb-3 flex items-center justify-between gap-2">
         <span className="text-xs text-gray-400">{index + 1}. {label}</span>
         <button ref={handleRef} type="button" aria-label={`Reorder ${label.toLowerCase()} ${index + 1}`} aria-describedby="journal-media-sort-help"
-          className="touch-none cursor-grab rounded border border-white/15 px-3 py-2 text-sm text-gray-300 hover:border-green-400 hover:text-green-400 focus-visible:outline-2 focus-visible:outline-green-400 active:cursor-grabbing">
+          className="touch-none cursor-grab rounded border border-white/15 px-3 py-2 text-sm text-gray-300 hover:border-blue-500 hover:text-blue-500 focus-visible:outline-2 focus-visible:outline-blue-500 active:cursor-grabbing">
           <span aria-hidden="true">⠿</span> Drag
         </button>
       </div>

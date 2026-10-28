@@ -155,12 +155,12 @@ export default function JournalImageMedia({ images, postId, controller, onChange
         onDragOver={(event) => { event.preventDefault(); setDragging(true); }}
         onDragLeave={() => setDragging(false)}
         onDrop={(event) => { event.preventDefault(); setDragging(false); addFiles(event.dataTransfer.files); }}
-        className={`rounded-lg border border-dashed p-5 text-center ${dragging ? "border-green-400 bg-green-400/10" : "border-white/20"}`}
+        className={`rounded-lg border border-dashed p-5 text-center ${dragging ? "border-blue-500 bg-blue-500/10" : "border-white/20"}`}
       >
         <p className="mb-3 text-sm text-gray-400">Drop JPG, PNG or WebP images here. Maximum 10 MB per image.</p>
         <input ref={input} type="file" multiple accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" className="sr-only" aria-label="Select journal images"
           onChange={(event) => { if (event.target.files) addFiles(event.target.files); event.target.value = ""; }} />
-        <button type="button" onClick={() => input.current?.click()} className="rounded-lg bg-green-400 px-4 py-2 text-sm font-semibold text-[#0B0D14] hover:bg-green-300">Choose images</button>
+        <button type="button" onClick={() => input.current?.click()} className="rounded-lg bg-blue-500 px-4 py-2 text-sm font-semibold text-[#0B0D14] hover:bg-blue-400">Choose images</button>
       </div>
       <p className="text-xs text-gray-400">Images, captions and alternative text save automatically. Removing an image takes effect publicly when you publish changes.</p>
       {error && <p role="alert" className="whitespace-pre-line text-sm text-red-400">{error}</p>}
@@ -171,11 +171,11 @@ export default function JournalImageMedia({ images, postId, controller, onChange
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={task.preview} alt="Image awaiting upload verification" className="aspect-video w-full rounded object-contain" />
             <p className="break-all text-xs text-gray-400">{task.file.name}</p>
-            {task.state === "uploading" && <progress aria-label={`Uploading ${task.file.name}`} max={100} value={task.progress} className="w-full accent-green-400" />}
+            {task.state === "uploading" && <progress aria-label={`Uploading ${task.file.name}`} max={100} value={task.progress} className="w-full accent-blue-500" />}
             <p role={task.state === "error" ? "alert" : "status"} className={`text-sm ${task.state === "error" ? "text-red-400" : "text-gray-400"}`}>
               {task.state === "error" ? task.message : task.state === "verifying" ? "Verifying image…" : `Uploading ${Math.round(task.progress)}%`}
             </p>
-            {task.state === "error" && <button type="button" onClick={() => start(task)} className="mr-4 text-sm text-green-400 underline">{task.uploaded ? "Retry verification" : "Retry upload"}</button>}
+            {task.state === "error" && <button type="button" onClick={() => start(task)} className="mr-4 text-sm text-blue-500 underline">{task.uploaded ? "Retry verification" : "Retry upload"}</button>}
             <button type="button" onClick={() => removeTask(task)} className="text-sm text-red-300">{task.state === "error" ? "Remove failed image" : "Cancel upload"}</button>
           </div>
         ))}
@@ -190,7 +190,7 @@ export function JournalImageCard({ image, onChange, isCover = false, onCover }: 
   isCover?: boolean;
   onCover?: () => void;
 }) {
-  const fieldStyle = "w-full rounded-lg border border-white/15 bg-[#0B0D14] px-3 py-2 text-sm text-white focus:border-green-400 focus:outline-none";
+  const fieldStyle = "w-full rounded-lg border border-white/15 bg-[#0B0D14] px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none";
   return (
     <div className="space-y-3 rounded-lg border border-white/15 p-3">
       {/* Blob URLs are resolved and verified by the server. */}
@@ -209,8 +209,8 @@ export function JournalImageCard({ image, onChange, isCover = false, onCover }: 
         }} />
       </label>
       <div className="flex items-center gap-3">
-        {isCover && <span className="rounded bg-green-400/15 px-2 py-1 text-xs font-semibold text-green-400">Cover</span>}
-        {onCover && <button type="button" aria-pressed={isCover} onClick={onCover} className="text-sm text-green-400 hover:text-green-300">{isCover ? "Clear cover" : "Set as cover"}</button>}
+        {isCover && <span className="rounded bg-blue-500/15 px-2 py-1 text-xs font-semibold text-blue-500">Cover</span>}
+        {onCover && <button type="button" aria-pressed={isCover} onClick={onCover} className="text-sm text-blue-500 hover:text-blue-400">{isCover ? "Clear cover" : "Set as cover"}</button>}
       </div>
       <button type="button" onClick={() => onChange((current) => current.filter((item) => item.id !== image.id))} aria-label="Remove image" className="text-sm text-red-300 hover:text-red-200">Remove image</button>
     </div>
