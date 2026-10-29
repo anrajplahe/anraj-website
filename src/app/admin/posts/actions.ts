@@ -362,6 +362,16 @@ export async function saveJournalDraft(
   return { saved: true, version: String(updated.version) };
 }
 
+function refreshPublicJournal(id: string) {
+  for (const category of ["bhangra", "music"] as const) {
+    revalidatePath(`/${category}`);
+    revalidatePath(`/${category}/journal`);
+    revalidatePath(`/${category}/${id}`);
+  }
+
+  revalidatePath("/sitemap.xml");
+}
+
 // Publication is always a separate, explicit action.
 export async function publishJournalDraft(
   input: JournalDraftInput
@@ -385,6 +395,7 @@ export async function publishJournalDraft(
   }
 
   revalidatePath("/admin");
+  refreshPublicJournal(data.id);
   return { published: true };
 }
 
@@ -494,8 +505,7 @@ export async function publishPublishedRevision(
   }
 
   revalidatePath("/admin");
-  revalidatePath("/bhangra");
-  revalidatePath("/music");
+  refreshPublicJournal(data.id);
 
   return { published: true };
 }

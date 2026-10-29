@@ -1,7 +1,18 @@
 
 import { Suspense } from "react";
-
 import JournalArticle from "@/components/journal/JournalArticle";
+import type { Metadata } from "next";
+import { getPublishedJournalMetadata } from "@/lib/journal/public";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+
+  return getPublishedJournalMetadata("music", id);
+}
 
 export default function MusicArticlePage({
   params,
