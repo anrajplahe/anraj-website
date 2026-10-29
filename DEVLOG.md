@@ -378,6 +378,105 @@ YouTube functionality has been tested across the publishing lifecycle, and image
 - [YouTube Embedded Players](https://developers.google.com/youtube/iframe_api_reference)
 - [OpenAI Codex](https://developers.openai.com/codex/)
 
+## 28 October 2026 — Media Ordering, Cover Selection & Visual Consistency
+
+**What I built**
+
+- Extended the journal media editor with drag-and-drop ordering of uploaded images and social media embeds using dnd-kit.
+- Added cover-image selection, storing it separately from the overall media order.
+- Preserved image captions and alternative text as part of the media editing experience.
+- Improved feedback and responsive layout within the editor, with drag handles and keyboard-accessible reordering controls.
+- Standardised the website's colour treatment: blue for general and administrative interfaces, with dedicated accent colours for interest-specific sections.
+
+**Technical decisions and challenges**
+
+Media order is represented explicitly rather than relying on the order in which files were uploaded. This allows users to rearrange different media types and keep that order across saving, publication and revisions.
+
+The selected cover is stored as a separate reference to an uploaded image. That keeps cover selection independent of drag-and-drop position.
+
+**Lesson:** Building a flexible editing interface also requires a reliable data model. The UI, validation and persisted media references must remain consistent after files are added, removed or reordered.
+
+## 29 October 2026 — Public Journals, Article Pages & SEO
+
+**What I built**
+
+- Connected the Bhangra and Guitar & Music pages to published journal data stored in Neon PostgreSQL.
+- Added journal previews on section pages, full journal listing routes and individual article routes.
+- Created reusable public-facing components rather than building separate publishing systems for the two categories.
+- Retrieved entries in historical journal-date order and generated short text excerpts from Tiptap content.
+- Limited public queries to published entries, keeping drafts and pending revisions private.
+- Added dynamic article metadata, canonical URLs, a sitemap containing published articles and `robots.txt` rules for administrative paths.
+- Added revalidation of relevant public pages and the sitemap after publishing or deleting entries.
+- Created a separate production database migration configuration to reduce the risk of accidentally targeting the wrong database.
+
+**Technical decisions and challenges**
+
+The public website reads published content independently of the editor's pending revisions. A published article should remain stable while I work on its next revision.
+
+I also separated public content queries from the admin dashboard's database access, allowing both journals to reuse the same underlying structure without duplicating their backend logic.
+
+**Lesson:** Publishing is more than storing a record in a database. It also involves public routing, caching, metadata, content visibility and keeping the live website in sync with changes.
+
+## 29 October 2026 — Journal Deletion & Rich Media Previews
+
+**What I built**
+
+- Added a permanent **Delete** action to the admin dashboard and journal editor, with an explicit confirmation step.
+- Protected deletion with administrator authorisation and entry-version checking to guard against deleting stale or concurrently edited content.
+- Updated the public journal cards to prioritise an explicitly selected cover image.
+- Replaced the previous single-media preview with a tabbed preview component.
+- Added a **Cover** tab, separate tabs for individual YouTube, Instagram and TikTok embeds, and a **Pictures** tab containing a responsive grid of the other uploaded images.
+- Preserved the existing social-media embed components and handled entries with different combinations of cover images, videos and photographs.
+
+**Technical decisions and challenges**
+
+I initially prioritised cover images over embeds, but that hid additional media on journal cards. A tabbed interface resolved the trade-off: the selected cover appears first without making the other media inaccessible.
+
+Deletion is deliberately permanent at this stage. A 30-day recovery or soft-delete system is a possible later enhancement, **not an implemented feature**.
+
+While merging the new preview component into `main`, I encountered a Git rebase conflict because another change had modified the old media component. I resolved the obsolete component's conflict, preserved the new preview implementation and completed the rebase despite a Vim commit-message editor problem.
+
+**Lesson:** Integrating concurrent changes is as important as implementing features. Understanding which code is superseded helps resolve conflicts without losing functionality.
+
+## 29 October 2026 — TikTok Mobile Share Links
+
+**What I built**
+
+- Added support for common TikTok mobile share links, including `vm.tiktok.com`, `vt.tiktok.com` and supported TikTok `/t/` links.
+- Introduced an authenticated server-side operation that follows approved TikTok redirects and obtains the canonical video URL.
+- Added allowlisted destination checks, a redirect limit and timeout handling instead of accepting arbitrary URL redirects.
+- Updated the journal editor to display resolution progress, avoid repeated submissions and report failures.
+- Kept the existing full TikTok, YouTube and Instagram flows intact.
+
+**Technical decisions and challenges**
+
+A shortened TikTok URL contains a redirect code, not the video ID needed for an embedded player. Treating it as a normal full video URL would not work.
+
+The solution resolves the short URL before adding media and stores only a validated, canonical TikTok video URL. This keeps the existing media-order validation, deduplication and publishing workflow consistent.
+
+**Outcome:** Mobile TikTok links were tested successfully through the journal editor.
+
+**Lesson:** Input validation needs to account for real user behaviour, such as links copied from mobile apps, while still constraining server-side network requests.
+
+## 29 October 2026 — Core Functionality Milestone
+
+The main functional features of the website are now implemented and working: the public portfolio sections, secure administrator access, database-backed journals, rich-text editing, draft autosaving, published revisions, image uploads, social embeds, media ordering, cover selection, public journal pages and entry deletion.
+
+The project has grown from a static Next.js site into a full-stack publishing application using PostgreSQL, Drizzle ORM, Auth.js, Tiptap and Vercel Blob.
+
+**Next phase — Design and interaction**
+
+The immediate priority is now visual refinement: stronger layouts and typography, tasteful animations, page transitions, responsive polish and improved interaction feedback. Motion should remain accessible, including appropriate reduced-motion behaviour.
+
+Automated tests, stronger CI checks and optional recovery for deleted entries remain possible future improvements. They are not being presented as completed features.
+
+### Further Technical References
+
+- [dnd-kit](https://dndkit.com/) — Drag-and-drop interactions.
+- [Next.js Metadata](https://nextjs.org/docs/app/getting-started/metadata-and-og-images) — Page and article metadata.
+- [Next.js `sitemap.ts`](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap) — Generated sitemap.
+- [Git — Rebasing](https://git-scm.com/book/en/v2/Git-Branching-Rebasing) — Replaying commits and resolving conflicts.
+
 ---
 
 ## Documentation and Reference Resources
