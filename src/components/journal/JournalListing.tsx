@@ -87,7 +87,7 @@ function EntryMedia({
   label: string;
   featured?: boolean;
 }) {
-  if (entry.previewSocialUrls?.length) {
+  if (!entry.coverImage && entry.previewSocialUrls?.length) {
     return (
       <div className="min-w-0 rounded-xl bg-[#161A22] p-3">
         <JournalSocialPreview

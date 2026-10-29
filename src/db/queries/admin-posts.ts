@@ -87,6 +87,7 @@ export async function getAdminDashboardData(
       db
         .select({
           id: posts.id,
+          version: sql<string>`${posts.updatedAt}::text`,
           title: posts.title,
           category: posts.category,
           status: posts.status,

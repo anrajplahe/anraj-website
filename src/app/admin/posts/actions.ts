@@ -550,3 +550,44 @@ export async function discardPublishedRevision(
 
   return { discarded: true };
 }
+
+/**
+ * Permanently delete a journal entry, whether draft or published.
+ * Require the current version to avoid deleting an entry edited elsewhere.
+ * Related post_media rows are removed by the database's ON DELETE CASCADE.
+ */
+export async function deleteJournalEntry(id: string, version: string) {
+  await requireAdmin();
+
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) {
+    throw new Error("Invalid entry ID.");
+  }
+
+  if (
+    typeof version !== "string" ||
+    version.length > 64 ||
+    !/^\d{4}-\d{2}-\d{2}[ T]/.test(version) ||
+    Number.isNaN(Date.parse(version))
+  ) {
+    throw new Error("Invalid entry version. Reload before deleting.");
+  }
+
+  const [deleted] = await db
+    .delete(posts)
+    .where(
+      and(
+        eq(posts.id, id),
+        sql`${posts.updatedAt} = ${version}::timestamptz`
+      )
+    )
+    .returning({ id: posts.id });
+
+  if (!deleted) {
+    throw new Error("This entry has changed or has already been deleted. Reload the dashboard and try again.");
+  }
+
+  revalidatePath("/admin");
+  refreshPublicJournal(id);
+
+  return { deleted: true };
+}

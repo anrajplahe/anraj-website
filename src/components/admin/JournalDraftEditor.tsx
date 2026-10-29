@@ -19,6 +19,7 @@ import {
   savePublishedRevision,
   publishPublishedRevision,
   discardPublishedRevision,
+  deleteJournalEntry,
   loadJournalEditor,
 } from "@/app/admin/posts/actions";
 
@@ -379,6 +380,31 @@ async function discard() {
 }
 
 
+  async function deleteEntry() {
+    if (!window.confirm(
+      "Permanently delete this entry? It will be removed from the website and cannot be recovered."
+    )) return;
+
+    stopped.current = true;
+    setBusy(true);
+    setError("");
+
+    try {
+      // Let any in-progress autosave complete before checking its version.
+      await saveQueue.current.catch(() => {});
+      await deleteJournalEntry(id, latestVersion.current);
+      if (active.current) {
+        router.replace("/admin");
+        router.refresh();
+      }
+    } catch (cause) {
+      stopped.current = false;
+      setError(cause instanceof Error ? cause.message : "Could not delete entry.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
   const savingLabel =
     saveStatus === "saved"
       ? "All changes saved"
@@ -539,6 +565,17 @@ async function discard() {
             )}
           </div>
         )}
+
+        <div className="flex justify-end">
+          <button
+            type="button"
+            disabled={busy}
+            onClick={() => runAction(deleteEntry)}
+            className="rounded-lg border border-red-500/40 px-4 py-2.5 text-sm font-medium text-red-300 transition-colors hover:bg-red-500/10 disabled:opacity-50"
+          >
+            Delete entry permanently
+          </button>
+        </div>
 
         {/* Publishing controls */}
         <div className="flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-6">
