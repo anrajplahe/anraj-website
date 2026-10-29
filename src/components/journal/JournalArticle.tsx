@@ -6,7 +6,7 @@ import type { ReactNode } from "react";
 import type { JSONContent } from "@tiptap/core";
 
 import { getPublishedJournalArticle } from "@/lib/journal/public";
-import { parseYouTubeUrl } from "@/lib/journal/youtube";
+import SocialEmbed from "@/components/journal/SocialEmbed";
 
 type Category = "bhangra" | "music";
 
@@ -18,7 +18,8 @@ type Props = {
 // Render only the rich-text elements supported by the editor.
 function renderNode(
   node: JSONContent,
-  key: number
+  key: number,
+  category: Category
 ): ReactNode {
   if (node.type === "text") {
     let output: ReactNode = node.text ?? "";
@@ -57,7 +58,11 @@ function renderNode(
                     href={url.toString()}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-400 underline underline-offset-4 hover:text-blue-300"
+                    className={
+                    category === "bhangra"
+                        ? "text-yellow-400 underline underline-offset-4 hover:text-yellow-300"
+                        : "text-pink-400 underline underline-offset-4 hover:text-pink-300"
+                    }
                   >
                     {output}
                   </a>
@@ -80,7 +85,9 @@ function renderNode(
     return <br key={key} />;
   }
 
-  const children = (node.content ?? []).map(renderNode);
+  const children = (node.content ?? []).map(
+    (child, index) => renderNode(child, index, category)
+  );
 
   switch (node.type) {
     case "doc":
@@ -148,9 +155,13 @@ export default async function JournalArticle({
   return (
     <article className="mx-auto max-w-4xl px-4 py-12 text-white sm:px-6 sm:py-20">
       <Link
-        href={`/${category}`}
-        className="text-sm text-blue-400 hover:text-blue-300"
-      >
+        href={`/${category}/journal`}
+        className={
+            category === "bhangra"
+            ? "text-sm text-yellow-400 hover:text-yellow-300"
+            : "text-sm text-pink-400 hover:text-pink-300"
+        }
+        >
         ← Back to journal
       </Link>
 
@@ -165,7 +176,7 @@ export default async function JournalArticle({
       </header>
 
       <div className="max-w-none text-base text-gray-300 sm:text-lg">
-        {renderNode(entry.content as JSONContent, 0)}
+        {renderNode(entry.content as JSONContent, 0, category)}
       </div>
 
       {entry.media.length > 0 && (
@@ -196,27 +207,19 @@ export default async function JournalArticle({
               );
             }
 
+            
             if (item.type === "video_embed") {
-              const video = parseYouTubeUrl(item.url);
-
-              if (!video) return null;
-
-              return (
+            return (
                 <div
-                  key={item.id}
-                  className="aspect-video overflow-hidden rounded-xl bg-black"
+                key={item.id}
+                className="mx-auto w-full max-w-2xl"
                 >
-                  <iframe
-                    src={`https://www.youtube-nocookie.com/embed/${video.id}`}
-                    title={`YouTube video ${index + 1}`}
-                    loading="lazy"
-                    referrerPolicy="strict-origin-when-cross-origin"
-                    allow="encrypted-media; picture-in-picture; fullscreen"
-                    allowFullScreen
-                    className="h-full w-full border-0"
-                  />
+                <SocialEmbed
+                    url={item.url}
+                    category={category}
+                />
                 </div>
-              );
+            );
             }
 
             return null;

@@ -8,6 +8,7 @@ import type { JournalDraftFields } from "@/types/journal";
 import type { JournalImage } from "@/lib/journal/images";
 import JournalImageMedia, { JournalImageCard, type ImageUploadController } from "./JournalImageMedia";
 import JournalVideoMedia, { JournalVideoPreview } from "./JournalVideoMedia";
+import { parseSocialUrl } from "@/lib/journal/social";
 
 type Props = {
   postId: string;
@@ -52,7 +53,11 @@ export default function JournalMediaEditor({ postId, fields, controller, onChang
             {fields.mediaOrder.map((ref, index) => {
               const image = ref.type === "image" ? fields.images.find((item) => item.id === ref.id) : undefined;
               return (
-                <SortableMedia key={ref.id} id={ref.id} index={index} label={ref.type === "image" ? "Image" : "YouTube video"}>
+                <SortableMedia key={ref.id} id={ref.id} index={index} label={
+                      ref.type === "image"
+                        ? "Image"
+                        : `${parseSocialUrl(ref.url)?.platform ?? "Social"} post`
+                    }>
                   {ref.type === "image" && image && <JournalImageCard image={image} onChange={onImagesChange}
                     isCover={fields.coverImageId === image.id}
                     onCover={() => onChange({ coverImageId: fields.coverImageId === image.id ? null : image.id })} />}

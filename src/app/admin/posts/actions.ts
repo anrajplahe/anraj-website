@@ -14,8 +14,7 @@ import { and, asc, eq, sql, getTableColumns } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import type { JournalDraftFields } from "@/types/journal";
-
-import { validateVideoUrls } from "@/lib/journal/youtube";
+import { validateSocialUrls } from "@/lib/journal/social";
 
 const EMPTY_CONTENT = {
   type: "doc",
@@ -264,7 +263,7 @@ function validateInput(input: JournalDraftInput) {
   }
   const content = validateContent(input.content);
   const images = validateImageInput(input.images);
-  const videoUrls = validateVideoUrls(input.videoUrls);
+  const videoUrls = validateSocialUrls(input.videoUrls);
   const arrangement = validateMediaArrangement(input.mediaOrder, input.coverImageId, images, videoUrls);
 
   return {

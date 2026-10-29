@@ -77,50 +77,68 @@ export async function getPublishedJournalEntries(
 
   if (entries.length === 0) return [];
 
-  // Retrieve selected cover images for these entries.
-  const covers = await db
-    .select({
-      postId: postMedia.postId,
-      url: postMedia.url,
-      altText: postMedia.altText,
-    })
-    .from(postMedia)
-    .where(
-      and(
+  
+    // Retrieve published media for the listed entries.
+    // This never reads pendingRevision.
+    const media = await db
+        .select({
+        postId: postMedia.postId,
+        type: postMedia.type,
+        url: postMedia.url,
+        altText: postMedia.altText,
+        isCover: postMedia.isCover,
+        })
+        .from(postMedia)
+        .where(
         inArray(
-          postMedia.postId,
-          entries.map((entry) => entry.id)
-        ),
-        eq(postMedia.type, "image"),
-        eq(postMedia.isCover, true)
-      )
-    )
-    .orderBy(asc(postMedia.position));
+            postMedia.postId,
+            entries.map((entry) => entry.id)
+        )
+        )
+        .orderBy(
+        asc(postMedia.position),
+        asc(postMedia.id)
+        );
 
-  const coverByPost = new Map<
-    string,
-    { url: string; alt: string }
-  >();
+    const coverByPost = new Map<
+        string,
+        { url: string; alt: string }
+    >();
 
-  for (const cover of covers) {
-    if (!coverByPost.has(cover.postId)) {
-      coverByPost.set(cover.postId, {
-        url: cover.url,
-        alt: cover.altText ?? "",
-      });
+    const socialByPost = new Map<string, string[]>();
+
+    for (const item of media) {
+        if (
+        item.type === "image" &&
+        item.isCover &&
+        !coverByPost.has(item.postId)
+        ) {
+        coverByPost.set(item.postId, {
+            url: item.url,
+            alt: item.altText ?? "",
+        });
+        }
+
+        if (item.type === "video_embed") {
+            const existing = socialByPost.get(item.postId) ?? [];
+            existing.push(item.url);
+            socialByPost.set(item.postId, existing);
+        }
     }
-  }
 
-  return entries
-    .filter((entry) => entry.date !== null)
-    .map((entry) => ({
-      id: entry.id,
-      title: entry.title,
-      date: entry.date!,
-      excerpt: createExcerpt(entry.content),
-      coverImage: coverByPost.get(entry.id) ?? null,
-    }));
-}
+    return entries
+        .filter((entry) => entry.date !== null)
+        .map((entry) => ({
+        id: entry.id,
+        title: entry.title,
+        date: entry.date!,
+        excerpt: createExcerpt(entry.content),
+        coverImage: coverByPost.get(entry.id) ?? null,
+        previewSocialUrls:
+            socialByPost.get(entry.id) ?? [],
+        }));
+    }
+
 
 export async function getPublishedJournalArticle(
   category: JournalCategory,

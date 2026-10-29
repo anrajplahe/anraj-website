@@ -1,6 +1,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import JournalSocialPreview from "@/components/journal/JournalSocialPreview";
 
 export type JournalEntry = {
   id: string;
@@ -11,6 +12,7 @@ export type JournalEntry = {
     url: string;
     alt: string;
   } | null;
+  previewSocialUrls?: string[];
 };
 
 type Props = {
@@ -57,9 +59,9 @@ function CoverImage({
           sizes={
             featured
               ? "(max-width: 768px) 100vw, 60vw"
-              : "(max-width: 640px) 100vw, 33vw"
+              : "(max-width: 640px) 100vw, 50vw"
           }
-          className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+          className="object-cover"
         />
       ) : (
         <div className="flex h-full items-center justify-center">
@@ -71,6 +73,40 @@ function CoverImage({
     </div>
   );
 }
+
+
+
+function EntryMedia({
+  entry,
+  category,
+  label,
+  featured = false,
+}: {
+  entry: JournalEntry;
+  category: "bhangra" | "music";
+  label: string;
+  featured?: boolean;
+}) {
+  if (entry.previewSocialUrls?.length) {
+    return (
+      <div className="min-w-0 rounded-xl bg-[#161A22] p-3">
+        <JournalSocialPreview
+          urls={entry.previewSocialUrls}
+          category={category}
+        />
+      </div>
+    );
+  }
+
+  return (
+    <CoverImage
+      image={entry.coverImage}
+      label={label}
+      featured={featured}
+    />
+  );
+}
+
 
 export default function JournalListing({
   category,
@@ -97,9 +133,7 @@ export default function JournalListing({
     ? entries.slice(0, 3)
     : entries;
 
-  const featured =
-    visibleEntries.find((entry) => entry.coverImage) ??
-    visibleEntries[0];
+  const featured = visibleEntries[0];
 
   const remaining = featured
     ? visibleEntries.filter(
@@ -150,47 +184,49 @@ export default function JournalListing({
         </p>
       ) : (
         <>
-          {/* Featured entry */}
-          <article>
+
+        {/* Featured entry */}
+        <article className="grid min-w-0 items-center gap-8 md:grid-cols-2">
+          <EntryMedia
+            entry={featured}
+            category={category}
+            label={label}
+            featured
+          />
+
+          <div className="min-w-0 break-words space-y-4">
+            <p
+              className={`text-xs font-semibold uppercase tracking-wider ${accentText}`}
+            >
+              Featured entry
+            </p>
+
+            <p className="text-sm text-gray-400">
+              {formatDate(featured.date)}
+            </p>
+
             <Link
               href={`/${category}/${featured.id}`}
-              className="group grid items-center gap-8 md:grid-cols-2"
+              className="group block space-y-4"
             >
-              <CoverImage
-                image={featured.coverImage}
-                label={label}
-                featured
-              />
+              <h3
+                className={`text-2xl font-semibold text-white transition-colors ${hoverText} sm:text-3xl`}
+              >
+                {featured.title || "Journal entry"}
+              </h3>
 
-              <div className="space-y-4">
-                <p
-                  className={`text-xs font-semibold uppercase tracking-wider ${accentText}`}
-                >
-                  Featured entry
-                </p>
+              <p className="leading-7 text-gray-400">
+                {featured.excerpt}
+              </p>
 
-                <p className="text-sm text-gray-400">
-                  {formatDate(featured.date)}
-                </p>
-
-                <h3
-                  className={`text-2xl font-semibold text-white transition-colors ${hoverText} sm:text-3xl`}
-                >
-                  {featured.title || "Journal entry"}
-                </h3>
-
-                <p className="leading-7 text-gray-400">
-                  {featured.excerpt}
-                </p>
-
-                <span
-                  className={`inline-block text-sm font-medium ${accentText}`}
-                >
-                  Read entry →
-                </span>
-              </div>
+              <span
+                className={`inline-block text-sm font-medium ${accentText}`}
+              >
+                Read entry →
+              </span>
             </Link>
-          </article>
+          </div>
+        </article>
 
           {/* Remaining entries */}
           {remaining.length > 0 && (
@@ -201,33 +237,34 @@ export default function JournalListing({
                   : "More from the journal"}
               </h3>
 
-              <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid min-w-0 gap-10 sm:grid-cols-2">
                 {remaining.map((entry) => (
-                  <article key={entry.id}>
-                    <Link
-                      href={`/${category}/${entry.id}`}
-                      className="group block space-y-3"
-                    >
-                      <CoverImage
-                        image={entry.coverImage}
+                    <article key={entry.id} className="min-w-0 space-y-3">
+                      <EntryMedia
+                        entry={entry}
+                        category={category}
                         label={label}
                       />
 
-                      <p className="text-xs text-gray-400">
-                        {formatDate(entry.date)}
-                      </p>
-
-                      <h4
-                        className={`text-lg font-semibold text-white transition-colors ${hoverText}`}
+                      <Link
+                        href={`/${category}/${entry.id}`}
+                        className="group block break-words space-y-3"
                       >
-                        {entry.title || "Journal entry"}
-                      </h4>
+                        <p className="text-xs text-gray-400">
+                          {formatDate(entry.date)}
+                        </p>
 
-                      <p className="line-clamp-3 text-sm leading-6 text-gray-400">
-                        {entry.excerpt}
-                      </p>
-                    </Link>
-                  </article>
+                        <h4
+                          className={`text-lg font-semibold text-white transition-colors ${hoverText}`}
+                        >
+                          {entry.title || "Journal entry"}
+                        </h4>
+
+                        <p className="line-clamp-3 text-sm leading-6 text-gray-400">
+                          {entry.excerpt}
+                        </p>
+                      </Link>
+                    </article>
                 ))}
               </div>
             </div>

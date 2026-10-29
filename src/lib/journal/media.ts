@@ -1,5 +1,5 @@
 import { UUID_PATTERN, type JournalImage } from "./images";
-import { validateVideoUrls } from "./youtube";
+import { validateSocialUrls } from "./social";
 
 export type MediaReference = { id: string; type: "image" } | { id: string; type: "video_embed"; url: string };
 export type MediaFields = {
@@ -47,7 +47,7 @@ export function validateMediaArrangement(value: unknown, cover: unknown, images:
     ids.add(ref.id);
     if (ref.type === "image" && imageIds.delete(ref.id)) return { id: ref.id, type: "image" };
     if (ref.type === "video_embed" && typeof ref.url === "string") {
-      const [url] = validateVideoUrls([ref.url]);
+      const [url] = validateSocialUrls([ref.url]);
       if (videos.delete(url)) return { id: ref.id, type: "video_embed", url };
     }
     throw new Error("Media order must reference each attached image and video exactly once.");
