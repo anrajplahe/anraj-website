@@ -1,7 +1,6 @@
 
-import Image from "next/image";
 import Link from "next/link";
-import JournalSocialPreview from "@/components/journal/JournalSocialPreview";
+import JournalMediaPreview from "@/components/journal/JournalMediaPreview";
 
 export type JournalEntry = {
   id: string;
@@ -13,6 +12,11 @@ export type JournalEntry = {
     alt: string;
   } | null;
   previewSocialUrls?: string[];
+  previewImages?: {
+    id: string;
+    url: string;
+    alt: string;
+  }[];
 };
 
 type Props = {
@@ -34,79 +38,6 @@ function formatDate(date: string) {
     timeZone: "UTC",
   }).format(parsed);
 }
-
-function CoverImage({
-  image,
-  label,
-  featured = false,
-}: {
-  image?: JournalEntry["coverImage"];
-  label: string;
-  featured?: boolean;
-}) {
-  return (
-    <div
-      className={`relative overflow-hidden rounded-xl bg-[#161A22] ${
-        featured ? "aspect-video" : "aspect-[4/3]"
-      }`}
-    >
-      {image ? (
-        <Image
-          src={image.url}
-          alt={image.alt}
-          fill
-          unoptimized
-          sizes={
-            featured
-              ? "(max-width: 768px) 100vw, 60vw"
-              : "(max-width: 640px) 100vw, 50vw"
-          }
-          className="object-cover"
-        />
-      ) : (
-        <div className="flex h-full items-center justify-center">
-          <span className="text-sm font-medium tracking-widest text-gray-500">
-            {label}
-          </span>
-        </div>
-      )}
-    </div>
-  );
-}
-
-
-
-function EntryMedia({
-  entry,
-  category,
-  label,
-  featured = false,
-}: {
-  entry: JournalEntry;
-  category: "bhangra" | "music";
-  label: string;
-  featured?: boolean;
-}) {
-  if (!entry.coverImage && entry.previewSocialUrls?.length) {
-    return (
-      <div className="min-w-0 rounded-xl bg-[#161A22] p-3">
-        <JournalSocialPreview
-          urls={entry.previewSocialUrls}
-          category={category}
-        />
-      </div>
-    );
-  }
-
-  return (
-    <CoverImage
-      image={entry.coverImage}
-      label={label}
-      featured={featured}
-    />
-  );
-}
-
 
 export default function JournalListing({
   category,
@@ -149,6 +80,7 @@ export default function JournalListing({
           : "mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-20"
       }
     >
+      {/* Journal heading */}
       <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
         <div>
           <p
@@ -184,49 +116,49 @@ export default function JournalListing({
         </p>
       ) : (
         <>
+          {/* Featured entry */}
+          <article className="grid min-w-0 items-center gap-8 md:grid-cols-2">
+            <JournalMediaPreview
+              key={featured.id}
+              entry={featured}
+              category={category}
+              label={label}
+              featured
+            />
 
-        {/* Featured entry */}
-        <article className="grid min-w-0 items-center gap-8 md:grid-cols-2">
-          <EntryMedia
-            entry={featured}
-            category={category}
-            label={label}
-            featured
-          />
-
-          <div className="min-w-0 break-words space-y-4">
-            <p
-              className={`text-xs font-semibold uppercase tracking-wider ${accentText}`}
-            >
-              Featured entry
-            </p>
-
-            <p className="text-sm text-gray-400">
-              {formatDate(featured.date)}
-            </p>
-
-            <Link
-              href={`/${category}/${featured.id}`}
-              className="group block space-y-4"
-            >
-              <h3
-                className={`text-2xl font-semibold text-white transition-colors ${hoverText} sm:text-3xl`}
+            <div className="min-w-0 space-y-4 break-words">
+              <p
+                className={`text-xs font-semibold uppercase tracking-wider ${accentText}`}
               >
-                {featured.title || "Journal entry"}
-              </h3>
-
-              <p className="leading-7 text-gray-400">
-                {featured.excerpt}
+                Featured entry
               </p>
 
-              <span
-                className={`inline-block text-sm font-medium ${accentText}`}
+              <p className="text-sm text-gray-400">
+                {formatDate(featured.date)}
+              </p>
+
+              <Link
+                href={`/${category}/${featured.id}`}
+                className="group block space-y-4"
               >
-                Read entry →
-              </span>
-            </Link>
-          </div>
-        </article>
+                <h3
+                  className={`text-2xl font-semibold text-white transition-colors ${hoverText} sm:text-3xl`}
+                >
+                  {featured.title || "Journal entry"}
+                </h3>
+
+                <p className="leading-7 text-gray-400">
+                  {featured.excerpt}
+                </p>
+
+                <span
+                  className={`inline-block text-sm font-medium ${accentText}`}
+                >
+                  Read entry →
+                </span>
+              </Link>
+            </div>
+          </article>
 
           {/* Remaining entries */}
           {remaining.length > 0 && (
@@ -239,32 +171,35 @@ export default function JournalListing({
 
               <div className="grid min-w-0 gap-10 sm:grid-cols-2">
                 {remaining.map((entry) => (
-                    <article key={entry.id} className="min-w-0 space-y-3">
-                      <EntryMedia
-                        entry={entry}
-                        category={category}
-                        label={label}
-                      />
+                  <article
+                    key={entry.id}
+                    className="min-w-0 space-y-3"
+                  >
+                    <JournalMediaPreview
+                      entry={entry}
+                      category={category}
+                      label={label}
+                    />
 
-                      <Link
-                        href={`/${category}/${entry.id}`}
-                        className="group block break-words space-y-3"
+                    <Link
+                      href={`/${category}/${entry.id}`}
+                      className="group block space-y-3 break-words"
+                    >
+                      <p className="text-xs text-gray-400">
+                        {formatDate(entry.date)}
+                      </p>
+
+                      <h4
+                        className={`text-lg font-semibold text-white transition-colors ${hoverText}`}
                       >
-                        <p className="text-xs text-gray-400">
-                          {formatDate(entry.date)}
-                        </p>
+                        {entry.title || "Journal entry"}
+                      </h4>
 
-                        <h4
-                          className={`text-lg font-semibold text-white transition-colors ${hoverText}`}
-                        >
-                          {entry.title || "Journal entry"}
-                        </h4>
-
-                        <p className="line-clamp-3 text-sm leading-6 text-gray-400">
-                          {entry.excerpt}
-                        </p>
-                      </Link>
-                    </article>
+                      <p className="line-clamp-3 text-sm leading-6 text-gray-400">
+                        {entry.excerpt}
+                      </p>
+                    </Link>
+                  </article>
                 ))}
               </div>
             </div>
@@ -272,6 +207,7 @@ export default function JournalListing({
         </>
       )}
 
+      {/* Full journal link */}
       {isPreview && (
         <div className="mt-10">
           <Link

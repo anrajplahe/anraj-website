@@ -148,6 +148,12 @@ export async function getPublishedJournalEntries(
     { url: string; alt: string }
   >();
 
+  const coverIdByPost = new Map<string, string>();
+  const imagesByPost = new Map<
+    string,
+    { id: string; url: string; alt: string }[]
+  >();
+
   // Store every social media URL for each entry.
   const socialByPost = new Map<string, string[]>();
 
@@ -158,10 +164,17 @@ export async function getPublishedJournalEntries(
       item.isCover &&
       !coverByPost.has(item.postId)
     ) {
+      coverIdByPost.set(item.postId, item.id);
       coverByPost.set(item.postId, {
         url: item.url,
         alt: item.altText ?? "",
       });
+    }
+
+    if (item.type === "image") {
+      const images = imagesByPost.get(item.postId) ?? [];
+      images.push({ id: item.id, url: item.url, alt: item.altText ?? "" });
+      imagesByPost.set(item.postId, images);
     }
 
     // YouTube, Instagram and TikTok embeds
@@ -190,6 +203,9 @@ export async function getPublishedJournalEntries(
         coverByPost.get(entry.id) ?? null,
       previewSocialUrls:
         socialByPost.get(entry.id) ?? [],
+      previewImages: (imagesByPost.get(entry.id) ?? []).filter(
+        (image) => image.id !== coverIdByPost.get(entry.id)
+      ),
     }));
 }
 
