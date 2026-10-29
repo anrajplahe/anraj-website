@@ -1,6 +1,8 @@
 
 import type { Metadata } from "next";
 import { FaInstagram, FaTiktok } from "react-icons/fa6";
+import { Suspense } from "react";
+import PublishedJournal from "@/components/journal/PublishedJournal";
 
 export const metadata: Metadata = {
   title: "Bhangra",
@@ -138,6 +140,22 @@ export default function BhangraPage() {
             Bhangra in general.
           </p>
         </div>
+
+
+        {/* Published Journal */}
+        <Suspense
+          fallback={
+            <p className="mt-16 text-sm text-gray-400">
+              Loading journal...
+            </p>
+          }
+        >
+          <PublishedJournal
+            category="bhangra"
+            variant="preview"
+          />
+        </Suspense>
+
 
         {/* Competition History */}
         <section

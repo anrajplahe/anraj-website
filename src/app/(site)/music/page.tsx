@@ -5,6 +5,8 @@ import {
   FaSliders,
   FaVolumeHigh,
 } from "react-icons/fa6";
+import { Suspense } from "react";
+import PublishedJournal from "@/components/journal/PublishedJournal";
 
 export const metadata: Metadata = {
   title: "Guitar & Music",
@@ -114,6 +116,20 @@ export default function MusicPage() {
             musical that I've been working on.
           </p>
         </div>
+
+        {/* Published Journal */}
+        <Suspense
+          fallback={
+            <p className="mt-16 text-sm text-gray-400">
+              Loading journal...
+            </p>
+          }
+        >
+          <PublishedJournal
+            category="music"
+            variant="preview"
+          />
+        </Suspense>
 
         {/* My Gear Section */}
         <section
