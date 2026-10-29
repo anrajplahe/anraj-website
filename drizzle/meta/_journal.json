@@ -8,6 +8,27 @@
       "when": 1792517312575,
       "tag": "0000_shallow_scalphunter",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1792622043693,
+      "tag": "0001_optional-draft-date",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793019591935,
+      "tag": "0002_published-entry-revisions",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1793029514633,
+      "tag": "0003_journal-image-uploads",
+      "breakpoints": true
     }
   ]
 }

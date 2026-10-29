@@ -16,8 +16,8 @@ const sections = [
   {
     title: "Tech I Use",
     href: "/tech",
-    activeStyle: "border-cyan-400 bg-cyan-400",
-    hoverStyle: "hover:border-cyan-400 hover:bg-cyan-400",
+    activeStyle: "border-green-500 bg-green-500",
+    hoverStyle: "hover:border-green-500 hover:bg-green-500",
   },
   {
     title: "Bhangra",
@@ -54,7 +54,7 @@ export default function Navbar() {
           aria-label="Anraj Plahe homepage"
           className="shrink-0 text-lg font-bold tracking-tight transition-opacity hover:opacity-80 sm:text-2xl"
         >
-          <span className="text-green-400">anraj</span>
+          <span className="text-blue-500">anraj</span>
           <span className="text-white">plahe</span>
         </Link>
 

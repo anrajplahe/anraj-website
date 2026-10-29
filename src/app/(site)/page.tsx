@@ -14,7 +14,7 @@ const interests = [
     title: "Tech",
     description: "The tech I use and love.",
     symbol: "⌘",
-    colour: "text-cyan-400",
+    colour: "text-green-500",
     href: "/tech",
   },
   
@@ -44,12 +44,12 @@ export default function Home() {
         className="relative mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24 md:py-36"
       >
         {/* Background glow */}
-        <div className="pointer-events-none absolute right-0 top-12 -z-0 h-64 w-64 rounded-full bg-green-600/10 blur-3xl" />
+        <div className="pointer-events-none absolute right-0 top-12 -z-0 h-64 w-64 rounded-full bg-blue-700/10 blur-3xl" />
 
         <div className="relative z-10">
           {/* Introduction */}
           <h1 className="max-w-4xl text-4xl font-bold tracking-tight sm:text-5xl md:text-7xl">
-            Hi, I'm <span className="text-green-400">Anraj</span>.
+            Hi, I'm <span className="text-blue-500">Anraj</span>.
 
             <span className="mt-3 block text-gray-400">
               Here's a little bit about me.

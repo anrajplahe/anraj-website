@@ -6,8 +6,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [GitHub],
 
   session: {
-    strategy: "jwt",
-  },
+  strategy: "jwt",
+  maxAge: 60 * 60 * 24, // 24 hours
+},
 
   pages: {
     signIn: "/admin/login",

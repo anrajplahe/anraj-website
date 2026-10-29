@@ -25,7 +25,7 @@ export default function Footer() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="LinkedIn"
-            className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-[#191D2B] text-gray-300 transition-all duration-200 hover:-translate-y-1 hover:border-green-400/50 hover:text-green-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
+            className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-[#191D2B] text-gray-300 transition-all duration-200 hover:-translate-y-1 hover:border-blue-500/50 hover:text-blue-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
           >
             <FaLinkedinIn size={18} />
           </a>
@@ -36,7 +36,7 @@ export default function Footer() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="GitHub"
-            className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-[#191D2B] text-gray-300 transition-all duration-200 hover:-translate-y-1 hover:border-green-400/50 hover:text-green-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
+            className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-[#191D2B] text-gray-300 transition-all duration-200 hover:-translate-y-1 hover:border-blue-500/50 hover:text-blue-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
           >
             <FaGithub size={19} />
           </a>
@@ -47,7 +47,7 @@ export default function Footer() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Instagram"
-            className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-[#191D2B] text-gray-300 transition-all duration-200 hover:-translate-y-1 hover:border-green-400/50 hover:text-green-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
+            className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-[#191D2B] text-gray-300 transition-all duration-200 hover:-translate-y-1 hover:border-blue-500/50 hover:text-blue-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
           >
             <FaInstagram size={19} />
           </a>
@@ -58,7 +58,7 @@ export default function Footer() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="TikTok"
-            className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-[#191D2B] text-gray-300 transition-all duration-200 hover:-translate-y-1 hover:border-green-400/50 hover:text-green-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
+            className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-[#191D2B] text-gray-300 transition-all duration-200 hover:-translate-y-1 hover:border-blue-500/50 hover:text-blue-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
           >
             <FaTiktok size={18} />
           </a>

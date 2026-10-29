@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { auth, signIn } from "@/auth";
 import { connection } from "next/server";
 
+
 type LoginPageProps = {
   searchParams: Promise<{ error?: string }>;
 };
