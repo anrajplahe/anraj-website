@@ -3,6 +3,28 @@ import { parseYouTubeUrl } from "./youtube";
 
 export const MAX_SOCIAL_EMBEDS = 20;
 
+// Recognise share links without treating unresolved codes as saved video URLs.
+export function parseTikTokShortUrl(input: unknown): string | null {
+  if (typeof input !== "string" || input.length > 2048) return null;
+  const value = input.trim();
+  // Check the raw authority too: URL normalisation can hide an explicit :443.
+  if (!/^https:\/\/(?:vm\.tiktok\.com|vt\.tiktok\.com|www\.tiktok\.com)\//i.test(value)) {
+    return null;
+  }
+  try {
+    const url = new URL(value);
+    const shortHost = url.hostname === "vm.tiktok.com" || url.hostname === "vt.tiktok.com";
+    const validPath = shortHost
+      ? /^\/[A-Za-z0-9_-]{1,128}\/?$/.test(url.pathname)
+      : /^\/t\/[A-Za-z0-9_-]{1,128}\/?$/.test(url.pathname);
+    if (!validPath || url.username || url.password || url.port) return null;
+    url.hash = "";
+    return url.toString();
+  } catch {
+    return null;
+  }
+}
+
 export type SocialEmbed = {
   platform: "youtube" | "instagram" | "tiktok";
   id: string;

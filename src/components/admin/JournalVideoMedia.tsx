@@ -1,12 +1,15 @@
 
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 
 import {
   MAX_SOCIAL_EMBEDS,
   parseSocialUrl,
+  parseTikTokShortUrl,
 } from "@/lib/journal/social";
+
+import { resolveTikTokShareUrl } from "@/app/admin/posts/resolve-social";
 
 import SocialEmbed from "@/components/journal/SocialEmbed";
 
@@ -26,29 +29,73 @@ export default function JournalVideoMedia({
   const [url, setUrl] = useState("");
   const [error, setError] = useState("");
 
-  function addVideo() {
-    const parsed = parseSocialUrl(url);
+  const [resolving, setResolving] = useState(false);
+  const pending = useRef(false);
+  const mounted = useRef(true);
+  const latest = useRef({ videoUrls, onChange });
 
-    if (!parsed) {
-      setError(
-        "Enter a valid YouTube, Instagram or TikTok post URL."
-      );
+  useEffect(() => {
+    latest.current = { videoUrls, onChange };
+  }, [videoUrls, onChange]);
+
+  useEffect(() => {
+    mounted.current = true;
+    return () => { mounted.current = false; };
+  }, []);
+
+  async function addVideo() {
+    if (pending.current) return;
+    if (latest.current.videoUrls.length >= MAX_SOCIAL_EMBEDS) {
+      setError(`Use at most ${MAX_SOCIAL_EMBEDS} social embeds.`);
       return;
     }
 
-    if (videoUrls.includes(parsed.url)) {
+    let parsed = parseSocialUrl(url);
+    if (!parsed && parseTikTokShortUrl(url)) {
+      pending.current = true;
+      setResolving(true);
+      setError("");
+      try {
+        const result = await resolveTikTokShareUrl(url);
+        if (!mounted.current) return;
+        if (result.error) {
+          setError(result.error);
+          return;
+        }
+        parsed = parseSocialUrl(result.url ?? "");
+        if (parsed?.platform !== "tiktok") {
+          setError("Could not resolve this TikTok link. Copy the full video URL from TikTok and try again.");
+          return;
+        }
+      } catch {
+        if (mounted.current) {
+          setError("Could not resolve this TikTok link. Check your admin session or copy the full video URL from TikTok and try again.");
+        }
+        return;
+      } finally {
+        pending.current = false;
+        if (mounted.current) setResolving(false);
+      }
+    }
+
+    if (!parsed) {
+      setError("Enter a valid YouTube, Instagram or TikTok URL. For TikTok, use an HTTPS share link or the full video URL.");
+      return;
+    }
+
+    // Recheck current props after resolution: other media may have changed.
+    const current = latest.current;
+    if (current.videoUrls.includes(parsed.url)) {
       setError("This post has already been added.");
       return;
     }
-
-    if (videoUrls.length >= MAX_SOCIAL_EMBEDS) {
-      setError(
-        `Use at most ${MAX_SOCIAL_EMBEDS} social embeds.`
-      );
+    if (current.videoUrls.length >= MAX_SOCIAL_EMBEDS) {
+      setError(`Use at most ${MAX_SOCIAL_EMBEDS} social embeds.`);
       return;
     }
 
-    onChange([...videoUrls, parsed.url]);
+    // Keep the existing parent callback responsible for reconciling mediaOrder.
+    current.onChange([...current.videoUrls, parsed.url]);
     setUrl("");
     setError("");
   }
@@ -77,6 +124,7 @@ export default function JournalVideoMedia({
           id="journal-video-url"
           type="url"
           value={url}
+          disabled={resolving}
           maxLength={2048}
           onChange={(event) => {
             setUrl(event.target.value);
@@ -101,18 +149,25 @@ export default function JournalVideoMedia({
         <button
           type="button"
           onClick={addVideo}
-          className="rounded-lg bg-blue-500 px-4 py-2 text-sm font-semibold text-[#0B0D14] transition-colors hover:bg-blue-400"
+          disabled={resolving}
+          className="rounded-lg bg-blue-500 px-4 py-2 text-sm font-semibold text-[#0B0D14] transition-colors hover:bg-blue-400 disabled:opacity-50"
         >
           Add media
         </button>
       </div>
+
+      {resolving && (
+        <p role="status" className="text-sm text-gray-400">
+          Resolving TikTok link...
+        </p>
+      )}
 
       <p
         id="journal-video-help"
         className="text-xs text-gray-400"
       >
         Supports YouTube videos and Shorts,
-        Instagram posts and Reels, and TikTok videos.
+        Instagram posts and Reels, and TikTok videos or mobile share links.
       </p>
 
       {error && (
