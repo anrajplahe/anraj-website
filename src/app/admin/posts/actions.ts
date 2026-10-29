@@ -566,7 +566,7 @@ export async function deleteJournalEntry(id: string, version: string) {
   if (
     typeof version !== "string" ||
     version.length > 64 ||
-    !/^\\d{4}-\\d{2}-\\d{2}[ T]/.test(version) ||
+    !/^\d{4}-\d{2}-\d{2}[ T]/.test(version) ||
     Number.isNaN(Date.parse(version))
   ) {
     throw new Error("Invalid entry version. Reload before deleting.");
