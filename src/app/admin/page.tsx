@@ -11,6 +11,7 @@ import {
 } from "@/db/queries/admin-posts";
 
 import { createJournalDraft } from "./posts/actions";
+import DeleteJournalEntryButton from "@/components/admin/DeleteJournalEntryButton";
 
 // Format journal dates for display
 function formatDate(date: string) {
@@ -336,6 +337,8 @@ async function AdminContent({
                         Unpublished changes
                       </span>
                     )}
+
+                  <DeleteJournalEntryButton id={entry.id} version={entry.version} title={entry.title} />
 
                   <Link
                     href={`/admin/posts/${entry.id}/edit`}
