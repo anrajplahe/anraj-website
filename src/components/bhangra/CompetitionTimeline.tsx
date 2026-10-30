@@ -90,7 +90,7 @@ export default function CompetitionTimeline({ history, placingColours, vardiColo
                       </span>}
                       {entry.youtubeUrl && <ActionLink href={entry.youtubeUrl} external accent="yellow" arrow="diagonal" tone="neutral"
                         aria-label={`Watch ${entry.team}'s performance at ${entry.competition} (${year.year})`}
-                        className="bhangra-performance">
+                        className="bhangra-performance ml-auto">
                         <FaYoutube size={18} className="text-red-500" aria-hidden="true" />
                         {entry.role === "Coach" ? "Watch team performance" : "Watch performance"}
                       </ActionLink>}
