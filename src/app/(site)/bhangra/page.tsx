@@ -1,6 +1,7 @@
 
 import type { Metadata } from "next";
-import { FaInstagram, FaTiktok, FaYoutube } from "react-icons/fa6";
+import CompetitionTimeline from "@/components/bhangra/CompetitionTimeline";
+import { FaInstagram, FaTiktok } from "react-icons/fa6";
 import { Suspense } from "react";
 import PublishedJournal from "@/components/journal/PublishedJournal";
 
@@ -135,14 +136,15 @@ const vardiColours: Record<VardiColour, string> = {
 
 export default function BhangraPage() {
   return (
-    <main className="flex-1 bg-[#0B0D14] text-white">
-      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
+    <main className="bhangra-page flex-1 bg-[#0B0D14] text-white">
+      <section className="relative isolate mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28">
+        <div aria-hidden="true" className="bhangra-atmosphere pointer-events-none absolute inset-x-0 top-0 -z-10 h-[36rem]" />
         {/* Page Introduction */}
-        <h1 className="text-4xl font-bold tracking-tight text-yellow-400 sm:text-5xl">
+        <h1 className="bhangra-heading text-5xl font-semibold tracking-[-0.05em] text-yellow-400 sm:text-6xl md:text-7xl">
           Bhangra
         </h1>
 
-        <div className="mt-8 max-w-2xl space-y-5 text-base leading-relaxed text-gray-400 sm:text-lg">
+        <div className="bhangra-introduction mt-8 max-w-2xl space-y-5 text-base leading-relaxed text-slate-400 sm:text-lg">
           <p>
             Bhangra is a huge part of my life. I dance and
             compete with Ranjhe, and I also run my own
@@ -181,11 +183,11 @@ export default function BhangraPage() {
         {/* Competition History */}
         <section
           aria-labelledby="competition-heading"
-          className="mt-16"
+          className="mt-20 sm:mt-24"
         >
           <h2
             id="competition-heading"
-            className="text-2xl font-bold tracking-tight text-white sm:text-3xl"
+            className="text-2xl font-semibold tracking-tight text-white sm:text-3xl"
           >
             Competition History
           </h2>
@@ -195,115 +197,28 @@ export default function BhangraPage() {
             coached over the years.
           </p>
 
-          <div className="mt-10 max-w-4xl space-y-8">
-            {competitionHistory.map((year) => (
-              <section
-                key={year.year}
-                aria-label={`${year.year} competitions`}
-                className="flex items-start gap-4 sm:gap-8"
-              >
-                {/* Year */}
-                <div className="w-12 shrink-0 pt-3">
-                  <h3 className="font-semibold text-yellow-400">
-                    {year.year}
-                  </h3>
-                </div>
-
-                {/* Competition Entries */}
-                <div className="min-w-0 flex-1 space-y-6 border-t border-white/15 pt-3">
-                  {year.entries.map((entry) => (
-                    <div
-                      key={`${entry.team}-${entry.competition}`}
-                    >
-                      {/* Team and Role */}
-                      <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-                        <h4 className="text-sm font-semibold text-white sm:text-base">
-                          {entry.team}
-                        </h4>
-
-                        {entry.role && (
-                          <span className="text-xs italic text-slate-400">
-                            ({entry.role})
-                          </span>
-                        )}
-                      </div>
-
-                      {/* Competition and Placing */}
-                      <p className="mt-1 text-sm leading-relaxed text-gray-400">
-                        {entry.competition}
-
-                        {entry.placing && (
-                          <span
-                            className={`ml-2 font-medium italic ${placingColours[entry.placing]}`}
-                          >
-                            ({entry.placing})
-                          </span>
-                        )}
-                      </p>
-
-                      {/* Vardi Colour and Performance Video */}
-                      {(entry.vardiColour || entry.youtubeUrl) && (
-                        <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-3">
-                          {entry.vardiColour && (
-                            <div className="inline-flex items-center gap-2">
-                              <span
-                                aria-hidden="true"
-                                className="h-4 w-4 shrink-0 rounded-full border border-white/40"
-                                style={{
-                                  backgroundColor:
-                                    vardiColours[entry.vardiColour],
-                                }}
-                              />
-                              <span className="text-xs text-gray-400">
-                                {entry.vardiColour}
-                              </span>
-                            </div>
-                          )}
-
-                          {entry.youtubeUrl && (
-                            <a
-                              href={entry.youtubeUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              aria-label={
-                                entry.role === "Coach"
-                                  ? `Watch ${entry.team}'s performance at ${entry.competition}`
-                                  : `Watch ${entry.team}'s performance at ${entry.competition}`
-                              }
-                              className="inline-flex items-center gap-2 text-xs font-medium text-gray-300 transition-colors hover:text-yellow-400 focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow-400"
-                            >
-                              <FaYoutube
-                                size={17}
-                                className="text-red-500"
-                                aria-hidden="true"
-                              />
-                              {entry.role === "Coach"
-                                ? "Watch team performance"
-                                : "Watch performance"}
-                            </a>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </section>
-            ))}
-          </div>
+          <CompetitionTimeline
+            history={competitionHistory}
+            placingColours={placingColours}
+            vardiColours={vardiColours}
+          />
         </section>
 
         {/* Anahat Social Links */}
-        <div className="mt-16 max-w-2xl border-t border-white/15 pt-6">
-          <p className="mb-4 text-sm font-medium text-white">
+        <section aria-labelledby="anahat-heading" className="mt-20 rounded-2xl border border-yellow-400/10 bg-yellow-400/[0.02] p-6 sm:mt-24 sm:p-8">
+          <h2 id="anahat-heading" className="text-xl font-semibold tracking-tight text-white">
             Follow Anahat Bhangra
+          </h2>
+          <p className="mt-3 max-w-xl text-sm leading-relaxed text-slate-400">
+            Anahat is my Bhangra academy, where I teach classes and workshops.
           </p>
 
-          <div className="flex flex-wrap items-center gap-6">
+          <div className="mt-6 flex flex-wrap items-center gap-3">
             <a
               href="https://www.instagram.com/anahatbhangra/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-sm text-gray-400 transition-colors hover:text-yellow-400"
+              className="inline-flex min-h-11 items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm text-slate-300 transition-colors hover:border-yellow-400/30 hover:bg-yellow-400/5 hover:text-yellow-400 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-yellow-400"
             >
               <FaInstagram size={18} aria-hidden="true" />
               Instagram
@@ -313,13 +228,13 @@ export default function BhangraPage() {
               href="https://www.tiktok.com/@anahatbhangra"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-sm text-gray-400 transition-colors hover:text-yellow-400"
+              className="inline-flex min-h-11 items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm text-slate-300 transition-colors hover:border-yellow-400/30 hover:bg-yellow-400/5 hover:text-yellow-400 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-yellow-400"
             >
               <FaTiktok size={18} aria-hidden="true" />
               TikTok
             </a>
           </div>
-        </div>
+        </section>
       </section>
     </main>
   );

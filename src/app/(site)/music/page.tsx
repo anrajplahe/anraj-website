@@ -1,5 +1,6 @@
 
 import type { Metadata } from "next";
+import EquipmentCard from "@/components/music/EquipmentCard";
 import {
   FaGuitar,
   FaSliders,
@@ -89,15 +90,17 @@ const gearCategories = [
 
 export default function MusicPage() {
   return (
-    <main className="flex-1 bg-[#0B0D14] text-white">
-      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
+    <main className="music-page flex-1 bg-[#0B0D14] text-white">
+      <section className="relative isolate mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28">
+
+        <div aria-hidden="true" className="music-atmosphere pointer-events-none absolute inset-x-0 top-0 -z-10 h-[36rem]" />
 
         {/* Page Introduction */}
-        <h1 className="text-4xl font-bold tracking-tight text-pink-400 sm:text-5xl">
+        <h1 className="music-heading text-5xl font-semibold tracking-[-0.05em] text-pink-400 sm:text-6xl md:text-7xl">
           Guitar & Music
         </h1>
 
-        <div className="mt-8 max-w-2xl space-y-5 text-base leading-relaxed text-gray-400 sm:text-lg">
+        <div className="music-introduction mt-8 max-w-2xl space-y-5 text-base leading-relaxed text-slate-400 sm:text-lg">
           <p>
             Music has always been something I've loved,
             and guitar is my favourite way of getting
@@ -134,11 +137,11 @@ export default function MusicPage() {
         {/* My Gear Section */}
         <section
           aria-labelledby="gear-heading"
-          className="mt-16"
+          className="mt-20 sm:mt-24"
         >
           <h2
             id="gear-heading"
-            className="text-2xl font-bold tracking-tight text-white sm:text-3xl"
+            className="text-2xl font-semibold tracking-tight text-white sm:text-3xl"
           >
             My Gear
           </h2>
@@ -149,7 +152,7 @@ export default function MusicPage() {
           </p>
 
           {/* Gear Categories */}
-          <div className="mt-12 space-y-14">
+          <div className="mt-12 space-y-14 sm:space-y-16">
             {gearCategories.map((category) => {
               const Icon = category.icon;
 
@@ -159,40 +162,29 @@ export default function MusicPage() {
                   aria-label={category.title}
                 >
                   {/* Category Heading */}
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 border-b border-white/[0.08] pb-5">
                     <Icon
                       aria-hidden="true"
                       className="text-xl text-pink-400"
                     />
 
-                    <h3 className="text-xl font-semibold tracking-tight text-pink-400 sm:text-2xl">
+                    <h3 className="text-lg font-semibold tracking-tight text-slate-200 sm:text-xl">
                       {category.title}
                     </h3>
                   </div>
 
                   {/* Equipment Grid */}
-                  <div className="mt-6 grid grid-cols-1 gap-x-12 gap-y-8 sm:grid-cols-2">
-                    {category.items.map((item) => (
-                      <article
+                  <ul className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
+                    {category.items.map((item, index) => (
+                      <EquipmentCard
                         key={item.name}
-                        className="border-t border-white/15 pt-5"
-                      >
-                        {/* Equipment Name */}
-                        <h4 className="text-lg font-semibold text-white">
-                          {item.name}
-                        </h4>
-
-                        {/* Equipment Details */}
-                        <div className="mt-4 space-y-2 text-sm leading-relaxed text-gray-400">
-                          {item.specs.map((spec) => (
-                            <p key={spec}>
-                              {spec}
-                            </p>
-                          ))}
-                        </div>
-                      </article>
+                        name={item.name}
+                        specs={item.specs}
+                        icon={<Icon />}
+                        index={index}
+                      />
                     ))}
-                  </div>
+                  </ul>
                 </section>
               );
             })}
