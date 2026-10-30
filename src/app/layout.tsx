@@ -13,8 +13,24 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+// Stable for a deployment: new commits automatically select a fresh favicon URL.
+// Only platform-provided identifiers are used; no request-time randomness.
+const commitSha = process.env.VERCEL_GIT_COMMIT_SHA;
+const deploymentId = process.env.VERCEL_DEPLOYMENT_ID;
+const faviconVersion = commitSha && /^[a-f0-9]{7,64}$/i.test(commitSha)
+  ? commitSha.slice(0, 12).toLowerCase()
+  : deploymentId?.replace(/[^a-zA-Z0-9_-]/g, "").slice(0, 64) || "development";
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://anrajplahe.com"),
+
+  icons: {
+    icon: {
+      url: `/brand-icon?v=${faviconVersion}`,
+      type: "image/png",
+      sizes: "64x64",
+    },
+  },
 
   title: {
     default: "Anraj Plahe",

@@ -1,16 +1,17 @@
 
 import { ImageResponse } from "next/og";
+import { connection } from "next/server";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 
-export const size = {
+const size = {
   width: 64,
   height: 64,
 };
 
-export const contentType = "image/png";
-
-export default async function Icon() {
+export async function GET() {
+  // Keep this endpoint request-time, including with Cache Components enabled.
+  await connection();
   const geistFont = await readFile(
     path.join(
       process.cwd(),
@@ -41,6 +42,12 @@ export default async function Icon() {
     ),
     {
       ...size,
+      headers: {
+        "Content-Type": "image/png",
+        "Cache-Control": "no-store, no-cache, max-age=0, must-revalidate",
+        Pragma: "no-cache",
+        Expires: "0",
+      },
       fonts: [
         {
           name: "Geist",
