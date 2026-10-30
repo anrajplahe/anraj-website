@@ -1,5 +1,6 @@
 
 import type { Metadata } from "next";
+import DeviceCard from "@/components/tech/DeviceCard";
 
 import {
   FaMobileScreenButton,
@@ -57,80 +58,43 @@ const devices = [
 
 export default function TechPage() {
   return (
-    <main className="flex-1 bg-[#0B0D14] text-white">
+    <main className="tech-page flex-1 bg-[#0B0D14] text-white">
 
       {/* Page Introduction */}
-      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
+      <section className="relative isolate mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28">
 
-        <h1 className="text-4xl font-bold tracking-tight text-green-500 sm:text-5xl">
+        <div aria-hidden="true" className="tech-atmosphere pointer-events-none absolute inset-x-0 top-0 -z-10 h-[32rem]" />
+
+        <h1 className="tech-heading text-5xl font-semibold tracking-[-0.05em] text-green-500 sm:text-6xl md:text-7xl">
           Tech
         </h1>
 
-        <p className="mt-6 max-w-2xl text-base leading-relaxed text-gray-400 sm:text-lg">
+        <p className="tech-introduction mt-6 max-w-xl text-base leading-relaxed text-slate-400 sm:text-lg">
           A look at the tech I use every day.
         </p>
 
         {/* Devices Section */}
         <div className="mt-16">
 
-          <h2 className="mb-8 text-2xl font-bold">
+          <h2 className="mb-8 text-2xl font-semibold tracking-tight">
             My everyday essentials.
           </h2>
 
-            <div className="grid gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
-            {devices.map((device) => {
-                const Icon = device.icon;
-
-                return (
-                <div
-                    key={device.name}
-                    className="border-t border-white/15 pt-6"
-                >
-                    {/* Device Heading */}
-                    <div className="flex items-start gap-4">
-                    <Icon
-                        size={26}
-                        aria-hidden="true"
-                        className="mt-1 shrink-0 text-green-500"
-                    />
-
-                    <div className="min-w-0">
-                        <p className="text-xs font-semibold uppercase tracking-widest text-green-500">
-                        {device.category}
-                        </p>
-
-                        <h3 className="mt-2 text-lg font-semibold tracking-tight text-white">
-                        {device.name}
-                        </h3>
-                    </div>
-                    </div>
-
-                    {/* Device Specifications */}
-                    <ul className="mt-4 space-y-2">
-                    {device.specs.map((spec) => (
-                        <li
-                        key={spec}
-                        className="flex items-start gap-4 text-sm leading-relaxed text-gray-400"
-                        >
-                        {/* Green Bullet */}
-                        <span
-                            aria-hidden="true"
-                            className="flex w-[26px] shrink-0 justify-center text-green-500"
-                        >
-                            •
-                        </span>
-
-                        {/* Specification */}
-                        <span className="min-w-0">
-                            {spec}
-                        </span>
-                        </li>
-                    ))}
-                    </ul>
-                </div>
-                );
+          <div className="grid items-start gap-5 md:grid-cols-2 xl:grid-cols-3">
+            {devices.map((device, index) => {
+              const Icon = device.icon;
+              return (
+                <DeviceCard
+                  key={device.name}
+                  category={device.category}
+                  name={device.name}
+                  specs={device.specs}
+                  icon={<Icon size={38} />}
+                  index={index}
+                />
+              );
             })}
-            </div>
+          </div>
 
         </div>
 
