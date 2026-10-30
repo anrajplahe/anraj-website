@@ -1,6 +1,6 @@
 
 import type { Metadata } from "next";
-import { FaInstagram, FaTiktok } from "react-icons/fa6";
+import { FaInstagram, FaTiktok, FaYoutube } from "react-icons/fa6";
 import { Suspense } from "react";
 import PublishedJournal from "@/components/journal/PublishedJournal";
 
@@ -13,12 +13,15 @@ export const metadata: Metadata = {
   },
 };
 
-// Types for competition history
+type VardiColour = "Black" | "Yellow" | "Blue" | "Red";
+
 type CompetitionEntry = {
   team: string;
   competition: string;
   role?: "Captain" | "Coach";
   placing?: "1st Place" | "2nd Place" | "3rd Place";
+  vardiColour?: VardiColour;
+  youtubeUrl?: string;
 };
 
 type CompetitionYear = {
@@ -26,7 +29,6 @@ type CompetitionYear = {
   entries: CompetitionEntry[];
 };
 
-// Competition history organised by year
 const competitionHistory: CompetitionYear[] = [
   {
     year: 2022,
@@ -35,6 +37,8 @@ const competitionHistory: CompetitionYear[] = [
         team: "Ankhi Jawan",
         competition: "World Class Bhangra",
         placing: "2nd Place",
+        vardiColour: "Black",
+        youtubeUrl: "https://youtu.be/sH7a7IRud8w",
       },
     ],
   },
@@ -45,11 +49,15 @@ const competitionHistory: CompetitionYear[] = [
         team: "Loughborough × Nottingham Trent University",
         competition: "The Bhangra Showdown",
         role: "Captain",
+        vardiColour: "Black",
+        youtubeUrl: "https://youtu.be/dLcNn2ojKL0",
       },
       {
         team: "Ranjhe",
         competition: "World Class Bhangra",
         placing: "2nd Place",
+        vardiColour: "Yellow",
+        youtubeUrl: "https://youtu.be/ZZdAm3OHFhc",
       },
     ],
   },
@@ -60,11 +68,15 @@ const competitionHistory: CompetitionYear[] = [
         team: "Loughborough × Nottingham Trent University",
         competition: "The Bhangra Showdown",
         role: "Captain",
+        vardiColour: "Blue",
+        youtubeUrl: "https://youtu.be/xQXB3AB2pgo",
       },
       {
         team: "Ranjhe",
         competition: "Bhangra Beatdown",
         placing: "1st Place",
+        vardiColour: "Red",
+        youtubeUrl: "https://youtu.be/TUY4c5vOIC8",
       },
     ],
   },
@@ -75,10 +87,13 @@ const competitionHistory: CompetitionYear[] = [
         team: "Westminster × University College London",
         competition: "The Bhangra Showdown",
         role: "Coach",
+        youtubeUrl: "https://youtu.be/Z1PdY69lxA4",
       },
       {
         team: "Ranjhe",
         competition: "Bhangra Beatdown",
+        vardiColour: "Yellow",
+        youtubeUrl: "https://youtu.be/nLexvzOqCU0",
       },
     ],
   },
@@ -89,17 +104,19 @@ const competitionHistory: CompetitionYear[] = [
         team: "Raunak Bhangra",
         competition: "The Bhangra Virsa Festival",
         placing: "3rd Place",
+        vardiColour: "Blue",
+        youtubeUrl: "https://youtu.be/xBL7NvuMLYk",
       },
       {
         team: "Ranjhe",
         competition: "Bhangra Beatdown",
         placing: "1st Place",
+        vardiColour: "Black",
       },
     ],
   },
 ];
 
-// Gold, silver and bronze placing colours
 const placingColours: Record<
   NonNullable<CompetitionEntry["placing"]>,
   string
@@ -109,11 +126,17 @@ const placingColours: Record<
   "3rd Place": "text-[#CD9467]",
 };
 
+const vardiColours: Record<VardiColour, string> = {
+  Black: "#111111",
+  Yellow: "#FACC15",
+  Blue: "#2563EB",
+  Red: "#DC2626",
+};
+
 export default function BhangraPage() {
   return (
     <main className="flex-1 bg-[#0B0D14] text-white">
       <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
-
         {/* Page Introduction */}
         <h1 className="text-4xl font-bold tracking-tight text-yellow-400 sm:text-5xl">
           Bhangra
@@ -141,7 +164,6 @@ export default function BhangraPage() {
           </p>
         </div>
 
-
         {/* Published Journal */}
         <Suspense
           fallback={
@@ -155,7 +177,6 @@ export default function BhangraPage() {
             variant="preview"
           />
         </Suspense>
-
 
         {/* Competition History */}
         <section
@@ -174,7 +195,6 @@ export default function BhangraPage() {
             coached over the years.
           </p>
 
-          {/* Year-by-year history */}
           <div className="mt-10 max-w-4xl space-y-8">
             {competitionHistory.map((year) => (
               <section
@@ -220,6 +240,50 @@ export default function BhangraPage() {
                           </span>
                         )}
                       </p>
+
+                      {/* Vardi Colour and Performance Video */}
+                      {(entry.vardiColour || entry.youtubeUrl) && (
+                        <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-3">
+                          {entry.vardiColour && (
+                            <div className="inline-flex items-center gap-2">
+                              <span
+                                aria-hidden="true"
+                                className="h-4 w-4 shrink-0 rounded-full border border-white/40"
+                                style={{
+                                  backgroundColor:
+                                    vardiColours[entry.vardiColour],
+                                }}
+                              />
+                              <span className="text-xs text-gray-400">
+                                {entry.vardiColour} vardi
+                              </span>
+                            </div>
+                          )}
+
+                          {entry.youtubeUrl && (
+                            <a
+                              href={entry.youtubeUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              aria-label={
+                                entry.role === "Coach"
+                                  ? `Watch ${entry.team}'s performance at ${entry.competition}`
+                                  : `Watch ${entry.team}'s performance at ${entry.competition}`
+                              }
+                              className="inline-flex items-center gap-2 text-xs font-medium text-gray-300 transition-colors hover:text-yellow-400 focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow-400"
+                            >
+                              <FaYoutube
+                                size={17}
+                                className="text-red-500"
+                                aria-hidden="true"
+                              />
+                              {entry.role === "Coach"
+                                ? "Watch team performance"
+                                : "Watch performance"}
+                            </a>
+                          )}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -256,7 +320,6 @@ export default function BhangraPage() {
             </a>
           </div>
         </div>
-
       </section>
     </main>
   );
