@@ -10,26 +10,26 @@ const sections = [
   {
     title: "Projects",
     href: "/projects",
-    activeStyle: "border-violet-400 bg-violet-400",
-    hoverStyle: "hover:border-violet-400 hover:bg-violet-400",
+    activeStyle: "border-violet-400/40 bg-violet-400/10 text-violet-400",
+    hoverStyle: "hover:border-violet-400/30 hover:bg-violet-400/10 hover:text-violet-400",
   },
   {
     title: "Tech I Use",
     href: "/tech",
-    activeStyle: "border-green-500 bg-green-500",
-    hoverStyle: "hover:border-green-500 hover:bg-green-500",
+    activeStyle: "border-green-500/40 bg-green-500/10 text-green-500",
+    hoverStyle: "hover:border-green-500/30 hover:bg-green-500/10 hover:text-green-500",
   },
   {
     title: "Bhangra",
     href: "/bhangra",
-    activeStyle: "border-yellow-400 bg-yellow-400",
-    hoverStyle: "hover:border-yellow-400 hover:bg-yellow-400",
+    activeStyle: "border-yellow-400/40 bg-yellow-400/10 text-yellow-400",
+    hoverStyle: "hover:border-yellow-400/30 hover:bg-yellow-400/10 hover:text-yellow-400",
   },
   {
     title: "Guitar & Music",
     href: "/music",
-    activeStyle: "border-pink-400 bg-pink-400",
-    hoverStyle: "hover:border-pink-400 hover:bg-pink-400",
+    activeStyle: "border-pink-400/40 bg-pink-400/10 text-pink-400",
+    hoverStyle: "hover:border-pink-400/30 hover:bg-pink-400/10 hover:text-pink-400",
   },
 ];
 
@@ -39,7 +39,7 @@ export default function Navbar() {
   const isHomePage = pathname === "/";
 
   return (
-    <header className="w-full border-b border-white/10 bg-[#0B0D14] text-white">
+    <header className="site-navbar sticky top-0 z-50 w-full border-b border-white/[0.08] text-white">
       <nav
         aria-label="Main navigation"
         className={`mx-auto flex w-full max-w-6xl px-4 sm:px-6 ${
@@ -52,7 +52,7 @@ export default function Navbar() {
         <Link
           href="/"
           aria-label="Anraj Plahe homepage"
-          className="shrink-0 text-lg font-bold tracking-tight transition-opacity hover:opacity-80 sm:text-2xl"
+          className="site-logo shrink-0 rounded-md text-lg font-semibold tracking-tight transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-500 sm:text-2xl"
         >
           <span className="text-blue-500">anraj</span>
           <span className="text-white">plahe</span>
@@ -67,15 +67,15 @@ export default function Navbar() {
                   pathname === section.href ||
                   pathname.startsWith(`${section.href}/`);
 
-                return (       
+                return (
               <Link
                 key={section.href}
                 href={section.href}
                 aria-current={isActive ? "page" : undefined}
                 className={`
-                  shrink-0 rounded-lg border
+                  shrink-0 rounded-full border
                   px-4 py-2 text-sm font-semibold
-                  text-[#0B0D14]
+
                   transition-colors duration-200
                   focus-visible:outline-2
                   focus-visible:outline-offset-2
@@ -83,7 +83,7 @@ export default function Navbar() {
                   ${
                     isActive
                       ? section.activeStyle
-                      : `border-gray-400 bg-gray-400 ${section.hoverStyle}`
+                      : `border-transparent bg-transparent text-slate-400 ${section.hoverStyle}`
                   }
                 `}
               >
