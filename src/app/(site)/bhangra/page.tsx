@@ -255,7 +255,7 @@ export default function BhangraPage() {
                                 }}
                               />
                               <span className="text-xs text-gray-400">
-                                {entry.vardiColour} vardi
+                                {entry.vardiColour}
                               </span>
                             </div>
                           )}
