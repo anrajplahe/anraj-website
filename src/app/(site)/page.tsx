@@ -28,7 +28,7 @@ const interests = [
     href: "/bhangra",
   },
   {
-    title: "Guitar & Music",
+    title: "Music",
     description: "Guitars, sounds and random musings.",
     symbol: "♫",
     colour: "text-pink-400",

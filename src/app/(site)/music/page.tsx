@@ -10,7 +10,7 @@ import { Suspense } from "react";
 import PublishedJournal from "@/components/journal/PublishedJournal";
 
 export const metadata: Metadata = {
-  title: "Guitar & Music",
+  title: "Music",
   description:
     "A little insight into my interests in guitar, music production and the gear I use.",
   alternates: {
@@ -97,7 +97,7 @@ export default function MusicPage() {
 
         {/* Page Introduction */}
         <h1 className="music-heading text-5xl font-semibold tracking-[-0.05em] text-pink-400 sm:text-6xl md:text-7xl">
-          Guitar & Music
+          Music
         </h1>
 
         <div className="music-introduction mt-8 max-w-2xl space-y-5 text-base leading-relaxed text-slate-400 sm:text-lg">

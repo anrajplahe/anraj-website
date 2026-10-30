@@ -1,12 +1,12 @@
 
 import type { Metadata } from "next";
-import Link from "next/link";
+import ActionLink from "@/components/ActionLink";
 import { Suspense } from "react";
 
 import PublishedJournal from "@/components/journal/PublishedJournal";
 
 export const metadata: Metadata = {
-  title: "Guitar & Music Journal",
+  title: "Music Journal",
   description:
     "My guitar recordings, musical projects and experiences.",
   alternates: {
@@ -18,12 +18,9 @@ export default function MusicJournalPage() {
   return (
     <main className="min-h-screen flex-1 bg-[#0B0D14] text-white">
       <div className="mx-auto max-w-6xl px-4 pt-12 sm:px-6 sm:pt-16">
-        <Link
-          href="/music"
-          className="text-sm text-pink-400 transition-colors hover:text-pink-300"
-        >
-          ← Back to Guitar & Music
-        </Link>
+        <ActionLink href="/music" accent="pink" arrow="back">
+          Back to Music
+        </ActionLink>
       </div>
 
       <Suspense

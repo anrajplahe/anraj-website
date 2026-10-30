@@ -1,6 +1,6 @@
 
 import type { Metadata } from "next";
-import Link from "next/link";
+import ActionLink from "@/components/ActionLink";
 import { Suspense } from "react";
 
 import PublishedJournal from "@/components/journal/PublishedJournal";
@@ -18,12 +18,9 @@ export default function BhangraJournalPage() {
   return (
     <main className="min-h-screen flex-1 bg-[#0B0D14] text-white">
       <div className="mx-auto max-w-6xl px-4 pt-12 sm:px-6 sm:pt-16">
-        <Link
-          href="/bhangra"
-          className="text-sm text-yellow-400 transition-colors hover:text-yellow-300"
-        >
-          ← Back to Bhangra
-        </Link>
+        <ActionLink href="/bhangra" accent="yellow" arrow="back">
+          Back to Bhangra
+        </ActionLink>
       </div>
 
       <Suspense

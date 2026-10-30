@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, type CSSProperties, type MouseEvent } from "react";
+import ActionLink from "@/components/ActionLink";
 import { FaYoutube } from "react-icons/fa6";
 
 type Entry = {
@@ -87,12 +88,12 @@ export default function CompetitionTimeline({ history, placingColours, vardiColo
                         <span aria-hidden="true" className="h-3 w-3 shrink-0 rounded-full border border-white/40" style={{ backgroundColor: vardiColours[entry.vardiColour] }} />
                         {entry.vardiColour}
                       </span>}
-                      {entry.youtubeUrl && <a href={entry.youtubeUrl} target="_blank" rel="noopener noreferrer"
+                      {entry.youtubeUrl && <ActionLink href={entry.youtubeUrl} external accent="yellow" arrow="diagonal" tone="neutral"
                         aria-label={`Watch ${entry.team}'s performance at ${entry.competition} (${year.year})`}
-                        className="bhangra-performance inline-flex min-h-10 items-center gap-2 rounded-md text-xs font-medium text-slate-300 transition-colors hover:text-yellow-400 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-yellow-400">
+                        className="bhangra-performance">
                         <FaYoutube size={18} className="text-red-500" aria-hidden="true" />
-                        {entry.role === "Coach" ? "Watch team performance" : "Watch performance"}<span aria-hidden="true">↗</span>
-                      </a>}
+                        {entry.role === "Coach" ? "Watch team performance" : "Watch performance"}
+                      </ActionLink>}
                     </div>
                   )}
                 </article>

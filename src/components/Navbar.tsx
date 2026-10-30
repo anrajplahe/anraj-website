@@ -14,7 +14,7 @@ const sections = [
     hoverStyle: "hover:border-violet-400/30 hover:bg-violet-400/10 hover:text-violet-400",
   },
   {
-    title: "Tech I Use",
+    title: "Tech",
     href: "/tech",
     activeStyle: "border-green-500/40 bg-green-500/10 text-green-500",
     hoverStyle: "hover:border-green-500/30 hover:bg-green-500/10 hover:text-green-500",
@@ -26,7 +26,7 @@ const sections = [
     hoverStyle: "hover:border-yellow-400/30 hover:bg-yellow-400/10 hover:text-yellow-400",
   },
   {
-    title: "Guitar & Music",
+    title: "Music",
     href: "/music",
     activeStyle: "border-pink-400/40 bg-pink-400/10 text-pink-400",
     hoverStyle: "hover:border-pink-400/30 hover:bg-pink-400/10 hover:text-pink-400",

@@ -1,6 +1,6 @@
 
 import Image from "next/image";
-import Link from "next/link";
+import ActionLink from "@/components/ActionLink";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import type { JSONContent } from "@tiptap/core";
@@ -153,53 +153,50 @@ export default async function JournalArticle({
   }).format(new Date(`${entry.date}T12:00:00Z`));
 
   return (
-    <article className="mx-auto max-w-4xl px-4 py-12 text-white sm:px-6 sm:py-20">
-      <Link
-        href={`/${category}/journal`}
-        className={
-            category === "bhangra"
-            ? "text-sm text-yellow-400 hover:text-yellow-300"
-            : "text-sm text-pink-400 hover:text-pink-300"
-        }
-        >
-        ← Back to journal
-      </Link>
+    <article className={`journal-article ${category === "bhangra" ? "journal-article-bhangra" : "journal-article-music"} mx-auto max-w-5xl px-4 py-12 text-white sm:px-6 sm:py-20`}>
+      <ActionLink href={`/${category}/journal`} accent={category === "bhangra" ? "yellow" : "pink"} arrow="back">
+        Back to journal
+      </ActionLink>
 
-      <header className="mt-12 mb-12">
-        <p className="mb-4 text-sm text-gray-400">
+      <header className="journal-article-heading mx-auto mb-12 mt-10 max-w-3xl border-b border-white/10 pb-10 sm:mb-14 sm:mt-12 sm:pb-12">
+        <p className="journal-article-category mb-5 text-xs font-semibold uppercase tracking-[0.18em]">{category === "bhangra" ? "Bhangra" : "Music"} / Journal</p>
+        <time dateTime={entry.date} className="mb-5 block text-sm text-slate-400">
           {formattedDate}
-        </p>
+        </time>
 
-        <h1 className="text-3xl font-bold tracking-tight sm:text-5xl">
+        <h1 className="break-words text-4xl font-semibold leading-[1.1] tracking-[-0.045em] sm:text-5xl md:text-6xl">
           {entry.title || "Journal entry"}
         </h1>
       </header>
 
-      <div className="max-w-none text-base text-gray-300 sm:text-lg">
+      <div className="journal-article-prose mx-auto max-w-[42rem] text-base text-slate-300 sm:text-lg">
         {renderNode(entry.content as JSONContent, 0, category)}
       </div>
 
       {entry.media.length > 0 && (
         <section
           aria-label="Photos and videos"
-          className="mt-12 space-y-10 border-t border-white/10 pt-10"
+          className="journal-article-media mt-14 space-y-10 border-t border-white/10 pt-10 sm:mt-16 sm:space-y-12 sm:pt-12"
         >
-          {entry.media.map((item, index) => {
+          {entry.media.map((item) => {
             if (item.type === "image") {
               return (
-                <figure key={item.id} className="space-y-3">
+                <figure key={item.id} className="space-y-4">
+                  <a href={item.url} target="_blank" rel="noopener noreferrer" className="journal-article-image block rounded-2xl" aria-label={item.altText ? `Open full-size image: ${item.altText}` : "Open full-size image"}>
                   <Image
                     src={item.url}
                     alt={item.altText ?? ""}
                     width={1600}
                     height={1000}
                     unoptimized
-                    sizes="(max-width: 768px) 100vw, 896px"
-                    className="h-auto max-h-[75vh] w-full rounded-xl bg-[#161A22] object-contain"
+                    sizes="(max-width: 1024px) 100vw, 976px"
+                    className="h-auto max-h-[85vh] w-full rounded-2xl border border-white/[0.08] bg-[#10141e] object-contain"
                   />
 
+                  </a>
+
                   {item.caption && (
-                    <figcaption className="text-center text-sm text-gray-400">
+                    <figcaption className="mx-auto max-w-2xl px-2 text-center text-sm leading-relaxed text-slate-400">
                       {item.caption}
                     </figcaption>
                   )}
@@ -212,7 +209,7 @@ export default async function JournalArticle({
             return (
                 <div
                 key={item.id}
-                className="mx-auto w-full max-w-2xl"
+                className="mx-auto w-full min-w-0 max-w-3xl rounded-2xl border border-white/[0.08] bg-white/[0.02] p-3 sm:p-5"
                 >
                 <SocialEmbed
                     url={item.url}
