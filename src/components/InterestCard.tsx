@@ -76,6 +76,7 @@ export default function InterestCard({
   return (
     <div
       ref={cardRef}
+      data-interactive={href ? "true" : undefined}
       className={`interest-card relative isolate h-full min-h-72 rounded-2xl border border-white/10 p-6 sm:p-8 ${accents[colour] ?? ""}`}
     >
       {href && <span aria-hidden="true" className="interest-arrow pointer-events-none absolute right-6 top-7 z-10 text-xl sm:right-8 sm:top-9">↗</span>}
