@@ -477,6 +477,88 @@ Automated tests, stronger CI checks and optional recovery for deleted entries re
 - [Next.js `sitemap.ts`](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap) — Generated sitemap.
 - [Git — Rebasing](https://git-scm.com/book/en/v2/Git-Branching-Rebasing) — Replaying commits and resolving conflicts.
 
+## 30 October 2026 — Portfolio Redesign: Homepage & Projects
+
+**What I built**
+
+- Refined the homepage into a more cohesive dark, minimalist portfolio, with an animated introduction and staggered interest-card entrances.
+- Added section-specific interactive highlights to the homepage cards, retaining violet for Projects, green for Tech, yellow for Bhangra and pink for Music.
+- Redesigned the Projects page as a set of expandable cards. Each card exposes its technologies, features and optional source link without navigating away.
+- Added **Fortitude** as a second project, documenting only its currently confirmed stack: Python with Pyglet for the game and Tkinter for the UI. More detail can be added later.
+- Added scroll-triggered reveal effects, subtle hover elevation and accessible disclosure interactions, with reduced-motion considerations.
+
+**Technical decisions and lessons**
+
+I chose inline expansion for project details because these are compact portfolios of work, whereas long-form journal entries benefit from their own article URLs. The project data remains separate from presentation so additional projects can be added without rewriting the card layout.
+
+The mouse-following spotlight initially appeared static in the homepage cards. Comparing the working components helped distinguish pointer-coordinate updates from CSS stacking and background rendering. The final homepage implementation draws a `radial-gradient()` directly onto the card background based on mouse coordinates. An outdated local Next.js development process also caused newer code to appear ineffective; restarting the correct server resolved that confusion.
+
+**Lesson:** A visual problem can be caused by event handling, CSS rendering or an outdated development process. Inspect the actual loaded component and browser state before repeatedly changing implementation code.
+
+## 30 October 2026 — Tech, Bhangra & Music Page Redesigns
+
+**What I built**
+
+- Redesigned Tech around expandable device cards for the iPhone 16 Pro Max, MacBook Pro and AirPods Pro 2, keeping their existing specifications and simplifying the action label to **View specifications**.
+- Updated the Bhangra competition showcase into a responsive two-column arrangement grouped by year, keeping team names, captain/coach roles, results, vardi colours and YouTube performance links.
+- Replaced the initial full-width vertical timeline and removed the decorative year dots. Switched from paired CSS Grid rows to independent CSS columns so years containing fewer competitions do not leave large empty gaps.
+- Added individual scroll reveals and cursor-following yellow lighting to the competition cards.
+- Redesigned the Music equipment sections as compact animated cards with pink cursor-following highlights, preserving the existing guitars, amp software and studio equipment.
+- Simplified the visible section name from **Guitar & Music** to **Music** in the navbar, homepage, headings, relevant metadata and journal navigation, while preserving the `/music` URLs.
+
+**Technical decisions and lessons**
+
+Each section uses a related visual language but a different information layout: expandable projects and device specifications, non-expandable competition cards grouped by year, and a structured music-equipment collection. Scroll-reveal wrappers and hoverable card surfaces use separate animation layers to avoid competing transforms.
+
+The Bhangra grid initially created large vertical gaps because each row inherited the height of its tallest year group. Newspaper-style CSS columns provided a closer fit for the intended year-group presentation while keeping each group together with `break-inside-avoid`.
+
+**Lesson:** A responsive layout should follow the shape of the content. A grid is not always the best solution when grouped items have unequal heights.
+
+## 30 October 2026 — Versioned Favicon & Browser Cache Debugging
+
+**What I built**
+
+- Investigated Safari displaying an older green favicon on some sections even when the current icon URL returned the blue design.
+- Moved the generated icon into a dedicated `/brand-icon` route and configured it to avoid HTTP caching.
+- Added a deployment-specific version query to the favicon metadata, using available Vercel commit or deployment identifiers with a local development fallback.
+
+**Technical decisions and lessons**
+
+Clearing Safari's cache corrected the immediate inconsistency, but that would not help every returning visitor. Versioning the URL gives a browser a different favicon resource address when the deployment version changes.
+
+**Lesson:** Browser-managed resources such as favicons can outlive a deployment. Both asset caching and the URL used to identify an asset matter when shipping visual changes.
+
+## 30–31 October 2026 — Journal Interface & Navigation Refinement
+
+**What I built**
+
+- Redesigned both Bhangra and Music journal previews with a featured entry, recent-entry cards, responsive layouts and scroll-triggered entrances.
+- Carried the design into full journal listings with a prominent featured story and a grid of remaining entries.
+- Updated individual journal articles with more deliberate typography, readable text widths, improved media spacing and clearer back navigation.
+- Added category-aware cursor-following lighting to journal listing cards: yellow for Bhangra and pink for Music. The reading area itself remains free of moving spotlights.
+- Introduced a shared `ActionLink` component to make prominent navigation and performance links look like consistent buttons, while keeping their semantic links and destinations intact.
+- Preserved interactive Cover, YouTube, Instagram, TikTok and Pictures media tabs and the existing published-content workflow.
+
+**Technical decisions and lessons**
+
+The public journals share their underlying publishing components, so the redesign applies consistently to both categories without changing data fetching, authentication, the admin editor or media parsing. Listing cards include separate interactive links and media controls; a full-card navigation overlay would obstruct those controls and was intentionally avoided.
+
+**Lesson:** Presentation changes to a shared component need to respect the interaction boundaries of nested controls, especially when preview media includes tabs, links and embedded players.
+
+## 2 November 2026 — Mobile Arrow Icons & Final UI Consistency
+
+**What I built**
+
+- Identified that the Unicode diagonal arrow in prominent links could render as an emoji on mobile devices.
+- Updated the shared `ActionLink` component to use React Icons SVG arrows for back, forward and diagonal navigation instead of font-dependent arrow characters.
+- Preserved existing link behaviour, category accents, hover movement and external-link handling.
+
+**Outcome and next steps**
+
+The main public-facing redesign is in the repository: Homepage, Projects, Tech, Bhangra, Music, journal previews, complete journals and article reading pages. The next phase is a cross-device regression pass, accessibility and performance review, and improved automated coverage. These checks are ongoing priorities rather than completed milestones.
+
+**Lesson:** Small interface details can behave differently across operating systems and fonts; using a consistent icon component removes one source of rendering variability.
+
 ---
 
 ## Documentation and Reference Resources

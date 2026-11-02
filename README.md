@@ -12,20 +12,25 @@ I built this project to create a more personal alternative to a conventional por
 
 What began as a responsive Next.js frontend has developed into a full-stack application with a private content management system, database-backed journals, cloud image uploads and embedded social media.
 
-**Project status (29 October 2026):** The main functional features are implemented and working. The next phase focuses on visual design, animation, accessibility and interface polish.
+**Project status (2 November 2026):** Core portfolio and publishing features are implemented. The public-facing redesign now includes animated, interactive section pages and redesigned journals. The next priorities are regression testing, mobile and accessibility checks, performance review, and automated test coverage.
 
 ## Features
 
 ### Public website
 
-- Responsive homepage and shared navigation.
-- Dedicated **Tech**, **Projects**, **Bhangra** and **Guitar & Music** sections.
-- Bhangra and Music journals, with previews on their respective section pages.
-- Full journal listings and individual article pages.
-- Journal entries ordered by their chosen historical date, so older experiences can be added retrospectively.
-- Media previews with a **Cover** tab, individual YouTube/Instagram/TikTok tabs, and a **Pictures** grid.
-- Page metadata, article metadata, canonical URLs, `robots.txt` rules and a sitemap that includes published articles.
-- A consistent dark interface with blue general branding and section-specific accents.
+- Responsive homepage with an animated introduction, scroll-revealed interest cards and cursor-following highlights.
+- Dedicated **Projects**, **Tech**, **Bhangra** and **Music** sections, each with its own accent colour and presentation style.
+- Expandable project showcases, including this website and **Fortitude**, a Python game project using Pyglet and Tkinter.
+- Expandable technical specifications for everyday devices and animated music-equipment showcases.
+- Bhangra competition history grouped by year in responsive columns, with roles, placings, vardi colours and performance video links.
+- Bhangra and Music journal previews, complete journal listings and individual article pages, with responsive editorial layouts.
+- Staggered scroll-reveal animations and cursor-following card lighting, with reduced-motion considerations.
+- Journal entries ordered by their selected historical date, allowing past experiences to be added retrospectively.
+- Interactive media previews: **Cover** first when selected, individual YouTube/Instagram/TikTok tabs, and a **Pictures** grid.
+- Reusable, accessible-looking action links for navigation and videos, with SVG arrows that render consistently on mobile.
+- Page and article metadata, canonical URLs, `robots.txt` rules and a sitemap containing published articles.
+- Deployment-versioned brand favicon URL to reduce stale-icon caching across releases.
+- A consistent dark interface with blue general branding and violet Projects, green Tech, yellow Bhangra and pink Music accents.
 
 ### Private journal management
 
@@ -66,7 +71,10 @@ src/
     (site)/          Public pages and journal routes
     admin/           Private dashboard, editor and server actions
     api/             API route handlers
-  components/        Shared UI and journal components
+  components/        Shared UI, animated cards and journal components
+    bhangra/         Competition history presentation
+    journal/         Shared Bhangra/Music journal UI
+    music/           Music equipment presentation
   db/                Database schema, connection and queries
   lib/journal/       Journal validation, media and publishing logic
   types/             Shared TypeScript types
@@ -104,17 +112,18 @@ The project is documented as a series of practical learning milestones. I have u
 
 For technical decisions, debugging notes and implementation milestones, see [DEVLOG.md](./DEVLOG.md).
 
-## Next Phase
+## Quality Assurance & Next Steps
 
-With core functionality in place, I am focusing on the experience of using the site:
+The initial visual redesign of the public sections and journals is complete. The next focus is verifying that the experience remains reliable across devices and content types:
 
-- Refine typography, layouts, spacing and visual hierarchy.
-- Add purposeful animations, page transitions and micro-interactions.
-- Improve responsive behaviour, keyboard access and reduced-motion support.
-- Review performance, loading states and accessibility.
-- Expand automated testing and deployment checks over time.
+- Perform a mobile and desktop regression pass, including Safari, touch interactions, navigation and responsive card layouts.
+- Check keyboard navigation, visible focus states, accessible disclosure controls, readable content without JavaScript and reduced-motion preferences.
+- Test journal cover selection, media tabs, embedded social posts, image galleries, article navigation and empty states.
+- Review loading behaviour, image performance and other measurable performance or accessibility issues.
+- Add appropriate automated tests and strengthen CI checks when feasible.
+- Keep documentation current as fixes and new projects are introduced.
 
-Additional features may be considered later, but the immediate priority is **design and polish**, rather than expanding the content management system.
+Possible later enhancements include further project details and a recoverable deletion workflow; neither should be treated as an implemented feature.
 
 ## Author
 
