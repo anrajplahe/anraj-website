@@ -9,12 +9,22 @@ export const education = [
   {
     institution: "A Levels",
     qualification: "Overall: ABB",
-    results: ["Mathematics — A", "Computer Science — B", "Physics — B"],
+    results: ["Mathematics - A", "Computer Science - B", "Physics - B"],
   },
   {
     institution: "GCSEs",
-    qualification: "8 GCSEs at grades 6–9 (A–A*)",
-    results: ["Mathematics — Grade 9"],
+    qualification: "9 GCSEs at grades 6–9 (A–A*)",
+    results: [
+      "Mathematics - Grade 9",
+      "Computer Science - A",
+      "English Literature - Grade 7",
+      "English Language - Grade 6",
+      "Biology - A*",
+      "Physics - A",
+      "Chemistry - A",
+      "French - A",
+      "History - A",
+    ],
   },
 ];
 
