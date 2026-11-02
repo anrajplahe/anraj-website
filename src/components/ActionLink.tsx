@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { AnchorHTMLAttributes, ReactNode } from "react";
+import { HiArrowLeft, HiArrowRight, HiArrowUpRight } from "react-icons/hi2";
 
 type Props = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href" | "children"> & {
   href: string;
@@ -20,7 +21,17 @@ export default function ActionLink({
   className = "",
   ...props
 }: Props) {
-  const arrowIcon = <span aria-hidden="true" className="action-link-arrow">{arrow === "back" ? "←" : arrow === "diagonal" ? "↗" : "→"}</span>;
+  const arrowIcon = (
+    <span aria-hidden="true" className="action-link-arrow">
+      {arrow === "back" ? (
+        <HiArrowLeft size={16} />
+      ) : arrow === "diagonal" ? (
+        <HiArrowUpRight size={16} />
+      ) : (
+        <HiArrowRight size={16} />
+      )}
+    </span>
+  );
   const content = <>{arrow === "back" && arrowIcon}<span className="action-link-label">{children}</span>{arrow !== "back" && arrowIcon}</>;
   const shared = {
     ...props,
