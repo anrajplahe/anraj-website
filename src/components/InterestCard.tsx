@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { FaInstagram, FaTiktok } from "react-icons/fa6";
-import { HiOutlineEnvelope } from "react-icons/hi2";
+import { HiArrowUpRight, HiOutlineEnvelope } from "react-icons/hi2";
 
 type InterestCardProps = {
   title: string;
@@ -79,7 +79,11 @@ export default function InterestCard({
       data-interactive={href ? "true" : undefined}
       className={`interest-card relative isolate h-full min-h-72 rounded-2xl border border-white/10 p-6 sm:p-8 ${accents[colour] ?? ""}`}
     >
-      {href && <span aria-hidden="true" className="interest-arrow pointer-events-none absolute right-6 top-7 z-10 text-xl sm:right-8 sm:top-9">↗</span>}
+      {href && (
+        <span aria-hidden="true" className="interest-arrow pointer-events-none absolute right-6 top-7 z-10 inline-flex h-7 items-center sm:right-8 sm:top-9">
+          <HiArrowUpRight size={16} />
+        </span>
+      )}
 
       {/* Coloured symbol */}
       <span aria-hidden="true" className={`relative z-10 inline-block text-3xl font-medium ${colour}`}>
