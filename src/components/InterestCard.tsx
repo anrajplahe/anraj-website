@@ -1,16 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef } from "react";
+import { useRef, type ReactNode } from "react";
+import useCardSpotlight from "@/components/useCardSpotlight";
 import { FaInstagram, FaTiktok } from "react-icons/fa6";
 import { HiArrowUpRight, HiOutlineEnvelope } from "react-icons/hi2";
 
 type InterestCardProps = {
   title: string;
   description: string;
-  symbol: string;
+  symbol: ReactNode;
   colour: string;
   href?: string;
+  external?: boolean;
 };
 
 // Shared by the spotlight, border and keyboard focus treatment.
@@ -20,8 +22,6 @@ const spotlightRGB: Record<string, string> = {
   "text-yellow-400": "250, 204, 21",
   "text-pink-400": "244, 114, 182",
 };
-
-const cardBackground = "linear-gradient(145deg, #161b27, #10141e)";
 
 const accents: Record<string, string> = {
   "text-violet-400": "interest-violet",
@@ -36,42 +36,11 @@ export default function InterestCard({
   symbol,
   colour,
   href,
+  external = false,
 }: InterestCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const card = cardRef.current;
-    if (!card) return;
-
-    const rgb = spotlightRGB[colour] ?? "96, 165, 250";
-
-    // Draw the same 380px spotlight directly into the card background.
-    // This avoids custom-property repaint issues and stacking/overlay layers.
-    function moveLight(event: MouseEvent) {
-      if (!card) return;
-      const bounds = card.getBoundingClientRect();
-      const x = event.clientX - bounds.left;
-      const y = event.clientY - bounds.top;
-      card.style.backgroundImage =
-        `radial-gradient(380px circle at ${x}px ${y}px, rgba(${rgb}, 0.12), transparent 75%), ${cardBackground}`;
-    }
-
-    function removeLight() {
-      card?.style.removeProperty("background-image");
-    }
-
-    // Capture events from the full-card link as well as other child elements.
-    card.addEventListener("mousemove", moveLight, { capture: true, passive: true });
-    card.addEventListener("mouseenter", moveLight, { passive: true });
-    card.addEventListener("mouseleave", removeLight);
-
-    return () => {
-      card.removeEventListener("mousemove", moveLight, true);
-      card.removeEventListener("mouseenter", moveLight);
-      card.removeEventListener("mouseleave", removeLight);
-      removeLight();
-    };
-  }, [colour]);
+  useCardSpotlight(cardRef, spotlightRGB[colour] ?? "96, 165, 250");
 
   return (
     <div
@@ -146,7 +115,9 @@ export default function InterestCard({
       {href && (
         <Link
           href={href}
-          aria-label={`Explore ${title}`}
+          target={external ? "_blank" : undefined}
+          rel={external ? "noopener noreferrer" : undefined}
+          aria-label={`Explore ${title}${external ? " (opens in a new tab)" : ""}`}
           className="interest-card-link absolute inset-0 z-20 rounded-2xl"
         />
       )}

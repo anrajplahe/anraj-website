@@ -561,6 +561,23 @@ The main public-facing redesign is in the repository: Homepage, Projects, Tech, 
 
 ---
 
+## 2 November 2026 — My Journey and Experience
+
+- Added **My Journey.** below the existing homepage interests, reusing `InterestCard` and `HomeInterestReveal` for matching responsive cards, blue accents, SVG document/briefcase icons and staggered reveals.
+- Extended the card to accept React icons and external links; existing interest destinations, colours and behaviour remain unchanged. The CV uses `NEXT_PUBLIC_CV_GOOGLE_DOC_URL`, opens in a new tab and stays non-interactive when the URL is absent or invalid.
+- Added `/experience` with page metadata, a shared `ActionLink` back to Home and a responsive, blue career timeline ready for verified entries. Native `details`/`summary` controls support keyboard expansion and visible focus.
+- Kept career data in `src/data/experience.ts`. Populated five roles using the Google Docs CV supplied during implementation, preserving its employment dates and work-experience designation. An empty state remains available when the list is cleared.
+- Extracted the existing home-card spotlight unchanged into `useCardSpotlight` so the new timeline can reuse its geometry and event handling. Reused homepage reveal timing with an optional container layout.
+
+Configured the supplied Google Docs URL in the ignored local environment file; deployments must set the same variable. No database, authentication, navbar or existing section changes were needed.
+
+**Validation**
+
+- TypeScript, targeted ESLint for every changed/new TypeScript file, and whitespace checks passed. Local HTTP checks verified both `/` and `/experience`, including page metadata, the configured CV destination/new-tab attributes, existing homepage destinations and all five experience disclosures.
+- Server-rendered assertions covered missing/invalid/configured CV URLs, the career empty state and populated responsibility/achievement panels. Test fixtures were kept outside the repository.
+- Full ESLint completed with existing errors across public copy and older client/admin components. The homepage apostrophe was escaped without changing its displayed text; unrelated lint findings were left for separate work.
+- Desktop/mobile visual, touch, keyboard and animated browser checks could not run because no browser was connected. Google Docs text export succeeded after the document's sharing permissions were updated; a browser new-tab click was not tested.
+
 ## Documentation and Reference Resources
 
 Official documentation relevant to the frameworks, tools and techniques used in this project. These are technical references, not a claim that I followed each resource as a tutorial.

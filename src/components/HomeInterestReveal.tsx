@@ -2,7 +2,17 @@
 
 import { useLayoutEffect, useRef, type ReactNode } from "react";
 
-export default function HomeInterestReveal({ children }: { children: ReactNode }) {
+type Props = {
+  children: ReactNode;
+  className?: string;
+  role?: "list";
+};
+
+export default function HomeInterestReveal({
+  children,
+  className = "home-interests grid auto-rows-fr grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5",
+  role,
+}: Props) {
   const grid = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
@@ -35,5 +45,5 @@ export default function HomeInterestReveal({ children }: { children: ReactNode }
     };
   }, []);
 
-  return <div ref={grid} className="home-interests grid auto-rows-fr grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">{children}</div>;
+  return <div ref={grid} className={className} role={role}>{children}</div>;
 }

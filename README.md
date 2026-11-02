@@ -19,6 +19,7 @@ What began as a responsive Next.js frontend has developed into a full-stack appl
 ### Public website
 
 - Responsive homepage with an animated introduction, scroll-revealed interest cards and cursor-following highlights.
+- **My Journey.** homepage cards for a configurable Google Docs CV and the blue-accented **Experience** career timeline.
 - Dedicated **Projects**, **Tech**, **Bhangra** and **Music** sections, each with its own accent colour and presentation style.
 - Expandable project showcases, including this website and **Fortitude**, a Python game project using Pyglet and Tkinter.
 - Expandable technical specifications for everyday devices and animated music-equipment showcases.
@@ -105,6 +106,12 @@ npm run dev
 Visit [http://localhost:3000](http://localhost:3000).
 
 The public pages and private journal features may require environment-specific configuration. Keep credentials in local environment files or deployment environment settings; **never commit secrets to the repository**. Database migrations must be applied to the intended database before using features that depend on them.
+
+### CV and experience configuration
+
+Set `NEXT_PUBLIC_CV_GOOGLE_DOC_URL` in `.env.local` or deployment settings to your actual HTTPS Google Docs document URL. Restart the development server or rebuild/redeploy after changing it. Ensure the document's sharing permissions allow the intended audience to view it. The CV opens in a new tab with `noopener noreferrer`; missing or invalid URLs leave the card non-interactive, without a navigation arrow.
+
+Edit `src/data/experience.ts` to publish verified roles, most recent first. Each entry has `id`, `organisation`, `title`, `dates`, `description`, `responsibilities` and `achievements`. The initial five roles were verified against the supplied CV on 2 November 2026. `/experience` shows an honest empty state if the list is cleared; populated entries use keyboard-accessible native disclosures, blue timeline markers, the shared spotlight and staggered reveals. Motion respects the existing reduced-motion styles.
 
 ## Development Approach
 

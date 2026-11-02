@@ -546,3 +546,24 @@ body {
   .action-link-arrow { transition: none; }
   .action-link[data-arrow]:hover .action-link-arrow { transform: none; }
 }
+
+/* Career disclosures share the home-card surface and reveal treatment. */
+.experience-card { overflow-wrap: anywhere; }
+.experience-summary { cursor: pointer; }
+.experience-summary::-webkit-details-marker { display: none; }
+.experience-summary::marker { content: ""; }
+.experience-summary:focus-visible {
+  outline: 2px solid #60a5fa;
+  outline-offset: 4px;
+}
+.experience-card:has(> summary:focus-visible),
+.experience-card[open] { border-color: rgb(96 165 250 / 40%); }
+.experience-plus { transition: transform 280ms cubic-bezier(0.2, 0.7, 0.3, 1); }
+.experience-card[open] .experience-plus { transform: rotate(45deg); }
+@media (hover: hover) and (pointer: fine) {
+  .experience-card:has(> summary:hover) { transform: translateY(-3px); border-color: rgb(96 165 250 / 50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .experience-plus { transition: none; }
+  .experience-card:has(> summary:hover) { transform: none; }
+}

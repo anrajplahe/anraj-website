@@ -1,3 +1,4 @@
+import { HiOutlineBriefcase, HiOutlineDocumentText } from "react-icons/hi2";
 import HomeIntroduction from "@/components/HomeIntroduction";
 import HomeInterestReveal from "@/components/HomeInterestReveal";
 import InterestCard from "@/components/InterestCard";
@@ -36,6 +37,18 @@ const interests = [
   },
 ];
 
+function getCVUrl() {
+  const value = process.env.NEXT_PUBLIC_CV_GOOGLE_DOC_URL?.trim();
+  if (!value) return undefined;
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" && url.hostname === "docs.google.com" && url.pathname.startsWith("/document/")
+      ? url.href : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 export default function Home() {
   return (
     <main className="home-page flex-1 bg-[#0B0D14] text-white">
@@ -51,13 +64,29 @@ export default function Home() {
         <HomeIntroduction />
       </section>
 
+      <section id="journey" aria-labelledby="journey-heading" className="mx-auto max-w-6xl px-4 pb-16 sm:px-6 sm:pb-28">
+        <h2 id="journey-heading" className="home-section-title mb-6 text-2xl font-semibold tracking-tight sm:mb-8 sm:text-3xl">
+          My Journey.
+        </h2>
+        <HomeInterestReveal>
+          <div className="home-card-reveal h-full">
+            <InterestCard title="CV" description="A snapshot of my skills, qualifications and professional experience."
+              symbol={<HiOutlineDocumentText size={30} />} colour="text-[#60A5FA]" href={getCVUrl()} external />
+          </div>
+          <div className="home-card-reveal h-full">
+            <InterestCard title="Experience" description="Explore the roles and experiences that have shaped my career."
+              symbol={<HiOutlineBriefcase size={30} />} colour="text-[#60A5FA]" href="/experience" />
+          </div>
+        </HomeInterestReveal>
+      </section>
+
       {/* Interests Section */}
       <section
         id="interests"
         className="mx-auto max-w-6xl px-4 pb-16 sm:px-6 sm:pb-28"
       >
         <h2 className="home-section-title mb-6 text-2xl font-semibold tracking-tight sm:mb-8 sm:text-3xl">
-          Things I'm into.
+          Things I&apos;m into.
         </h2>
 
         {/* Reusable Interest Cards */}
@@ -75,7 +104,6 @@ export default function Home() {
           ))}
         </HomeInterestReveal>
       </section>
-      
     </main>
   );
 }
