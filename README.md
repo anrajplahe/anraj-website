@@ -33,6 +33,8 @@ What began as a responsive Next.js frontend has developed into a full-stack appl
 - Deployment-versioned brand favicon URL to reduce stale-icon caching across releases.
 - A consistent dark interface with blue general branding and violet Projects, green Tech, yellow Bhangra and pink Music accents.
 
+- The Experience page also includes Education cards and six Skills categories, with blue spotlights, staggered reveals and static skill badges. Edit qualifications and skills in `src/data/experienceProfile.ts`. The Computer Science qualification is a DipHE awarded in 2026.
+
 ### Private journal management
 
 - GitHub OAuth authentication through Auth.js, restricted to an authorised administrator.

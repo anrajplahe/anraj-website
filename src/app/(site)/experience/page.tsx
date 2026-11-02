@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import ActionLink from "@/components/ActionLink";
+import ExperienceProfileSections from "@/components/ExperienceProfileSections";
 import ExperienceTimeline from "@/components/ExperienceTimeline";
 import { experiences } from "@/data/experience";
 
@@ -18,7 +19,10 @@ export default function ExperiencePage() {
           <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">Experience.</h1>
           <p className="mt-5 max-w-2xl text-sm leading-relaxed text-gray-400 sm:text-base">The roles and experiences that have shaped my career.</p>
         </header>
-        <ExperienceTimeline experiences={experiences} />
+        <section aria-label="Experience">
+          <ExperienceTimeline experiences={experiences} />
+        </section>
+        <ExperienceProfileSections />
       </div>
     </main>
   );

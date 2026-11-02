@@ -578,6 +578,14 @@ Configured the supplied Google Docs URL in the ignored local environment file; d
 - Full ESLint completed with existing errors across public copy and older client/admin components. The homepage apostrophe was escaped without changing its displayed text; unrelated lint findings were left for separate work.
 - Desktop/mobile visual, touch, keyboard and animated browser checks could not run because no browser was connected. Google Docs text export succeeded after the document's sharing permissions were updated; a browser new-tab click was not tested.
 
+## 2 November 2026 — Education and Skills
+
+- Added Education and Skills below the existing career timeline on `/experience`, keeping the title, career data and disclosure controls intact.
+- Added the supplied Computer Science DipHE (2026), A Levels (ABB) and GCSE results without claiming a completed BSc or honours degree.
+- Added six categories of compact skill badges, using only the supplied skills without proficiency ratings or additional certifications.
+- Kept content editable in `src/data/experienceProfile.ts`. Static cards reuse the blue spotlight hook, dark card surface and responsive, reduced-motion-aware `HomeInterestReveal` component; only badges have subtle colour hover effects.
+- Validation: TypeScript, targeted ESLint and whitespace checks passed. Server-rendered checks confirmed section order, all supplied qualifications/skills, nine non-interactive cards and the five existing native career disclosures. Responsive grid and badge-wrapping classes were checked; desktop/mobile visual and keyboard interaction checks remain unverified because no browser was connected.
+
 ## Documentation and Reference Resources
 
 Official documentation relevant to the frameworks, tools and techniques used in this project. These are technical references, not a claim that I followed each resource as a tutorial.
