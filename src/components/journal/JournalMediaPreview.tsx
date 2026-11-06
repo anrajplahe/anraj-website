@@ -90,7 +90,7 @@ export default function JournalMediaPreview({
   if (!selected) return coverOrPlaceholder;
 
   return (
-    <div className="min-w-0 max-w-full space-y-3">
+    <div className="journal-card-media min-w-0 max-w-full space-y-3">
       <div role="group" aria-label={`${label} entry media`} className="flex max-w-full gap-2 overflow-x-auto p-1">
         {tabs.map((tab) => (
           <button

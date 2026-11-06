@@ -70,7 +70,7 @@ export default function JournalReveal({ category, index, featured = false, child
 
   return (
     <div ref={revealRef} className="journal-preview-reveal min-w-0" style={{ "--journal-delay": `${index * 110}ms` } as CSSProperties}>
-      <article ref={cardRef} className={`journal-preview-card h-full rounded-3xl border border-white/10 ${featured ? "p-5 sm:p-7 lg:p-8" : "p-5 sm:p-6"}`}>
+      <article ref={cardRef} className={`journal-preview-card card-interactive relative isolate h-full ${category === "bhangra" ? "interest-yellow" : "interest-pink"} rounded-3xl border border-white/10 ${featured ? "p-5 sm:p-7 lg:p-8" : "p-5 sm:p-6"}`}>
         {children}
       </article>
     </div>

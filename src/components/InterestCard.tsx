@@ -50,7 +50,7 @@ export default function InterestCard({
     <div
       ref={cardRef}
       data-interactive={href ? "true" : undefined}
-      className={`interest-card ${href ? "card-interactive" : "card-static"} relative isolate h-full ${isFeature ? "grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-4 sm:gap-x-6 sm:p-8" : "min-h-[13.5rem]"} rounded-2xl border border-white/10 p-6 ${accents[colour] ?? ""}`}
+      className={`interest-card ${href ? "card-interactive" : "card-static"} relative isolate h-full ${isFeature ? "grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-4 sm:gap-x-6 sm:p-8" : "min-h-[15rem]"} rounded-2xl border border-white/10 p-6 ${accents[colour] ?? ""}`}
     >
       {href && (
         <span aria-hidden="true" className={`interest-arrow pointer-events-none z-10 inline-flex h-7 items-center ${isFeature ? "col-start-3 row-start-1 row-span-2" : "absolute right-6 top-6"}`}>
@@ -64,7 +64,7 @@ export default function InterestCard({
       </span>
 
       {/* White title */}
-      <h3 className={`relative z-10 text-lg font-semibold text-white sm:text-xl ${isFeature ? "col-start-2 row-start-1" : "mt-4"}`}>
+      <h3 className={`relative z-10 text-lg font-semibold text-white sm:text-xl ${isFeature ? "col-start-2 row-start-1" : "mt-6"}`}>
         {title}
       </h3>
 

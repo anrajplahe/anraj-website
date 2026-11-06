@@ -49,9 +49,11 @@ Native disclosure controls support keyboard activation, visible focus, smooth in
 
 ### Card interactions
 
+The six homepage tiles share a flexible 240px minimum, 24px padding and 24px icon-to-title gap, with matching desktop dimensions and the existing three/two/one-column breakpoints. Smaller-screen cards can grow with their content.
+
 Full-card navigation uses the shared `.card-interactive` styling; native expandable cards use `.card-disclosure`, with pointer/hover feedback confined to their summaries. Both use 280ms transitions, a 3px lift and a 45% section-accent border on fine-pointer hover, with a consistent 50% active/focus border and visible focus outlines. Navigation indicators are SVG arrows; disclosure indicators are `+` symbols that rotate while open. Reduced-motion styles remove the lift and transitions.
 
-Informational cards stay stationary with default cursors, their existing backgrounds and spotlights, and no action indicators. Education, skill categories, book cards, equipment, competition entries and journal containers keep this static treatment. Child social links, media buttons and full-image thumbnail links remain independently interactive; no full-card link is added to their containers. Skill and technology labels have no action-like hover treatment.
+Informational cards stay stationary with default cursors, their existing backgrounds and spotlights, and no action indicators. Education, skill categories, book cards, equipment and competition entries without a video keep this static treatment. Journal cards use one stretched entry link around the non-control area, with an inline Read entry indicator; media tabs, embeds, social links and image links stay above that layer and retain independent actions. Competition cards with a video use a stretched new-tab performance link with an inline YouTube/arrow indicator; their video-less counterparts remain static. Skill and technology labels have no action-like hover treatment.
 
 ### Private journal management
 
