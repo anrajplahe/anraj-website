@@ -18,6 +18,7 @@ export default function ExperiencePage() {
         <header className="mb-10 mt-10 sm:mb-12">
           <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">Experience.</h1>
           <p className="mt-5 max-w-2xl text-sm leading-relaxed text-gray-400 sm:text-base">The roles and experiences that have shaped my career.</p>
+          <ActionLink href="/cv" accent="blue" arrow="diagonal" className="mt-6">View CV</ActionLink>
         </header>
         <section aria-label="Experience">
           <ExperienceTimeline experiences={experiences} />

@@ -65,7 +65,7 @@ export default function TechPage() {
 
         <div aria-hidden="true" className="tech-atmosphere pointer-events-none absolute inset-x-0 top-0 -z-10 h-[32rem]" />
 
-        <h1 className="tech-heading text-5xl font-semibold tracking-[-0.05em] text-green-500 sm:text-6xl md:text-7xl">
+        <h1 className="tech-heading text-5xl font-semibold tracking-[-0.05em] text-cyan-400 sm:text-6xl md:text-7xl">
           Tech
         </h1>
 

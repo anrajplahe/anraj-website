@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { HiArrowUpRight } from "react-icons/hi2";
 import type { JournalEntry } from "./JournalListing";
 import SocialEmbed from "./SocialEmbed";
 import { parseSocialUrl } from "@/lib/journal/social";
@@ -97,7 +98,7 @@ export default function JournalMediaPreview({
             type="button"
             aria-pressed={selected.id === tab.id}
             onClick={() => setSelectedId(tab.id)}
-            className={`shrink-0 rounded-lg border px-3 py-2 text-xs font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 ${focusColour} ${selected.id === tab.id ? activeColour : "border-white/15 text-gray-300 hover:border-white/40"}`}
+            className={`cursor-pointer shrink-0 rounded-lg border px-3 py-2 text-xs font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 ${focusColour} ${selected.id === tab.id ? activeColour : "border-white/15 text-gray-300 hover:border-white/40"}`}
           >
             {tab.label}
           </button>
@@ -117,7 +118,7 @@ export default function JournalMediaPreview({
               target="_blank"
               rel="noopener noreferrer"
               aria-label={image.alt ? `Open full-size image: ${image.alt}` : "Open full-size image"}
-              className={`min-w-0 overflow-hidden rounded-xl bg-[#161A22] focus-visible:outline-2 focus-visible:outline-offset-2 ${focusColour}`}
+              className={`card-interactive relative min-w-0 overflow-hidden rounded-xl border border-white/10 bg-[#161A22] ${category === "bhangra" ? "interest-yellow" : "interest-pink"}`}
             >
               <Image
                 src={image.url}
@@ -127,6 +128,9 @@ export default function JournalMediaPreview({
                 unoptimized
                 className="h-auto w-full"
               />
+              <span aria-hidden="true" className="card-arrow pointer-events-none absolute bottom-2 right-2 rounded-full bg-[#0B0D14]/90 p-1.5">
+                <HiArrowUpRight size={16} />
+              </span>
             </a>
           ))}
         </div>

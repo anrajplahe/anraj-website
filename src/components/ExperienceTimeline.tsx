@@ -10,7 +10,7 @@ function ExperienceCard({ experience }: { experience: Experience }) {
   useCardSpotlight(card, "96, 165, 250");
 
   return (
-    <details ref={card} className="interest-card experience-card rounded-2xl border border-white/10">
+    <details ref={card} className="interest-card experience-card card-disclosure rounded-2xl border border-white/10">
       <summary className="experience-summary list-none rounded-2xl p-6 sm:p-8">
         <span className="flex items-start justify-between gap-4">
           <span className="min-w-0">
@@ -18,7 +18,7 @@ function ExperienceCard({ experience }: { experience: Experience }) {
             <span className="mt-2 block text-lg font-semibold text-white sm:text-xl">{experience.title}</span>
             <span className="mt-2 block text-sm text-gray-400">{experience.dates}</span>
           </span>
-          <span aria-hidden="true" className="experience-plus shrink-0 text-xl text-[#60A5FA]">+</span>
+          <span aria-hidden="true" className="experience-plus card-plus shrink-0 text-xl text-[#60A5FA]">+</span>
         </span>
         <span className="mt-4 block text-sm leading-relaxed text-gray-400">{experience.description}</span>
       </summary>

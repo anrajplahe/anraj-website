@@ -586,6 +586,48 @@ Configured the supplied Google Docs URL in the ignored local environment file; d
 - Kept content editable in `src/data/experienceProfile.ts`. Static cards reuse the blue spotlight hook, dark card surface and responsive, reduced-motion-aware `HomeInterestReveal` component; only badges have subtle colour hover effects.
 - Validation: TypeScript, targeted ESLint and whitespace checks passed. Server-rendered checks confirmed section order, all supplied qualifications/skills, nine non-interactive cards and the five existing native career disclosures. Responsive grid and badge-wrapping classes were checked; desktop/mobile visual and keyboard interaction checks remain unverified because no browser was connected.
 
+## 2 November 2026 — Experience Navigation and View CV
+
+- Added Experience as the first navbar tab, using `#60A5FA` for active and hover styles and the existing exact/nested route detection.
+- Preserved the four other tabs, homepage tab hiding, focus styling and horizontal overflow for narrow screens.
+- Added a blue `ActionLink` with the diagonal SVG arrow below the Experience introduction, opening `/cv` internally in the same tab. Existing hover, focus and reduced-motion behaviour comes from the shared component.
+- Left homepage Journey cards, the CV viewer and timeline unchanged.
+- Validation: TypeScript, targeted ESLint and whitespace checks passed. Rendered-markup assertions covered all five exact/nested active routes, tab ordering, homepage tab hiding, overflow classes, the same-tab CV action and five preserved career disclosures. Visual desktop/mobile checks remain unverified because no browser was connected.
+
+## 6 November 2026 — Tech Cyan and Self-Improvement Green
+
+- Changed Tech to `#22D3EE` across its homepage icon/arrow, spotlight, hover border, page heading, device disclosures, open/focus states, atmospheric glow and navbar active/hover treatment.
+- Changed the Self-Improvement homepage card to `#22C55E` using the existing green accent mapping. The icon, decorative SVG arrow and spotlight now use green; the shared focus/border mapping is ready for a future destination. The card remains non-clickable without a route.
+- Added the exact cyan Tailwind token and shared card mapping. Preserved all other section colours, layouts, backgrounds, SVGs, motion timing and interaction logic.
+- Validation: TypeScript, targeted ESLint and whitespace checks passed. Source review found no remaining green Tech accents. Calculated contrast for cyan/green against the brightest card spotlight was 7.50:1 / 6.19:1; Tech retains visible 2px focus outlines. Desktop/mobile visual checks remain unverified because no browser was connected.
+
+## 6 November 2026 — Complete Tech Theme Audit
+
+- Re-audited `/tech`, `DeviceCard`, all `.tech-*` rules, homepage accent mappings and the navbar. All Tech accents already use cyan (`#22D3EE`, `34, 211, 238`); no further implementation changes were needed.
+- Confirmed that green remains available for Self-Improvement. Reviewed native summary controls, animation and spotlight handlers, fine-pointer hover rules, cyan 2px focus outlines and reduced-motion fallbacks without changing them.
+- TypeScript, targeted ESLint and whitespace checks passed. Desktop/mobile layout and interactive hover, spotlight, expansion and keyboard tests remain unverified because no browser was connected.
+
+## 6 November 2026 — Self-Improvement Lesson Tree
+
+- Added `/self-improvement` with the green theme, a Back to Home action, page metadata and explicit white/grey text against dark gradient surfaces.
+- Built a centred Always Learning root, three connected branches and six expandable lesson cards. Desktop connectors become a vertical branching timeline below 1024px. Book cards credit Mark Manson, Ichiro Kishimi and Fumitake Koga, followed by More to come.
+- Kept books, branches, lesson titles and reflections editable in `src/data/selfImprovement.ts`. The approved preview reflections were not available in the session; newly written example reflections are clearly labelled, with no claim of personal experience or direct quotation.
+- Reused `HomeInterestReveal`, `useCardSpotlight`, `ActionLink` and the existing SVG libraries. Native disclosures use the same interruptible height/opacity animation pattern as the device cards, with visible green focus and reduced-motion fallbacks.
+- Added an optional motion/pointer preference guard to the shared spotlight hook for the new page; existing callers keep their previous behaviour.
+- Added Self-Improvement second in the navbar, preserving homepage tab hiding and mobile scrolling, and activated the existing green homepage card link without changing card order.
+- Validation: TypeScript, targeted ESLint and whitespace checks passed. A local HTTP request verified the route and metadata. Rendered/handler checks covered six disclosures, book credits, homepage linking, navbar order and exact/nested active routes, expansion/collapse, rapid reversal and reduced-motion fallback. Contrast calculations passed 4.5:1 for white, muted grey and green text against the brightest green spotlight. Desktop/mobile visual, connector, touch and live keyboard/spotlight checks remain unverified because no browser was connected.
+
+## 6 November 2026 — Consistent Card Interactions
+
+- Audited homepage, Experience, Projects, Self-Improvement, Tech, Bhangra, Music and journal surfaces against their actual functionality.
+- Added shared `.card-interactive`, `.card-disclosure`, `.card-static` and `.card-plus` rules. Full-card links and disclosure summaries now share the 280ms transition, 3px fine-pointer hover lift, 45% accent hover border, 50% active/focus border and visible keyboard outlines. Expanded descriptions retain a default cursor and do not independently trigger card hover.
+- Kept native disclosure controls, height/opacity animation implementations, existing spotlight handlers and scroll-reveal keyframes unchanged. Preserved the inset Project focus ring so overflow clipping cannot hide it.
+- Replaced the Projects disclosure chevron with `+` and its source-link character arrow with `HiArrowUpRight`. Removed the arrow-only override from `InterestCard` so navigation indicators follow real destinations.
+- Removed hover brightening from static books, skill chips and technology labels. Existing informational Bhangra/Music/journal containers remain static, with their child links and controls intact.
+- Applied shared navigation styling and SVG arrows to full-image journal thumbnail links, while cover previews, embed wrappers and article cards remain static. Media buttons retain their own actions and explicit pointer cursors.
+- Pinned named section colour tokens to the specified palette and aligned the Project card spotlight/focus/border accent with `#C084FC`; Tech remains cyan and Self-Improvement green.
+- Validation: TypeScript, targeted ESLint, CSS parsing and whitespace checks passed. Temporary rendered/handler regression checks covered all card families, six homepage destinations/social links, static tab stops, journal cover/picture boundaries, open/close behaviour, rapid reversal, inert panels and reduced-motion fallback. Source comparison confirmed unchanged disclosure logic and reveal keyframes. Browser visual, live focus and desktop/tablet/mobile checks remain unverified because no browser was connected.
+
 ## Documentation and Reference Resources
 
 Official documentation relevant to the frameworks, tools and techniques used in this project. These are technical references, not a claim that I followed each resource as a tutorial.

@@ -12,7 +12,7 @@ function ProfileCard({ children }: { children: ReactNode }) {
 
   return (
     <div className="home-card-reveal min-w-0">
-      <article ref={card} className="interest-card h-full rounded-2xl border border-[#60A5FA]/15 p-6 sm:p-8">
+      <article ref={card} className="interest-card card-static h-full rounded-2xl border border-[#60A5FA]/15 p-6 sm:p-8">
         {children}
       </article>
     </div>
@@ -50,7 +50,7 @@ export default function ExperienceProfileSections() {
               <h3 className="text-lg font-semibold text-white sm:text-xl">{category.title}</h3>
               <ul className="mt-5 flex flex-wrap gap-2">
                 {category.skills.map(skill => (
-                  <li key={skill} className="rounded-full border border-[#60A5FA]/20 bg-[#60A5FA]/[0.04] px-3 py-1.5 text-xs leading-relaxed text-gray-300 transition-colors hover:border-[#60A5FA]/40 hover:bg-[#60A5FA]/[0.08] motion-reduce:transition-none">{skill}</li>
+                  <li key={skill} className="rounded-full border border-[#60A5FA]/20 bg-[#60A5FA]/[0.04] px-3 py-1.5 text-xs leading-relaxed text-gray-300">{skill}</li>
                 ))}
               </ul>
             </ProfileCard>
