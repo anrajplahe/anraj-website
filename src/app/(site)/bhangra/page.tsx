@@ -2,6 +2,7 @@
 import type { Metadata } from "next";
 import CompetitionTimeline from "@/components/bhangra/CompetitionTimeline";
 import { FaInstagram, FaTiktok } from "react-icons/fa6";
+import { HiOutlineEnvelope } from "react-icons/hi2";
 import { Suspense } from "react";
 import PublishedJournal from "@/components/journal/PublishedJournal";
 
@@ -113,6 +114,7 @@ const competitionHistory: CompetitionYear[] = [
         competition: "Bhangra Beatdown",
         placing: "1st Place",
         vardiColour: "Black",
+        youtubeUrl: "https://youtu.be/ykPpmqj1DhY",
       },
     ],
   },
@@ -134,6 +136,8 @@ const vardiColours: Record<VardiColour, string> = {
   Red: "#DC2626",
 };
 
+const contactLinkClassName = "inline-flex min-h-11 items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm text-slate-300 transition-colors hover:border-yellow-400/30 hover:bg-yellow-400/5 hover:text-yellow-400 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-yellow-400 cursor-pointer max-w-full";
+
 export default function BhangraPage() {
   return (
     <main className="bhangra-page flex-1 bg-[#0B0D14] text-white">
@@ -154,17 +158,57 @@ export default function BhangraPage() {
 
           <p>
             Between teaching, rehearsals, performances
-            and competitions, there's usually something
+            and competitions, there&apos;s usually something
             going on!
           </p>
 
           <p>
-            I'll be using this space to share some of
-            the things I've been getting up to, whether
-            that's something with Anahat, Ranjhe or just
+            I&apos;ll be using this space to share some of
+            the things I&apos;ve been getting up to, whether
+            that&apos;s something with Anahat, Ranjhe or just
             Bhangra in general.
           </p>
         </div>
+
+        {/* Anahat Social Links */}
+        <section aria-labelledby="anahat-heading" className="mt-20 rounded-2xl border border-yellow-400/10 bg-yellow-400/[0.02] p-6 sm:mt-24 sm:p-8">
+          <h2 id="anahat-heading" className="text-xl font-semibold tracking-tight text-white">
+            Follow Anahat Bhangra
+          </h2>
+          <p className="mt-3 max-w-xl text-sm leading-relaxed text-slate-400">
+            Anahat is my Bhangra academy, where I teach classes and workshops.
+          </p>
+
+          <div className="mt-6 flex flex-wrap items-center gap-3">
+            <a
+              href="https://www.instagram.com/anahatbhangra/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={contactLinkClassName}
+            >
+              <FaInstagram size={18} aria-hidden="true" />
+              Instagram
+            </a>
+
+            <a
+              href="https://www.tiktok.com/@anahatbhangra"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={contactLinkClassName}
+            >
+              <FaTiktok size={18} aria-hidden="true" />
+              TikTok
+            </a>
+
+            <a
+              href="mailto:anahatbhangra@gmail.com"
+              className={contactLinkClassName}
+            >
+              <HiOutlineEnvelope size={18} aria-hidden="true" className="shrink-0" />
+              Email Anahat Bhangra
+            </a>
+          </div>
+        </section>
 
         {/* Published Journal */}
         <Suspense
@@ -193,7 +237,7 @@ export default function BhangraPage() {
           </h2>
 
           <p className="mt-4 max-w-2xl leading-relaxed text-gray-400">
-            The teams I've competed with, captained and
+            The teams I&apos;ve competed with, captained and
             coached over the years.
           </p>
 
@@ -202,38 +246,6 @@ export default function BhangraPage() {
             placingColours={placingColours}
             vardiColours={vardiColours}
           />
-        </section>
-
-        {/* Anahat Social Links */}
-        <section aria-labelledby="anahat-heading" className="mt-20 rounded-2xl border border-yellow-400/10 bg-yellow-400/[0.02] p-6 sm:mt-24 sm:p-8">
-          <h2 id="anahat-heading" className="text-xl font-semibold tracking-tight text-white">
-            Follow Anahat Bhangra
-          </h2>
-          <p className="mt-3 max-w-xl text-sm leading-relaxed text-slate-400">
-            Anahat is my Bhangra academy, where I teach classes and workshops.
-          </p>
-
-          <div className="mt-6 flex flex-wrap items-center gap-3">
-            <a
-              href="https://www.instagram.com/anahatbhangra/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex min-h-11 items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm text-slate-300 transition-colors hover:border-yellow-400/30 hover:bg-yellow-400/5 hover:text-yellow-400 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-yellow-400"
-            >
-              <FaInstagram size={18} aria-hidden="true" />
-              Instagram
-            </a>
-
-            <a
-              href="https://www.tiktok.com/@anahatbhangra"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex min-h-11 items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm text-slate-300 transition-colors hover:border-yellow-400/30 hover:bg-yellow-400/5 hover:text-yellow-400 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-yellow-400"
-            >
-              <FaTiktok size={18} aria-hidden="true" />
-              TikTok
-            </a>
-          </div>
         </section>
       </section>
     </main>

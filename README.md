@@ -19,6 +19,7 @@ What began as a responsive Next.js frontend has developed into a full-stack appl
 ### Public website
 
 - Responsive homepage with an animated introduction, scroll-revealed interest cards and cursor-following highlights.
+- **My Journey.** homepage cards for Experience, Projects and Self-Improvement, with section accents, SVG arrows and cursor-following highlights.
 - Dedicated **Projects**, **Tech**, **Bhangra** and **Music** sections, each with its own accent colour and presentation style.
 - Expandable project showcases, including this website and **Fortitude**, a Python game project using Pyglet and Tkinter.
 - Expandable technical specifications for everyday devices and animated music-equipment showcases.
@@ -30,7 +31,27 @@ What began as a responsive Next.js frontend has developed into a full-stack appl
 - Reusable, accessible-looking action links for navigation and videos, with SVG arrows that render consistently on mobile.
 - Page and article metadata, canonical URLs, `robots.txt` rules and a sitemap containing published articles.
 - Deployment-versioned brand favicon URL to reduce stale-icon caching across releases.
-- A consistent dark interface with blue general branding and violet Projects, green Tech, yellow Bhangra and pink Music accents.
+- A consistent dark interface with blue general branding and violet Projects, cyan Tech, yellow Bhangra and pink Music accents.
+
+- The Experience page also includes Education cards and six Skills categories, with blue spotlights, staggered reveals and static skill badges. Edit qualifications and skills in `src/data/experienceProfile.ts`. The Computer Science qualification is a DipHE awarded in 2026.
+
+Navigation tabs appear on pages other than the homepage in this order: Experience (blue), Self-Improvement (green), Projects (violet), Tech (cyan), Bhangra (yellow) and Music (pink). The tab row scrolls horizontally on narrow screens. The Experience page includes a **View CV** action linking internally to `/cv`.
+
+Section accents: Experience blue (`#60A5FA`), Projects violet (`#C084FC`), Tech cyan (`#22D3EE`), Self-Improvement green (`#22C55E`), Bhangra yellow (`#FACC15`) and Music pink (`#F472B6`). The Self-Improvement homepage card links to `/self-improvement`. General branding and admin UI remain blue.
+
+The Tech cyan theme covers the page heading, device icons, specification indicators, cursor-following spotlight, atmospheric glow, hover/open borders, keyboard focus outlines and homepage/navbar accents. Device expansion, scroll reveals and reduced-motion behaviour retain their existing implementation.
+
+### Self-Improvement
+
+`/self-improvement` presents an **Always Learning** lesson tree with Values, Responsibility and Growth branches, six expandable reflections, and two book cards. Desktop branches use green connecting lines; smaller screens use a vertical timeline. Lesson and book content lives in `src/data/selfImprovement.ts` and is labelled as example reflections inspired by the books, not personal accounts or direct quotations. The approved preview copy was not available during implementation, so the initial reflections are newly written examples for review.
+
+Native disclosure controls support keyboard activation, visible focus, smooth interruptible expansion and reduced motion. The shared spotlight hook optionally respects pointer/motion preferences for this page; existing callers retain their previous behaviour. Section navigation remains hidden on the homepage and horizontally scrollable on narrow screens.
+
+### Card interactions
+
+Full-card navigation uses the shared `.card-interactive` styling; native expandable cards use `.card-disclosure`, with pointer/hover feedback confined to their summaries. Both use 280ms transitions, a 3px lift and a 45% section-accent border on fine-pointer hover, with a consistent 50% active/focus border and visible focus outlines. Navigation indicators are SVG arrows; disclosure indicators are `+` symbols that rotate while open. Reduced-motion styles remove the lift and transitions.
+
+Informational cards stay stationary with default cursors, their existing backgrounds and spotlights, and no action indicators. Education, skill categories, book cards, equipment, competition entries and journal containers keep this static treatment. Child social links, media buttons and full-image thumbnail links remain independently interactive; no full-card link is added to their containers. Skill and technology labels have no action-like hover treatment.
 
 ### Private journal management
 
@@ -105,6 +126,12 @@ npm run dev
 Visit [http://localhost:3000](http://localhost:3000).
 
 The public pages and private journal features may require environment-specific configuration. Keep credentials in local environment files or deployment environment settings; **never commit secrets to the repository**. Database migrations must be applied to the intended database before using features that depend on them.
+
+### CV and experience configuration
+
+Set `NEXT_PUBLIC_CV_GOOGLE_DOC_URL` in `.env.local` or deployment settings to your actual HTTPS Google Docs document URL. Restart the development server or rebuild/redeploy after changing it. Ensure the document's sharing permissions allow the intended audience to view it. The CV opens in a new tab with `noopener noreferrer`; missing or invalid URLs leave the card non-interactive, without a navigation arrow.
+
+Edit `src/data/experience.ts` to publish verified roles, most recent first. Each entry has `id`, `organisation`, `title`, `dates`, `description`, `responsibilities` and `achievements`. The initial five roles were verified against the supplied CV on 2 November 2026. `/experience` shows an honest empty state if the list is cleared; populated entries use keyboard-accessible native disclosures, blue timeline markers, the shared spotlight and staggered reveals. Motion respects the existing reduced-motion styles.
 
 ## Development Approach
 

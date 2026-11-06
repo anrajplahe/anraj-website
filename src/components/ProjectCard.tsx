@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, type CSSProperties, type MouseEvent, type PointerEvent } from "react";
 import { FaGithub } from "react-icons/fa6";
+import { HiArrowUpRight } from "react-icons/hi2";
 import ProjectShowcase from "@/components/ProjectShowcase";
 
 type Project = {
@@ -70,7 +71,7 @@ export default function ProjectCard({ project, index }: { project: Project; inde
   return (
     <div className="project-card-slot" style={{ "--project-delay": `${index * 120}ms` } as CSSProperties}>
       <ProjectShowcase>
-        <details ref={details} className="project-showcase project-disclosure relative isolate overflow-hidden rounded-3xl border border-white/10" onPointerMove={spotlight}>
+        <details ref={details} className="project-showcase project-disclosure card-disclosure relative isolate overflow-hidden rounded-3xl border border-white/10" onPointerMove={spotlight}>
           <summary onClick={toggle} className="project-summary cursor-pointer list-none p-6 sm:p-10 lg:p-12">
             <span aria-hidden="true" className="project-spotlight pointer-events-none absolute inset-0 -z-10" />
             <div className="grid gap-8 sm:grid-cols-[1fr_auto] sm:items-center">
@@ -88,7 +89,7 @@ export default function ProjectCard({ project, index }: { project: Project; inde
             </div>
             <span className="mt-8 flex items-center justify-between border-t border-white/[0.08] pt-5 text-sm font-medium text-violet-300">
               <span className="project-explore">Explore project</span>
-              <span aria-hidden="true" className="project-chevron inline-flex h-8 w-8 items-center justify-center rounded-full border border-violet-400/20">⌄</span>
+              <span aria-hidden="true" className="project-chevron card-plus inline-flex h-8 w-8 items-center justify-center rounded-full border border-violet-400/20 text-xl font-light">+</span>
             </span>
           </summary>
           <div ref={panel} className="project-disclosure-panel">
@@ -103,7 +104,7 @@ export default function ProjectCard({ project, index }: { project: Project; inde
                 </div>
                 {project.features.length > 0 && (
                 <div>
-                  <h3 className="font-semibold">What I've implemented</h3>
+                  <h3 className="font-semibold">What I&apos;ve implemented</h3>
                   <ul className="mt-4 list-disc space-y-2 pl-5 text-sm leading-relaxed text-slate-400 marker:text-violet-400">
                     {project.features.map(feature => <li key={feature}>{feature}</li>)}
                   </ul>
@@ -112,7 +113,7 @@ export default function ProjectCard({ project, index }: { project: Project; inde
               </div>
               {project.githubUrl && (
               <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="mt-8 inline-flex items-center gap-3 rounded-xl border border-violet-400/30 bg-violet-400/10 px-5 py-3 text-sm font-semibold text-violet-300 transition-colors hover:border-violet-400/60 hover:bg-violet-400/20 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-violet-400">
-                <FaGithub size={20} aria-hidden="true" />View source code<span aria-hidden="true">↗</span>
+                <FaGithub size={20} aria-hidden="true" />View source code<HiArrowUpRight size={16} aria-hidden="true" />
               </a>
               )}
             </div>

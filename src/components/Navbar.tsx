@@ -8,16 +8,30 @@ import { usePathname } from "next/navigation";
 
 const sections = [
   {
+    title: "Experience",
+    href: "/experience",
+    activeStyle: "border-[#60A5FA]/40 bg-[#60A5FA]/10 text-[#60A5FA]",
+    hoverStyle: "hover:border-[#60A5FA]/30 hover:bg-[#60A5FA]/10 hover:text-[#60A5FA]",
+  },
+  {
     title: "Projects",
     href: "/projects",
     activeStyle: "border-violet-400/40 bg-violet-400/10 text-violet-400",
     hoverStyle: "hover:border-violet-400/30 hover:bg-violet-400/10 hover:text-violet-400",
   },
   {
-    title: "Tech",
-    href: "/tech",
+    title: "Self-Improvement",
+    href: "/self-improvement",
+    focusStyle: "focus-visible:outline-green-500",
     activeStyle: "border-green-500/40 bg-green-500/10 text-green-500",
     hoverStyle: "hover:border-green-500/30 hover:bg-green-500/10 hover:text-green-500",
+  },
+  {
+    title: "Tech",
+    href: "/tech",
+    focusStyle: "focus-visible:outline-cyan-400",
+    activeStyle: "border-cyan-400/40 bg-cyan-400/10 text-cyan-400",
+    hoverStyle: "hover:border-cyan-400/30 hover:bg-cyan-400/10 hover:text-cyan-400",
   },
   {
     title: "Bhangra",
@@ -79,7 +93,7 @@ export default function Navbar() {
                   transition-colors duration-200
                   focus-visible:outline-2
                   focus-visible:outline-offset-2
-                  focus-visible:outline-white
+                  ${section.focusStyle ?? "focus-visible:outline-white"}
                   ${
                     isActive
                       ? section.activeStyle

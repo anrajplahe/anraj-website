@@ -34,7 +34,7 @@ export default function DeviceCard({ category, name, specs, icon, index }: Devic
       const x = event.clientX - bounds.left;
       const y = event.clientY - bounds.top;
       card.style.backgroundImage =
-        `radial-gradient(380px circle at ${x}px ${y}px, rgba(34, 197, 94, 0.12), transparent 75%), ${cardBackground}`;
+        `radial-gradient(380px circle at ${x}px ${y}px, rgba(34, 211, 238, 0.12), transparent 75%), ${cardBackground}`;
     }
     function removeLight() {
       card?.style.removeProperty("background-image");
@@ -105,17 +105,17 @@ export default function DeviceCard({ category, name, specs, icon, index }: Devic
 
   return (
     <div ref={revealRef} className="tech-device-reveal min-w-0" style={{ "--device-delay": `${index * 120}ms` } as CSSProperties}>
-      <details ref={cardRef} className="tech-device relative isolate rounded-3xl border border-white/10">
+      <details ref={cardRef} className="tech-device card-disclosure relative isolate rounded-3xl border border-white/10">
         <summary onClick={toggle} className="tech-device-summary cursor-pointer list-none rounded-3xl p-6 sm:p-7">
-          <span className="text-xs font-medium uppercase tracking-[0.18em] text-green-500">{category}</span>
-          <span aria-hidden="true" className="my-7 flex h-20 w-20 items-center justify-center rounded-2xl border border-green-500/15 bg-green-500/[0.04] text-green-500">{icon}</span>
+          <span className="text-xs font-medium uppercase tracking-[0.18em] text-cyan-400">{category}</span>
+          <span aria-hidden="true" className="my-7 flex h-20 w-20 items-center justify-center rounded-2xl border border-cyan-400/15 bg-cyan-400/[0.04] text-cyan-400">{icon}</span>
           <h3 className="text-xl font-semibold tracking-tight text-white">{name}</h3>
           <span className="mt-4 block min-h-14 space-y-1 text-sm leading-relaxed text-slate-400">
             {preview.map(spec => <span key={spec} className="block">{spec}</span>)}
           </span>
-          <span className="mt-7 flex items-center justify-between gap-3 border-t border-white/[0.08] pt-5 text-xs font-medium text-green-400">
+          <span className="mt-7 flex items-center justify-between gap-3 border-t border-white/[0.08] pt-5 text-xs font-medium text-cyan-400">
             <span>View specifications</span>
-            <span aria-hidden="true" className="tech-device-plus text-xl font-light">+</span>
+            <span aria-hidden="true" className="tech-device-plus card-plus text-xl font-light">+</span>
           </span>
         </summary>
         <div ref={panelRef} className="tech-device-panel">
