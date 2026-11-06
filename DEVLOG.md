@@ -628,6 +628,15 @@ Configured the supplied Google Docs URL in the ignored local environment file; d
 - Pinned named section colour tokens to the specified palette and aligned the Project card spotlight/focus/border accent with `#C084FC`; Tech remains cyan and Self-Improvement green.
 - Validation: TypeScript, targeted ESLint, CSS parsing and whitespace checks passed. Temporary rendered/handler regression checks covered all card families, six homepage destinations/social links, static tab stops, journal cover/picture boundaries, open/close behaviour, rapid reversal, inert panels and reduced-motion fallback. Source comparison confirmed unchanged disclosure logic and reveal keyframes. Browser visual, live focus and desktop/tablet/mobile checks remain unverified because no browser was connected.
 
+## 6 November 2026 — Roomier Tiles and Whole-Card Navigation
+
+- Increased the shared homepage tile minimum from 216px to 240px and the icon-to-title gap from 16px to 24px. Preserved the shared 24px padding, responsive grid, fonts, content and effects.
+- Replaced duplicate journal title links and standalone Read entry buttons with one semantic stretched link per featured/recent card in both preview and full listings. The inline Read entry text and SVG arrow sit at the lower right of the content area.
+- Kept media controls on a separate layer above the entry link. Non-control cover/background regions can navigate, while tabs, embedded players, social links and picture links retain their existing independent behaviour. No parent click handler or nested anchor was introduced.
+- Made video-backed Bhangra competition cards full-card new-tab links with inline YouTube/Watch performance/SVG indicators. Coached labels stay Watch team performance; entries without video URLs remain static and show no navigation indicator.
+- Reused the shared fine-pointer hover, border, focus and reduced-motion rules. Added shared stretched-link focus outlines and subtle inline-arrow movement. Spotlight/reveal implementations and all journal/competition data remain unchanged.
+- Validation: TypeScript, targeted ESLint, CSS parsing and whitespace checks passed. Temporary regression checks covered both journal categories, preview/full and featured/recent variants, single entry links, non-nested controls, all five real media-tab callbacks, image/social/embed destinations, and video/static competition distinctions. Browser visual, live hit-testing, touch and desktop/tablet/mobile checks remain unverified because no browser was connected.
+
 ## Documentation and Reference Resources
 
 Official documentation relevant to the frameworks, tools and techniques used in this project. These are technical references, not a claim that I followed each resource as a tutorial.

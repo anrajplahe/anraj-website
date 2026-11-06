@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, type CSSProperties, type MouseEvent } from "react";
-import ActionLink from "@/components/ActionLink";
+import { HiArrowUpRight } from "react-icons/hi2";
 import { FaYoutube } from "react-icons/fa6";
 
 type Entry = {
@@ -71,7 +71,7 @@ export default function CompetitionTimeline({ history, placingColours, vardiColo
             {year.entries.map((entry, index) => (
               <li key={`${entry.team}-${entry.competition}`} data-timeline-item className="bhangra-timeline-reveal" style={{ "--timeline-delay": `${(index + 1) * 120}ms` } as CSSProperties}>
                 <article
-                  className="bhangra-competition rounded-2xl border border-white/10 p-5 sm:p-6"
+                  className={`bhangra-competition interest-yellow relative isolate rounded-2xl border border-white/10 p-5 sm:p-6 ${entry.youtubeUrl ? "card-interactive" : "card-static"}`}
                   onMouseMoveCapture={moveLight}
                   onMouseEnter={moveLight}
                   onMouseLeave={event => event.currentTarget.style.removeProperty("background-image")}
@@ -88,12 +88,13 @@ export default function CompetitionTimeline({ history, placingColours, vardiColo
                         <span aria-hidden="true" className="h-3 w-3 shrink-0 rounded-full border border-white/40" style={{ backgroundColor: vardiColours[entry.vardiColour] }} />
                         {entry.vardiColour}
                       </span>}
-                      {entry.youtubeUrl && <ActionLink href={entry.youtubeUrl} external accent="yellow" arrow="diagonal" tone="neutral"
+                      {entry.youtubeUrl && <a href={entry.youtubeUrl} target="_blank" rel="noopener noreferrer"
                         aria-label={`Watch ${entry.team}'s performance at ${entry.competition} (${year.year})`}
-                        className="bhangra-performance ml-auto">
-                        <FaYoutube size={18} className="text-red-500" aria-hidden="true" />
+                        className="card-stretched-link inline-card-link bhangra-performance ml-auto text-xs">
+                        <FaYoutube size={18} className="shrink-0 text-red-500" aria-hidden="true" />
                         {entry.role === "Coach" ? "Watch team performance" : "Watch performance"}
-                      </ActionLink>}
+                        <HiArrowUpRight size={16} aria-hidden="true" className="card-nav-arrow" />
+                      </a>}
                     </div>
                   )}
                 </article>

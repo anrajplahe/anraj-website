@@ -1,5 +1,6 @@
 
 import Link from "next/link";
+import { HiArrowUpRight } from "react-icons/hi2";
 import ActionLink from "@/components/ActionLink";
 import JournalReveal from "@/components/journal/JournalReveal";
 import JournalMediaPreview from "@/components/journal/JournalMediaPreview";
@@ -100,12 +101,13 @@ export default function JournalListing({
                   <p className={`text-xs font-semibold uppercase tracking-[0.16em] ${accentText}`}>Featured entry</p>
                   <time dateTime={featured.date} className="mt-4 block text-xs text-slate-400">{formatDate(featured.date)}</time>
                   <h3 className="mt-4 break-words text-2xl font-semibold leading-tight tracking-tight text-white sm:text-3xl">
-                    <Link href={`/${category}/${featured.id}`} className="journal-preview-title rounded-md">{featured.title || "Journal entry"}</Link>
+                    {featured.title || "Journal entry"}
                   </h3>
                   <p className="mt-5 break-words text-sm leading-7 text-slate-400 sm:text-base">{featured.excerpt}</p>
-                  <ActionLink href={`/${category}/${featured.id}`} accent={isBhangra ? "yellow" : "pink"} arrow="forward" className="mt-6">
+                  <Link href={`/${category}/${featured.id}`} aria-label={`Read entry: ${featured.title || "Journal entry"}`} className="card-stretched-link inline-card-link text-sm mt-6">
                     Read entry
-                  </ActionLink>
+                    <HiArrowUpRight size={16} aria-hidden="true" className="card-nav-arrow" />
+                  </Link>
                 </div>
               </div>
             </JournalReveal>
@@ -120,12 +122,13 @@ export default function JournalListing({
                       <div className="mt-5 min-w-0">
                         <time dateTime={entry.date} className="text-xs text-slate-400">{formatDate(entry.date)}</time>
                         <h4 className="mt-3 break-words text-lg font-semibold leading-snug tracking-tight text-white sm:text-xl">
-                          <Link href={`/${category}/${entry.id}`} className="journal-preview-title rounded-md">{entry.title || "Journal entry"}</Link>
+                          {entry.title || "Journal entry"}
                         </h4>
                         <p className="mt-3 line-clamp-3 break-words text-sm leading-6 text-slate-400">{entry.excerpt}</p>
-                        <ActionLink href={`/${category}/${entry.id}`} accent={isBhangra ? "yellow" : "pink"} arrow="forward" className="mt-4">
-                    Read entry
-                  </ActionLink>
+                        <Link href={`/${category}/${entry.id}`} aria-label={`Read entry: ${entry.title || "Journal entry"}`} className="card-stretched-link inline-card-link text-sm mt-4">
+                          Read entry
+                          <HiArrowUpRight size={16} aria-hidden="true" className="card-nav-arrow" />
+                        </Link>
                       </div>
                     </JournalReveal>
                   ))}
@@ -165,12 +168,13 @@ export default function JournalListing({
                 <p className={`text-xs font-semibold uppercase tracking-[0.16em] ${accentText}`}>Featured entry</p>
                 <time dateTime={featured.date} className="mt-4 block text-xs text-slate-400">{formatDate(featured.date)}</time>
                 <h2 className="mt-4 break-words text-2xl font-semibold leading-tight tracking-tight text-white sm:text-3xl">
-                  <Link href={`/${category}/${featured.id}`} className="journal-preview-title rounded-md">{featured.title || "Journal entry"}</Link>
+                  {featured.title || "Journal entry"}
                 </h2>
                 <p className="mt-5 break-words text-sm leading-7 text-slate-400 sm:text-base">{featured.excerpt}</p>
-                <ActionLink href={`/${category}/${featured.id}`} accent={isBhangra ? "yellow" : "pink"} arrow="forward" className="mt-6">
-                    Read entry
-                  </ActionLink>
+                <Link href={`/${category}/${featured.id}`} aria-label={`Read entry: ${featured.title || "Journal entry"}`} className="card-stretched-link inline-card-link text-sm mt-6">
+                  Read entry
+                  <HiArrowUpRight size={16} aria-hidden="true" className="card-nav-arrow" />
+                </Link>
               </div>
             </div>
           </JournalReveal>
@@ -184,12 +188,13 @@ export default function JournalListing({
                     <div className="mt-5 min-w-0">
                       <time dateTime={entry.date} className="text-xs text-slate-400">{formatDate(entry.date)}</time>
                       <h3 className="mt-3 break-words text-lg font-semibold leading-snug tracking-tight text-white sm:text-xl">
-                        <Link href={`/${category}/${entry.id}`} className="journal-preview-title rounded-md">{entry.title || "Journal entry"}</Link>
+                        {entry.title || "Journal entry"}
                       </h3>
                       <p className="mt-3 line-clamp-3 break-words text-sm leading-6 text-slate-400">{entry.excerpt}</p>
-                      <ActionLink href={`/${category}/${entry.id}`} accent={isBhangra ? "yellow" : "pink"} arrow="forward" className="mt-4">
-                    Read entry
-                  </ActionLink>
+                      <Link href={`/${category}/${entry.id}`} aria-label={`Read entry: ${entry.title || "Journal entry"}`} className="card-stretched-link inline-card-link text-sm mt-4">
+                        Read entry
+                        <HiArrowUpRight size={16} aria-hidden="true" className="card-nav-arrow" />
+                      </Link>
                     </div>
                   </JournalReveal>
                 ))}
